@@ -1,0 +1,45 @@
+diff --git a/node_modules/path-scurry/dist/mjs/index.js b/node_modules/path-scurry/dist/mjs/index.js
+index 079253a..163c3d1 100644
+--- a/node_modules/path-scurry/dist/mjs/index.js
++++ b/node_modules/path-scurry/dist/mjs/index.js
+@@ -1,37 +1,10 @@
+ import { LRUCache } from 'lru-cache';
+ import { posix, win32 } from 'path';
+ import { fileURLToPath } from 'url';
+-import * as actualFS from 'fs';
+-import { lstatSync, readdir as readdirCB, readdirSync, readlinkSync, realpathSync as rps, } from 'fs';
+-const realpathSync = rps.native;
+-// TODO: test perf of fs/promises realpath vs realpathCB,
+-// since the promises one uses realpath.native
+-import { lstat, readdir, readlink, realpath } from 'fs/promises';
+ import { Minipass } from 'minipass';
+-const defaultFS = {
+-    lstatSync,
+-    readdir: readdirCB,
+-    readdirSync,
+-    readlinkSync,
+-    realpathSync,
+-    promises: {
+-        lstat,
+-        readdir,
+-        readlink,
+-        realpath,
+-    },
+-};
+-// if they just gave us require('fs') then use our default
+-const fsFromOption = (fsOption) => !fsOption || fsOption === defaultFS || fsOption === actualFS
+-    ? defaultFS
+-    : {
+-        ...defaultFS,
+-        ...fsOption,
+-        promises: {
+-            ...defaultFS.promises,
+-            ...(fsOption.promises || {}),
+-        },
+-    };
++
++// In this patch, we assume fs is always passed, as we assume we are not in Node env, therefore no built-in fs module.
++const fsFromOption = (fsOption) => fsOption;
+ // turn something like //?/c:/ into c:\
+ const uncDriveRegexp = /^\\\\\?\\([a-z]:)\\?$/i;
+ const uncToDrive = (rootPath) => rootPath.replace(/\//g, '\\').replace(uncDriveRegexp, '$1\\');
