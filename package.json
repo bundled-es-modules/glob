@@ -3,7 +3,6 @@
   "version": "10.3.5",
   "description": "mirror of glob, bundled and exposed as ES module",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
-  "main": "index-esm.js",
   "type": "module",
   "exports": {
     ".": {
@@ -25,6 +24,7 @@
   "keywords": [],
   "files": [
     "index-esm.js",
+    "index-esm-node.js",
     "index-cjs.cjs"
   ],
   "license": "ISC",
