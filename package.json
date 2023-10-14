@@ -1,20 +1,26 @@
 {
   "name": "@bundled-es-modules/glob",
-  "version": "10.3.4",
+  "version": "10.3.5",
   "description": "mirror of glob, bundled and exposed as ES module",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
   "main": "index-esm.js",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index-esm.js",
-      "require": "./index-cjs.cjs"
+      "require": "./index-cjs.cjs",
+      "node": "./index-esm-node.js",
+      "default": "./index-esm.js"
     }
   },
   "scripts": {
     "postinstall": "patch-package",
-    "dev": "node dev.js",
-    "build": "esbuild source.js --bundle --format=esm --outfile=index-esm.js && node manual-adjust-esm.js"
+    "test": "run-p test:*",
+    "test:browser": "wds --open --node-resolve",
+    "test:node": "node dev-node.js",
+    "test:node:custom": "node dev-node-custom.js",
+    "build": "run-p build:*",
+    "build:browser": "esbuild source.js --bundle --format=esm --outfile=index-esm.js && node manual-adjust-esm.js",
+    "build:node": "esbuild source.js --bundle --format=esm --platform=node --outfile=index-esm-node.js"
   },
   "keywords": [],
   "files": [
@@ -34,6 +40,8 @@
   },
   "devDependencies": {
     "@bundled-es-modules/memfs": "^4.2.3",
-    "esbuild": "^0.18.10"
+    "@web/dev-server": "^0.3.3",
+    "esbuild": "^0.18.10",
+    "npm-run-all": "^4.1.5"
   }
 }
