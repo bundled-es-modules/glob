@@ -7,7 +7,7 @@ function defaultSetTimout() {
 function defaultClearTimeout() {
   throw new Error("clearTimeout has not been defined");
 }
-(function() {
+(function () {
   try {
     if (typeof setTimeout === "function") {
       cachedSetTimeout = setTimeout;
@@ -31,7 +31,10 @@ function runTimeout(fun) {
   if (cachedSetTimeout === setTimeout) {
     return setTimeout(fun, 0);
   }
-  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+  if (
+    (cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) &&
+    setTimeout
+  ) {
     cachedSetTimeout = setTimeout;
     return setTimeout(fun, 0);
   }
@@ -49,7 +52,10 @@ function runClearTimeout(marker) {
   if (cachedClearTimeout === clearTimeout) {
     return clearTimeout(marker);
   }
-  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+  if (
+    (cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) &&
+    clearTimeout
+  ) {
     cachedClearTimeout = clearTimeout;
     return clearTimeout(marker);
   }
@@ -103,7 +109,7 @@ function drainQueue() {
   draining = false;
   runClearTimeout(timeout);
 }
-process.nextTick = function(fun) {
+process.nextTick = function (fun) {
   var args = new Array(arguments.length - 1);
   if (arguments.length > 1) {
     for (var i = 1; i < arguments.length; i++) {
@@ -119,7 +125,7 @@ function Item(fun, array) {
   this.fun = fun;
   this.array = array;
 }
-Item.prototype.run = function() {
+Item.prototype.run = function () {
   this.fun.apply(null, this.array);
 };
 process.title = "browser";
@@ -128,8 +134,7 @@ process.env = {};
 process.argv = [];
 process.version = "";
 process.versions = {};
-function noop() {
-}
+function noop() {}
 process.on = noop;
 process.addListener = noop;
 process.once = noop;
@@ -139,21 +144,22 @@ process.removeAllListeners = noop;
 process.emit = noop;
 process.prependListener = noop;
 process.prependOnceListener = noop;
-process.listeners = function(name) {
+process.listeners = function (name) {
   return [];
 };
-process.binding = function(name) {
+process.binding = function (name) {
   throw new Error("process.binding is not supported");
 };
-process.cwd = function() {
+process.cwd = function () {
   return "/";
 };
-process.chdir = function(dir) {
+process.chdir = function (dir) {
   throw new Error("process.chdir is not supported");
 };
-process.umask = function() {
+process.umask = function () {
   return 0;
 };
+
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -11759,10 +11765,10 @@ var PathScurryDarwin = class extends PathScurryPosix {
 var Path = process.platform === "win32" ? PathWin32 : PathPosix;
 var PathScurry = process.platform === "win32" ? PathScurryWin32 : process.platform === "darwin" ? PathScurryDarwin : PathScurryPosix;
 
-// node_modules/glob/dist/mjs/glob.js
+// node_modules/glob/dist/esm/glob.js
 var import_url2 = __toESM(require_url(), 1);
 
-// node_modules/glob/dist/mjs/pattern.js
+// node_modules/glob/dist/esm/pattern.js
 var isPatternList = (pl) => pl.length >= 1;
 var isGlobList = (gl) => gl.length >= 1;
 var Pattern = class _Pattern {
@@ -11927,7 +11933,7 @@ var Pattern = class _Pattern {
   }
 };
 
-// node_modules/glob/dist/mjs/ignore.js
+// node_modules/glob/dist/esm/ignore.js
 var defaultPlatform2 = typeof process === "object" && process && typeof process.platform === "string" ? process.platform : "linux";
 var Ignore = class {
   relative;
@@ -11955,6 +11961,9 @@ var Ignore = class {
       for (let i = 0; i < mm.set.length; i++) {
         const parsed = mm.set[i];
         const globParts = mm.globParts[i];
+        if (!parsed || !globParts) {
+          throw new Error("invalid pattern object");
+        }
         const p = new Pattern(parsed, globParts, 0, platform);
         const m = new Minimatch(p.globString(), mmopts);
         const children = globParts[globParts.length - 1] === "**";
@@ -11996,13 +12005,13 @@ var Ignore = class {
     }
     for (const m of this.absoluteChildren) {
       if (m.match(fullpath))
-        true;
+        return true;
     }
     return false;
   }
 };
 
-// node_modules/glob/dist/mjs/processor.js
+// node_modules/glob/dist/esm/processor.js
 var HasWalkedCache = class _HasWalkedCache {
   store;
   constructor(store = /* @__PURE__ */ new Map()) {
@@ -12105,8 +12114,6 @@ var Processor = class _Processor {
       let changed = false;
       while (typeof (p = pattern.pattern()) === "string" && (rest = pattern.rest())) {
         const c = t.resolve(p);
-        if (c.isUnknown() && p !== "..")
-          break;
         t = c;
         pattern = rest;
         changed = true;
@@ -12119,12 +12126,8 @@ var Processor = class _Processor {
         this.hasWalkedCache.storeWalked(t, pattern);
       }
       if (typeof p === "string") {
-        if (!rest) {
-          const ifDir = p === ".." || p === "" || p === ".";
-          this.matches.add(t.resolve(p), absolute, ifDir);
-        } else {
-          this.subwalks.add(t, pattern);
-        }
+        const ifDir = p === ".." || p === "" || p === ".";
+        this.matches.add(t.resolve(p), absolute, ifDir);
         continue;
       } else if (p === GLOBSTAR) {
         if (!t.isSymbolicLink() || this.follow || pattern.checkFollowGlobstar()) {
@@ -12229,7 +12232,7 @@ var Processor = class _Processor {
   }
 };
 
-// node_modules/glob/dist/mjs/walker.js
+// node_modules/glob/dist/esm/walker.js
 var makeIgnore = (ignore, opts) => typeof ignore === "string" ? new Ignore([ignore], opts) : Array.isArray(ignore) ? new Ignore(ignore, opts) : ignore;
 var GlobUtil = class {
   path;
@@ -12533,7 +12536,7 @@ var GlobStream = class extends GlobUtil {
   }
 };
 
-// node_modules/glob/dist/mjs/glob.js
+// node_modules/glob/dist/esm/glob.js
 var defaultPlatform3 = typeof process === "object" && process && typeof process.platform === "string" ? process.platform : "linux";
 var Glob = class {
   absolute;
@@ -12663,7 +12666,10 @@ var Glob = class {
       return set;
     }, [[], []]);
     this.patterns = matchSet.map((set, i) => {
-      return new Pattern(set, globParts[i], 0, this.platform);
+      const g = globParts[i];
+      if (!g)
+        throw new Error("invalid pattern object");
+      return new Pattern(set, g, 0, this.platform);
     });
   }
   async walk() {
@@ -12724,7 +12730,7 @@ var Glob = class {
   }
 };
 
-// node_modules/glob/dist/mjs/has-magic.js
+// node_modules/glob/dist/esm/has-magic.js
 var hasMagic = (pattern, options = {}) => {
   if (!Array.isArray(pattern)) {
     pattern = [pattern];
@@ -12736,7 +12742,7 @@ var hasMagic = (pattern, options = {}) => {
   return false;
 };
 
-// node_modules/glob/dist/mjs/index.js
+// node_modules/glob/dist/esm/index.js
 function globStreamSync(pattern, options = {}) {
   return new Glob(pattern, options).streamSync();
 }

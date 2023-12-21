@@ -1,6 +1,6 @@
 {
   "name": "@bundled-es-modules/glob",
-  "version": "10.3.5",
+  "version": "10.3.10",
   "description": "mirror of glob, bundled and exposed as ES module",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
   "type": "module",
@@ -31,7 +31,7 @@
   "dependencies": {
     "buffer": "^6.0.3",
     "events": "^3.3.0",
-    "glob": "^10.3.3",
+    "glob": "^10.3.10",
     "patch-package": "^8.0.0",
     "path": "^0.12.7",
     "stream": "^0.0.2",

@@ -7,7 +7,7 @@ function defaultSetTimout() {
 function defaultClearTimeout() {
   throw new Error("clearTimeout has not been defined");
 }
-(function() {
+(function () {
   try {
     if (typeof setTimeout === "function") {
       cachedSetTimeout = setTimeout;
@@ -31,7 +31,10 @@ function runTimeout(fun) {
   if (cachedSetTimeout === setTimeout) {
     return setTimeout(fun, 0);
   }
-  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+  if (
+    (cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) &&
+    setTimeout
+  ) {
     cachedSetTimeout = setTimeout;
     return setTimeout(fun, 0);
   }
@@ -49,7 +52,10 @@ function runClearTimeout(marker) {
   if (cachedClearTimeout === clearTimeout) {
     return clearTimeout(marker);
   }
-  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+  if (
+    (cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) &&
+    clearTimeout
+  ) {
     cachedClearTimeout = clearTimeout;
     return clearTimeout(marker);
   }
@@ -103,7 +109,7 @@ function drainQueue() {
   draining = false;
   runClearTimeout(timeout);
 }
-process.nextTick = function(fun) {
+process.nextTick = function (fun) {
   var args = new Array(arguments.length - 1);
   if (arguments.length > 1) {
     for (var i = 1; i < arguments.length; i++) {
@@ -119,7 +125,7 @@ function Item(fun, array) {
   this.fun = fun;
   this.array = array;
 }
-Item.prototype.run = function() {
+Item.prototype.run = function () {
   this.fun.apply(null, this.array);
 };
 process.title = "browser";
@@ -128,8 +134,7 @@ process.env = {};
 process.argv = [];
 process.version = "";
 process.versions = {};
-function noop() {
-}
+function noop() {}
 process.on = noop;
 process.addListener = noop;
 process.once = noop;
@@ -139,18 +144,18 @@ process.removeAllListeners = noop;
 process.emit = noop;
 process.prependListener = noop;
 process.prependOnceListener = noop;
-process.listeners = function(name) {
+process.listeners = function (name) {
   return [];
 };
-process.binding = function(name) {
+process.binding = function (name) {
   throw new Error("process.binding is not supported");
 };
-process.cwd = function() {
+process.cwd = function () {
   return "/";
 };
-process.chdir = function(dir) {
+process.chdir = function (dir) {
   throw new Error("process.chdir is not supported");
 };
-process.umask = function() {
+process.umask = function () {
   return 0;
 };

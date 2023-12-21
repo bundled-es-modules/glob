@@ -6,7 +6,7 @@ It additionally comes with a patch of path-scurry, where we just assume the `fs`
 
 > Therefore, with this mirror of `glob`, you MUST always pass the `fs` property in the options parameter, even if you do end up using Node's builtin `fs` module.
 
-> When using a custom FS implementation, you may need a leading slash in glob search value.
+> When using a custom FS implementation combined with Node ESM, you probably need a leading slash in glob search value for it to find results.
 
 ## Install
 
