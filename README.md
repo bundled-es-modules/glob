@@ -1,12 +1,13 @@
 # glob
 
-This is a mirror of [glob](https://www.npmjs.com/package/glob), bundled and exposed as ES module, exposes a browser entrypoint that works in browser without any additional build tool transformations.
+This is a mirror of [glob](https://www.npmjs.com/package/glob), bundled and exposed as dual publish CJS & ES module.
 
-It additionally comes with a patch of path-scurry, where we just assume the `fs` option is always passed to glob.
+In addition, it exposes a browser entrypoint that works in browsers without any additional build tool transformations.
+This comes with a patch of path-scurry, where we just assume the `fs` option is always passed to glob.
 
-> Therefore, with this mirror of `glob`, you MUST always pass the `fs` property in the options parameter, even if you do end up using Node's builtin `fs` module.
+Therefore, with this mirror of `glob`, you MUST always pass the `fs` property in the options parameter when inside browser environment
 
-> When using a custom FS implementation combined with Node ESM, you probably need a leading slash in glob search value for it to find results.
+> In Node environment, we just use a re-export of `glob` origin, as it now exposes both ESM + CJS
 
 ## Install
 

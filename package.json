@@ -1,38 +1,35 @@
 {
   "name": "@bundled-es-modules/glob",
-  "version": "10.3.10",
-  "description": "mirror of glob, bundled and exposed as ES module",
+  "version": "10.3.11",
+  "description": "mirror of glob, bundled and exposed as ES module including for browser",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
   "type": "module",
   "exports": {
     ".": {
-      "require": "./index-cjs.cjs",
-      "node": "./index-esm-node.js",
-      "default": "./index-esm.js"
+      "require": "./index.cjs",
+      "node": "./index.js",
+      "default": "./browser.js"
     }
   },
   "scripts": {
     "postinstall": "patch-package",
+    "build": "esbuild index.js --bundle --format=esm --outfile=browser.js && node inject-process-patch.js",
     "test": "run-p test:*",
-    "test:browser": "wds --open --node-resolve",
-    "test:node": "node dev-node.js",
-    "test:node:custom": "node dev-node-custom.js",
-    "build": "run-p build:*",
-    "build:browser": "esbuild source.js --bundle --format=esm --outfile=index-esm.js && node manual-adjust-esm.js",
-    "build:node": "esbuild source.js --bundle --format=esm --platform=node --outfile=index-esm-node.js"
+    "test:browser": "wds --open --node-resolve --app-index=tests/index.html",
+    "test:node": "node tests/node.js",
+    "test:node:custom": "node tests/node-custom.js"
   },
   "keywords": [],
   "files": [
-    "index-esm.js",
-    "index-esm-node.js",
-    "index-cjs.cjs"
+    "index.js",
+    "index.cjs",
+    "browser.js"
   ],
   "license": "ISC",
   "dependencies": {
     "buffer": "^6.0.3",
     "events": "^3.3.0",
     "glob": "^10.3.10",
-    "patch-package": "^8.0.0",
     "path": "^0.12.7",
     "stream": "^0.0.2",
     "string_decoder": "^1.3.0",
@@ -42,6 +39,7 @@
     "@bundled-es-modules/memfs": "^4.2.3",
     "@web/dev-server": "^0.3.3",
     "esbuild": "^0.18.10",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "patch-package": "^8.0.0"
   }
 }

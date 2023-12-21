@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
-const fileBefore = readFileSync("./index-esm.js", "utf-8");
+const fileBefore = readFileSync("./browser.js", "utf-8");
 const process = readFileSync("./process.js", "utf-8");
 
 /**
@@ -8,4 +8,4 @@ const process = readFileSync("./process.js", "utf-8");
  */
 const fileAfter = `${process}\n${fileBefore}`;
 
-writeFileSync("./index-esm.js", fileAfter);
+writeFileSync("./browser.js", fileAfter);

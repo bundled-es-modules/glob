@@ -11158,7 +11158,7 @@ var PathScurryBase = class {
    *
    * @internal
    */
-  constructor(cwd = process.cwd(), pathImpl, sep2, { nocase, childrenCacheSize = 16 * 1024, fs = defaultFS } = {}) {
+  constructor(cwd = process.cwd(), pathImpl, sep2, { nocase, childrenCacheSize = 16 * 1024, fs } = {}) {
     this.#fs = fsFromOption(fs);
     if (cwd instanceof URL || cwd.startsWith("file://")) {
       cwd = (0, import_url.fileURLToPath)(cwd);
@@ -12789,11 +12789,22 @@ var glob = Object.assign(glob_, {
   unescape: unescape2
 });
 glob.glob = glob;
-
-// source.js
-var source_default = glob;
 export {
-  source_default as default
+  Glob,
+  escape2 as escape,
+  glob,
+  globIterate,
+  globIterateSync,
+  globStream,
+  globStreamSync,
+  globSync,
+  hasMagic,
+  iterate,
+  iterateSync,
+  stream,
+  streamSync,
+  sync,
+  unescape2 as unescape
 };
 /*! Bundled license information:
 
