@@ -1,17 +1,17 @@
-diff --git a/node_modules/path-scurry/dist/mjs/index.js b/node_modules/path-scurry/dist/mjs/index.js
-index 079253a..163c3d1 100644
---- a/node_modules/path-scurry/dist/mjs/index.js
-+++ b/node_modules/path-scurry/dist/mjs/index.js
+diff --git a/node_modules/path-scurry/dist/esm/index.js b/node_modules/path-scurry/dist/esm/index.js
+index 3b11b81..10d2d9f 100644
+--- a/node_modules/path-scurry/dist/esm/index.js
++++ b/node_modules/path-scurry/dist/esm/index.js
 @@ -1,37 +1,10 @@
  import { LRUCache } from 'lru-cache';
- import { posix, win32 } from 'path';
- import { fileURLToPath } from 'url';
--import * as actualFS from 'fs';
+ import { posix, win32 } from 'node:path';
+ import { fileURLToPath } from 'node:url';
 -import { lstatSync, readdir as readdirCB, readdirSync, readlinkSync, realpathSync as rps, } from 'fs';
+-import * as actualFS from 'node:fs';
 -const realpathSync = rps.native;
 -// TODO: test perf of fs/promises realpath vs realpathCB,
 -// since the promises one uses realpath.native
--import { lstat, readdir, readlink, realpath } from 'fs/promises';
+-import { lstat, readdir, readlink, realpath } from 'node:fs/promises';
  import { Minipass } from 'minipass';
 -const defaultFS = {
 -    lstatSync,
@@ -27,8 +27,8 @@ index 079253a..163c3d1 100644
 -    },
 -};
 -// if they just gave us require('fs') then use our default
--const fsFromOption = (fsOption) => !fsOption || fsOption === defaultFS || fsOption === actualFS
--    ? defaultFS
+-const fsFromOption = (fsOption) => !fsOption || fsOption === defaultFS || fsOption === actualFS ?
+-    defaultFS
 -    : {
 -        ...defaultFS,
 -        ...fsOption,
