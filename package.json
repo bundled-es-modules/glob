@@ -1,6 +1,6 @@
 {
   "name": "@bundled-es-modules/glob",
-  "version": "10.3.13",
+  "version": "10.4.2",
   "description": "mirror of glob, bundled and exposed as ES module including for browser",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
   "type": "module",
