@@ -241,888 +241,6 @@ var require_brace_expansion = __commonJS({
   }
 });
 
-// node_modules/path/node_modules/util/support/isBufferBrowser.js
-var require_isBufferBrowser = __commonJS({
-  "node_modules/path/node_modules/util/support/isBufferBrowser.js"(exports, module) {
-    module.exports = function isBuffer(arg) {
-      return arg && typeof arg === "object" && typeof arg.copy === "function" && typeof arg.fill === "function" && typeof arg.readUInt8 === "function";
-    };
-  }
-});
-
-// node_modules/path/node_modules/inherits/inherits_browser.js
-var require_inherits_browser = __commonJS({
-  "node_modules/path/node_modules/inherits/inherits_browser.js"(exports, module) {
-    if (typeof Object.create === "function") {
-      module.exports = function inherits(ctor, superCtor) {
-        ctor.super_ = superCtor;
-        ctor.prototype = Object.create(superCtor.prototype, {
-          constructor: {
-            value: ctor,
-            enumerable: false,
-            writable: true,
-            configurable: true
-          }
-        });
-      };
-    } else {
-      module.exports = function inherits(ctor, superCtor) {
-        ctor.super_ = superCtor;
-        var TempCtor = function() {
-        };
-        TempCtor.prototype = superCtor.prototype;
-        ctor.prototype = new TempCtor();
-        ctor.prototype.constructor = ctor;
-      };
-    }
-  }
-});
-
-// node_modules/path/node_modules/util/util.js
-var require_util = __commonJS({
-  "node_modules/path/node_modules/util/util.js"(exports) {
-    var formatRegExp = /%[sdj%]/g;
-    exports.format = function(f) {
-      if (!isString(f)) {
-        var objects = [];
-        for (var i = 0; i < arguments.length; i++) {
-          objects.push(inspect(arguments[i]));
-        }
-        return objects.join(" ");
-      }
-      var i = 1;
-      var args = arguments;
-      var len = args.length;
-      var str = String(f).replace(formatRegExp, function(x2) {
-        if (x2 === "%%")
-          return "%";
-        if (i >= len)
-          return x2;
-        switch (x2) {
-          case "%s":
-            return String(args[i++]);
-          case "%d":
-            return Number(args[i++]);
-          case "%j":
-            try {
-              return JSON.stringify(args[i++]);
-            } catch (_) {
-              return "[Circular]";
-            }
-          default:
-            return x2;
-        }
-      });
-      for (var x = args[i]; i < len; x = args[++i]) {
-        if (isNull(x) || !isObject(x)) {
-          str += " " + x;
-        } else {
-          str += " " + inspect(x);
-        }
-      }
-      return str;
-    };
-    exports.deprecate = function(fn, msg) {
-      if (isUndefined(global.process)) {
-        return function() {
-          return exports.deprecate(fn, msg).apply(this, arguments);
-        };
-      }
-      if (process.noDeprecation === true) {
-        return fn;
-      }
-      var warned2 = false;
-      function deprecated() {
-        if (!warned2) {
-          if (process.throwDeprecation) {
-            throw new Error(msg);
-          } else if (process.traceDeprecation) {
-            console.trace(msg);
-          } else {
-            console.error(msg);
-          }
-          warned2 = true;
-        }
-        return fn.apply(this, arguments);
-      }
-      return deprecated;
-    };
-    var debugs = {};
-    var debugEnviron;
-    exports.debuglog = function(set) {
-      if (isUndefined(debugEnviron))
-        debugEnviron = process.env.NODE_DEBUG || "";
-      set = set.toUpperCase();
-      if (!debugs[set]) {
-        if (new RegExp("\\b" + set + "\\b", "i").test(debugEnviron)) {
-          var pid = process.pid;
-          debugs[set] = function() {
-            var msg = exports.format.apply(exports, arguments);
-            console.error("%s %d: %s", set, pid, msg);
-          };
-        } else {
-          debugs[set] = function() {
-          };
-        }
-      }
-      return debugs[set];
-    };
-    function inspect(obj, opts) {
-      var ctx = {
-        seen: [],
-        stylize: stylizeNoColor
-      };
-      if (arguments.length >= 3)
-        ctx.depth = arguments[2];
-      if (arguments.length >= 4)
-        ctx.colors = arguments[3];
-      if (isBoolean(opts)) {
-        ctx.showHidden = opts;
-      } else if (opts) {
-        exports._extend(ctx, opts);
-      }
-      if (isUndefined(ctx.showHidden))
-        ctx.showHidden = false;
-      if (isUndefined(ctx.depth))
-        ctx.depth = 2;
-      if (isUndefined(ctx.colors))
-        ctx.colors = false;
-      if (isUndefined(ctx.customInspect))
-        ctx.customInspect = true;
-      if (ctx.colors)
-        ctx.stylize = stylizeWithColor;
-      return formatValue(ctx, obj, ctx.depth);
-    }
-    exports.inspect = inspect;
-    inspect.colors = {
-      "bold": [1, 22],
-      "italic": [3, 23],
-      "underline": [4, 24],
-      "inverse": [7, 27],
-      "white": [37, 39],
-      "grey": [90, 39],
-      "black": [30, 39],
-      "blue": [34, 39],
-      "cyan": [36, 39],
-      "green": [32, 39],
-      "magenta": [35, 39],
-      "red": [31, 39],
-      "yellow": [33, 39]
-    };
-    inspect.styles = {
-      "special": "cyan",
-      "number": "yellow",
-      "boolean": "yellow",
-      "undefined": "grey",
-      "null": "bold",
-      "string": "green",
-      "date": "magenta",
-      // "name": intentionally not styling
-      "regexp": "red"
-    };
-    function stylizeWithColor(str, styleType) {
-      var style = inspect.styles[styleType];
-      if (style) {
-        return "\x1B[" + inspect.colors[style][0] + "m" + str + "\x1B[" + inspect.colors[style][1] + "m";
-      } else {
-        return str;
-      }
-    }
-    function stylizeNoColor(str, styleType) {
-      return str;
-    }
-    function arrayToHash(array) {
-      var hash = {};
-      array.forEach(function(val, idx) {
-        hash[val] = true;
-      });
-      return hash;
-    }
-    function formatValue(ctx, value, recurseTimes) {
-      if (ctx.customInspect && value && isFunction(value.inspect) && // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect && // Also filter out any prototype objects using the circular check.
-      !(value.constructor && value.constructor.prototype === value)) {
-        var ret = value.inspect(recurseTimes, ctx);
-        if (!isString(ret)) {
-          ret = formatValue(ctx, ret, recurseTimes);
-        }
-        return ret;
-      }
-      var primitive = formatPrimitive(ctx, value);
-      if (primitive) {
-        return primitive;
-      }
-      var keys = Object.keys(value);
-      var visibleKeys = arrayToHash(keys);
-      if (ctx.showHidden) {
-        keys = Object.getOwnPropertyNames(value);
-      }
-      if (isError(value) && (keys.indexOf("message") >= 0 || keys.indexOf("description") >= 0)) {
-        return formatError(value);
-      }
-      if (keys.length === 0) {
-        if (isFunction(value)) {
-          var name = value.name ? ": " + value.name : "";
-          return ctx.stylize("[Function" + name + "]", "special");
-        }
-        if (isRegExp(value)) {
-          return ctx.stylize(RegExp.prototype.toString.call(value), "regexp");
-        }
-        if (isDate(value)) {
-          return ctx.stylize(Date.prototype.toString.call(value), "date");
-        }
-        if (isError(value)) {
-          return formatError(value);
-        }
-      }
-      var base = "", array = false, braces = ["{", "}"];
-      if (isArray(value)) {
-        array = true;
-        braces = ["[", "]"];
-      }
-      if (isFunction(value)) {
-        var n = value.name ? ": " + value.name : "";
-        base = " [Function" + n + "]";
-      }
-      if (isRegExp(value)) {
-        base = " " + RegExp.prototype.toString.call(value);
-      }
-      if (isDate(value)) {
-        base = " " + Date.prototype.toUTCString.call(value);
-      }
-      if (isError(value)) {
-        base = " " + formatError(value);
-      }
-      if (keys.length === 0 && (!array || value.length == 0)) {
-        return braces[0] + base + braces[1];
-      }
-      if (recurseTimes < 0) {
-        if (isRegExp(value)) {
-          return ctx.stylize(RegExp.prototype.toString.call(value), "regexp");
-        } else {
-          return ctx.stylize("[Object]", "special");
-        }
-      }
-      ctx.seen.push(value);
-      var output;
-      if (array) {
-        output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-      } else {
-        output = keys.map(function(key) {
-          return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-        });
-      }
-      ctx.seen.pop();
-      return reduceToSingleString(output, base, braces);
-    }
-    function formatPrimitive(ctx, value) {
-      if (isUndefined(value))
-        return ctx.stylize("undefined", "undefined");
-      if (isString(value)) {
-        var simple = "'" + JSON.stringify(value).replace(/^"|"$/g, "").replace(/'/g, "\\'").replace(/\\"/g, '"') + "'";
-        return ctx.stylize(simple, "string");
-      }
-      if (isNumber(value))
-        return ctx.stylize("" + value, "number");
-      if (isBoolean(value))
-        return ctx.stylize("" + value, "boolean");
-      if (isNull(value))
-        return ctx.stylize("null", "null");
-    }
-    function formatError(value) {
-      return "[" + Error.prototype.toString.call(value) + "]";
-    }
-    function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-      var output = [];
-      for (var i = 0, l = value.length; i < l; ++i) {
-        if (hasOwnProperty(value, String(i))) {
-          output.push(formatProperty(
-            ctx,
-            value,
-            recurseTimes,
-            visibleKeys,
-            String(i),
-            true
-          ));
-        } else {
-          output.push("");
-        }
-      }
-      keys.forEach(function(key) {
-        if (!key.match(/^\d+$/)) {
-          output.push(formatProperty(
-            ctx,
-            value,
-            recurseTimes,
-            visibleKeys,
-            key,
-            true
-          ));
-        }
-      });
-      return output;
-    }
-    function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-      var name, str, desc;
-      desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-      if (desc.get) {
-        if (desc.set) {
-          str = ctx.stylize("[Getter/Setter]", "special");
-        } else {
-          str = ctx.stylize("[Getter]", "special");
-        }
-      } else {
-        if (desc.set) {
-          str = ctx.stylize("[Setter]", "special");
-        }
-      }
-      if (!hasOwnProperty(visibleKeys, key)) {
-        name = "[" + key + "]";
-      }
-      if (!str) {
-        if (ctx.seen.indexOf(desc.value) < 0) {
-          if (isNull(recurseTimes)) {
-            str = formatValue(ctx, desc.value, null);
-          } else {
-            str = formatValue(ctx, desc.value, recurseTimes - 1);
-          }
-          if (str.indexOf("\n") > -1) {
-            if (array) {
-              str = str.split("\n").map(function(line) {
-                return "  " + line;
-              }).join("\n").substr(2);
-            } else {
-              str = "\n" + str.split("\n").map(function(line) {
-                return "   " + line;
-              }).join("\n");
-            }
-          }
-        } else {
-          str = ctx.stylize("[Circular]", "special");
-        }
-      }
-      if (isUndefined(name)) {
-        if (array && key.match(/^\d+$/)) {
-          return str;
-        }
-        name = JSON.stringify("" + key);
-        if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-          name = name.substr(1, name.length - 2);
-          name = ctx.stylize(name, "name");
-        } else {
-          name = name.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'");
-          name = ctx.stylize(name, "string");
-        }
-      }
-      return name + ": " + str;
-    }
-    function reduceToSingleString(output, base, braces) {
-      var numLinesEst = 0;
-      var length = output.reduce(function(prev, cur) {
-        numLinesEst++;
-        if (cur.indexOf("\n") >= 0)
-          numLinesEst++;
-        return prev + cur.replace(/\u001b\[\d\d?m/g, "").length + 1;
-      }, 0);
-      if (length > 60) {
-        return braces[0] + (base === "" ? "" : base + "\n ") + " " + output.join(",\n  ") + " " + braces[1];
-      }
-      return braces[0] + base + " " + output.join(", ") + " " + braces[1];
-    }
-    function isArray(ar) {
-      return Array.isArray(ar);
-    }
-    exports.isArray = isArray;
-    function isBoolean(arg) {
-      return typeof arg === "boolean";
-    }
-    exports.isBoolean = isBoolean;
-    function isNull(arg) {
-      return arg === null;
-    }
-    exports.isNull = isNull;
-    function isNullOrUndefined(arg) {
-      return arg == null;
-    }
-    exports.isNullOrUndefined = isNullOrUndefined;
-    function isNumber(arg) {
-      return typeof arg === "number";
-    }
-    exports.isNumber = isNumber;
-    function isString(arg) {
-      return typeof arg === "string";
-    }
-    exports.isString = isString;
-    function isSymbol(arg) {
-      return typeof arg === "symbol";
-    }
-    exports.isSymbol = isSymbol;
-    function isUndefined(arg) {
-      return arg === void 0;
-    }
-    exports.isUndefined = isUndefined;
-    function isRegExp(re) {
-      return isObject(re) && objectToString(re) === "[object RegExp]";
-    }
-    exports.isRegExp = isRegExp;
-    function isObject(arg) {
-      return typeof arg === "object" && arg !== null;
-    }
-    exports.isObject = isObject;
-    function isDate(d) {
-      return isObject(d) && objectToString(d) === "[object Date]";
-    }
-    exports.isDate = isDate;
-    function isError(e) {
-      return isObject(e) && (objectToString(e) === "[object Error]" || e instanceof Error);
-    }
-    exports.isError = isError;
-    function isFunction(arg) {
-      return typeof arg === "function";
-    }
-    exports.isFunction = isFunction;
-    function isPrimitive(arg) {
-      return arg === null || typeof arg === "boolean" || typeof arg === "number" || typeof arg === "string" || typeof arg === "symbol" || // ES6 symbol
-      typeof arg === "undefined";
-    }
-    exports.isPrimitive = isPrimitive;
-    exports.isBuffer = require_isBufferBrowser();
-    function objectToString(o) {
-      return Object.prototype.toString.call(o);
-    }
-    function pad(n) {
-      return n < 10 ? "0" + n.toString(10) : n.toString(10);
-    }
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    function timestamp() {
-      var d = /* @__PURE__ */ new Date();
-      var time = [
-        pad(d.getHours()),
-        pad(d.getMinutes()),
-        pad(d.getSeconds())
-      ].join(":");
-      return [d.getDate(), months[d.getMonth()], time].join(" ");
-    }
-    exports.log = function() {
-      console.log("%s - %s", timestamp(), exports.format.apply(exports, arguments));
-    };
-    exports.inherits = require_inherits_browser();
-    exports._extend = function(origin, add) {
-      if (!add || !isObject(add))
-        return origin;
-      var keys = Object.keys(add);
-      var i = keys.length;
-      while (i--) {
-        origin[keys[i]] = add[keys[i]];
-      }
-      return origin;
-    };
-    function hasOwnProperty(obj, prop) {
-      return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-  }
-});
-
-// node_modules/path/path.js
-var require_path = __commonJS({
-  "node_modules/path/path.js"(exports, module) {
-    "use strict";
-    var isWindows = process.platform === "win32";
-    var util = require_util();
-    function normalizeArray(parts, allowAboveRoot) {
-      var res = [];
-      for (var i = 0; i < parts.length; i++) {
-        var p = parts[i];
-        if (!p || p === ".")
-          continue;
-        if (p === "..") {
-          if (res.length && res[res.length - 1] !== "..") {
-            res.pop();
-          } else if (allowAboveRoot) {
-            res.push("..");
-          }
-        } else {
-          res.push(p);
-        }
-      }
-      return res;
-    }
-    function trimArray(arr) {
-      var lastIndex = arr.length - 1;
-      var start = 0;
-      for (; start <= lastIndex; start++) {
-        if (arr[start])
-          break;
-      }
-      var end = lastIndex;
-      for (; end >= 0; end--) {
-        if (arr[end])
-          break;
-      }
-      if (start === 0 && end === lastIndex)
-        return arr;
-      if (start > end)
-        return [];
-      return arr.slice(start, end + 1);
-    }
-    var splitDeviceRe = /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/;
-    var splitTailRe = /^([\s\S]*?)((?:\.{1,2}|[^\\\/]+?|)(\.[^.\/\\]*|))(?:[\\\/]*)$/;
-    var win322 = {};
-    function win32SplitPath(filename) {
-      var result = splitDeviceRe.exec(filename), device = (result[1] || "") + (result[2] || ""), tail = result[3] || "";
-      var result2 = splitTailRe.exec(tail), dir = result2[1], basename = result2[2], ext2 = result2[3];
-      return [device, dir, basename, ext2];
-    }
-    function win32StatPath(path2) {
-      var result = splitDeviceRe.exec(path2), device = result[1] || "", isUnc = !!device && device[1] !== ":";
-      return {
-        device,
-        isUnc,
-        isAbsolute: isUnc || !!result[2],
-        // UNC paths are always absolute
-        tail: result[3]
-      };
-    }
-    function normalizeUNCRoot(device) {
-      return "\\\\" + device.replace(/^[\\\/]+/, "").replace(/[\\\/]+/g, "\\");
-    }
-    win322.resolve = function() {
-      var resolvedDevice = "", resolvedTail = "", resolvedAbsolute = false;
-      for (var i = arguments.length - 1; i >= -1; i--) {
-        var path2;
-        if (i >= 0) {
-          path2 = arguments[i];
-        } else if (!resolvedDevice) {
-          path2 = process.cwd();
-        } else {
-          path2 = process.env["=" + resolvedDevice];
-          if (!path2 || path2.substr(0, 3).toLowerCase() !== resolvedDevice.toLowerCase() + "\\") {
-            path2 = resolvedDevice + "\\";
-          }
-        }
-        if (!util.isString(path2)) {
-          throw new TypeError("Arguments to path.resolve must be strings");
-        } else if (!path2) {
-          continue;
-        }
-        var result = win32StatPath(path2), device = result.device, isUnc = result.isUnc, isAbsolute = result.isAbsolute, tail = result.tail;
-        if (device && resolvedDevice && device.toLowerCase() !== resolvedDevice.toLowerCase()) {
-          continue;
-        }
-        if (!resolvedDevice) {
-          resolvedDevice = device;
-        }
-        if (!resolvedAbsolute) {
-          resolvedTail = tail + "\\" + resolvedTail;
-          resolvedAbsolute = isAbsolute;
-        }
-        if (resolvedDevice && resolvedAbsolute) {
-          break;
-        }
-      }
-      if (isUnc) {
-        resolvedDevice = normalizeUNCRoot(resolvedDevice);
-      }
-      resolvedTail = normalizeArray(
-        resolvedTail.split(/[\\\/]+/),
-        !resolvedAbsolute
-      ).join("\\");
-      return resolvedDevice + (resolvedAbsolute ? "\\" : "") + resolvedTail || ".";
-    };
-    win322.normalize = function(path2) {
-      var result = win32StatPath(path2), device = result.device, isUnc = result.isUnc, isAbsolute = result.isAbsolute, tail = result.tail, trailingSlash = /[\\\/]$/.test(tail);
-      tail = normalizeArray(tail.split(/[\\\/]+/), !isAbsolute).join("\\");
-      if (!tail && !isAbsolute) {
-        tail = ".";
-      }
-      if (tail && trailingSlash) {
-        tail += "\\";
-      }
-      if (isUnc) {
-        device = normalizeUNCRoot(device);
-      }
-      return device + (isAbsolute ? "\\" : "") + tail;
-    };
-    win322.isAbsolute = function(path2) {
-      return win32StatPath(path2).isAbsolute;
-    };
-    win322.join = function() {
-      var paths = [];
-      for (var i = 0; i < arguments.length; i++) {
-        var arg = arguments[i];
-        if (!util.isString(arg)) {
-          throw new TypeError("Arguments to path.join must be strings");
-        }
-        if (arg) {
-          paths.push(arg);
-        }
-      }
-      var joined = paths.join("\\");
-      if (!/^[\\\/]{2}[^\\\/]/.test(paths[0])) {
-        joined = joined.replace(/^[\\\/]{2,}/, "\\");
-      }
-      return win322.normalize(joined);
-    };
-    win322.relative = function(from, to) {
-      from = win322.resolve(from);
-      to = win322.resolve(to);
-      var lowerFrom = from.toLowerCase();
-      var lowerTo = to.toLowerCase();
-      var toParts = trimArray(to.split("\\"));
-      var lowerFromParts = trimArray(lowerFrom.split("\\"));
-      var lowerToParts = trimArray(lowerTo.split("\\"));
-      var length = Math.min(lowerFromParts.length, lowerToParts.length);
-      var samePartsLength = length;
-      for (var i = 0; i < length; i++) {
-        if (lowerFromParts[i] !== lowerToParts[i]) {
-          samePartsLength = i;
-          break;
-        }
-      }
-      if (samePartsLength == 0) {
-        return to;
-      }
-      var outputParts = [];
-      for (var i = samePartsLength; i < lowerFromParts.length; i++) {
-        outputParts.push("..");
-      }
-      outputParts = outputParts.concat(toParts.slice(samePartsLength));
-      return outputParts.join("\\");
-    };
-    win322._makeLong = function(path2) {
-      if (!util.isString(path2))
-        return path2;
-      if (!path2) {
-        return "";
-      }
-      var resolvedPath = win322.resolve(path2);
-      if (/^[a-zA-Z]\:\\/.test(resolvedPath)) {
-        return "\\\\?\\" + resolvedPath;
-      } else if (/^\\\\[^?.]/.test(resolvedPath)) {
-        return "\\\\?\\UNC\\" + resolvedPath.substring(2);
-      }
-      return path2;
-    };
-    win322.dirname = function(path2) {
-      var result = win32SplitPath(path2), root = result[0], dir = result[1];
-      if (!root && !dir) {
-        return ".";
-      }
-      if (dir) {
-        dir = dir.substr(0, dir.length - 1);
-      }
-      return root + dir;
-    };
-    win322.basename = function(path2, ext2) {
-      var f = win32SplitPath(path2)[2];
-      if (ext2 && f.substr(-1 * ext2.length) === ext2) {
-        f = f.substr(0, f.length - ext2.length);
-      }
-      return f;
-    };
-    win322.extname = function(path2) {
-      return win32SplitPath(path2)[3];
-    };
-    win322.format = function(pathObject) {
-      if (!util.isObject(pathObject)) {
-        throw new TypeError(
-          "Parameter 'pathObject' must be an object, not " + typeof pathObject
-        );
-      }
-      var root = pathObject.root || "";
-      if (!util.isString(root)) {
-        throw new TypeError(
-          "'pathObject.root' must be a string or undefined, not " + typeof pathObject.root
-        );
-      }
-      var dir = pathObject.dir;
-      var base = pathObject.base || "";
-      if (!dir) {
-        return base;
-      }
-      if (dir[dir.length - 1] === win322.sep) {
-        return dir + base;
-      }
-      return dir + win322.sep + base;
-    };
-    win322.parse = function(pathString) {
-      if (!util.isString(pathString)) {
-        throw new TypeError(
-          "Parameter 'pathString' must be a string, not " + typeof pathString
-        );
-      }
-      var allParts = win32SplitPath(pathString);
-      if (!allParts || allParts.length !== 4) {
-        throw new TypeError("Invalid path '" + pathString + "'");
-      }
-      return {
-        root: allParts[0],
-        dir: allParts[0] + allParts[1].slice(0, -1),
-        base: allParts[2],
-        ext: allParts[3],
-        name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
-      };
-    };
-    win322.sep = "\\";
-    win322.delimiter = ";";
-    var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-    var posix2 = {};
-    function posixSplitPath(filename) {
-      return splitPathRe.exec(filename).slice(1);
-    }
-    posix2.resolve = function() {
-      var resolvedPath = "", resolvedAbsolute = false;
-      for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-        var path2 = i >= 0 ? arguments[i] : process.cwd();
-        if (!util.isString(path2)) {
-          throw new TypeError("Arguments to path.resolve must be strings");
-        } else if (!path2) {
-          continue;
-        }
-        resolvedPath = path2 + "/" + resolvedPath;
-        resolvedAbsolute = path2[0] === "/";
-      }
-      resolvedPath = normalizeArray(
-        resolvedPath.split("/"),
-        !resolvedAbsolute
-      ).join("/");
-      return (resolvedAbsolute ? "/" : "") + resolvedPath || ".";
-    };
-    posix2.normalize = function(path2) {
-      var isAbsolute = posix2.isAbsolute(path2), trailingSlash = path2 && path2[path2.length - 1] === "/";
-      path2 = normalizeArray(path2.split("/"), !isAbsolute).join("/");
-      if (!path2 && !isAbsolute) {
-        path2 = ".";
-      }
-      if (path2 && trailingSlash) {
-        path2 += "/";
-      }
-      return (isAbsolute ? "/" : "") + path2;
-    };
-    posix2.isAbsolute = function(path2) {
-      return path2.charAt(0) === "/";
-    };
-    posix2.join = function() {
-      var path2 = "";
-      for (var i = 0; i < arguments.length; i++) {
-        var segment = arguments[i];
-        if (!util.isString(segment)) {
-          throw new TypeError("Arguments to path.join must be strings");
-        }
-        if (segment) {
-          if (!path2) {
-            path2 += segment;
-          } else {
-            path2 += "/" + segment;
-          }
-        }
-      }
-      return posix2.normalize(path2);
-    };
-    posix2.relative = function(from, to) {
-      from = posix2.resolve(from).substr(1);
-      to = posix2.resolve(to).substr(1);
-      var fromParts = trimArray(from.split("/"));
-      var toParts = trimArray(to.split("/"));
-      var length = Math.min(fromParts.length, toParts.length);
-      var samePartsLength = length;
-      for (var i = 0; i < length; i++) {
-        if (fromParts[i] !== toParts[i]) {
-          samePartsLength = i;
-          break;
-        }
-      }
-      var outputParts = [];
-      for (var i = samePartsLength; i < fromParts.length; i++) {
-        outputParts.push("..");
-      }
-      outputParts = outputParts.concat(toParts.slice(samePartsLength));
-      return outputParts.join("/");
-    };
-    posix2._makeLong = function(path2) {
-      return path2;
-    };
-    posix2.dirname = function(path2) {
-      var result = posixSplitPath(path2), root = result[0], dir = result[1];
-      if (!root && !dir) {
-        return ".";
-      }
-      if (dir) {
-        dir = dir.substr(0, dir.length - 1);
-      }
-      return root + dir;
-    };
-    posix2.basename = function(path2, ext2) {
-      var f = posixSplitPath(path2)[2];
-      if (ext2 && f.substr(-1 * ext2.length) === ext2) {
-        f = f.substr(0, f.length - ext2.length);
-      }
-      return f;
-    };
-    posix2.extname = function(path2) {
-      return posixSplitPath(path2)[3];
-    };
-    posix2.format = function(pathObject) {
-      if (!util.isObject(pathObject)) {
-        throw new TypeError(
-          "Parameter 'pathObject' must be an object, not " + typeof pathObject
-        );
-      }
-      var root = pathObject.root || "";
-      if (!util.isString(root)) {
-        throw new TypeError(
-          "'pathObject.root' must be a string or undefined, not " + typeof pathObject.root
-        );
-      }
-      var dir = pathObject.dir ? pathObject.dir + posix2.sep : "";
-      var base = pathObject.base || "";
-      return dir + base;
-    };
-    posix2.parse = function(pathString) {
-      if (!util.isString(pathString)) {
-        throw new TypeError(
-          "Parameter 'pathString' must be a string, not " + typeof pathString
-        );
-      }
-      var allParts = posixSplitPath(pathString);
-      if (!allParts || allParts.length !== 4) {
-        throw new TypeError("Invalid path '" + pathString + "'");
-      }
-      allParts[1] = allParts[1] || "";
-      allParts[2] = allParts[2] || "";
-      allParts[3] = allParts[3] || "";
-      return {
-        root: allParts[0],
-        dir: allParts[0] + allParts[1].slice(0, -1),
-        base: allParts[2],
-        ext: allParts[3],
-        name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
-      };
-    };
-    posix2.sep = "/";
-    posix2.delimiter = ":";
-    if (isWindows)
-      module.exports = win322;
-    else
-      module.exports = posix2;
-    module.exports.posix = posix2;
-    module.exports.win32 = win322;
-  }
-});
-
 // node_modules/punycode/punycode.js
 var require_punycode = __commonJS({
   "node_modules/punycode/punycode.js"(exports, module) {
@@ -2136,7 +1254,7 @@ var require_callBound = __commonJS({
 });
 
 // (disabled):node_modules/object-inspect/util.inspect
-var require_util2 = __commonJS({
+var require_util = __commonJS({
   "(disabled):node_modules/object-inspect/util.inspect"() {
   }
 });
@@ -2195,7 +1313,7 @@ var require_object_inspect = __commonJS({
       }
       return $replace.call(str, sepRegex, "$&_");
     }
-    var utilInspect = require_util2();
+    var utilInspect = require_util();
     var inspectCustom = utilInspect.custom;
     var inspectSymbol = isSymbol(inspectCustom) ? inspectCustom : null;
     module.exports = function inspect_(obj, options, depth, seen) {
@@ -4067,6 +3185,888 @@ var require_url = __commonJS({
   }
 });
 
+// node_modules/path/node_modules/util/support/isBufferBrowser.js
+var require_isBufferBrowser = __commonJS({
+  "node_modules/path/node_modules/util/support/isBufferBrowser.js"(exports, module) {
+    module.exports = function isBuffer(arg) {
+      return arg && typeof arg === "object" && typeof arg.copy === "function" && typeof arg.fill === "function" && typeof arg.readUInt8 === "function";
+    };
+  }
+});
+
+// node_modules/path/node_modules/inherits/inherits_browser.js
+var require_inherits_browser = __commonJS({
+  "node_modules/path/node_modules/inherits/inherits_browser.js"(exports, module) {
+    if (typeof Object.create === "function") {
+      module.exports = function inherits(ctor, superCtor) {
+        ctor.super_ = superCtor;
+        ctor.prototype = Object.create(superCtor.prototype, {
+          constructor: {
+            value: ctor,
+            enumerable: false,
+            writable: true,
+            configurable: true
+          }
+        });
+      };
+    } else {
+      module.exports = function inherits(ctor, superCtor) {
+        ctor.super_ = superCtor;
+        var TempCtor = function() {
+        };
+        TempCtor.prototype = superCtor.prototype;
+        ctor.prototype = new TempCtor();
+        ctor.prototype.constructor = ctor;
+      };
+    }
+  }
+});
+
+// node_modules/path/node_modules/util/util.js
+var require_util2 = __commonJS({
+  "node_modules/path/node_modules/util/util.js"(exports) {
+    var formatRegExp = /%[sdj%]/g;
+    exports.format = function(f) {
+      if (!isString(f)) {
+        var objects = [];
+        for (var i = 0; i < arguments.length; i++) {
+          objects.push(inspect(arguments[i]));
+        }
+        return objects.join(" ");
+      }
+      var i = 1;
+      var args = arguments;
+      var len = args.length;
+      var str = String(f).replace(formatRegExp, function(x2) {
+        if (x2 === "%%")
+          return "%";
+        if (i >= len)
+          return x2;
+        switch (x2) {
+          case "%s":
+            return String(args[i++]);
+          case "%d":
+            return Number(args[i++]);
+          case "%j":
+            try {
+              return JSON.stringify(args[i++]);
+            } catch (_) {
+              return "[Circular]";
+            }
+          default:
+            return x2;
+        }
+      });
+      for (var x = args[i]; i < len; x = args[++i]) {
+        if (isNull(x) || !isObject(x)) {
+          str += " " + x;
+        } else {
+          str += " " + inspect(x);
+        }
+      }
+      return str;
+    };
+    exports.deprecate = function(fn, msg) {
+      if (isUndefined(global.process)) {
+        return function() {
+          return exports.deprecate(fn, msg).apply(this, arguments);
+        };
+      }
+      if (process.noDeprecation === true) {
+        return fn;
+      }
+      var warned2 = false;
+      function deprecated() {
+        if (!warned2) {
+          if (process.throwDeprecation) {
+            throw new Error(msg);
+          } else if (process.traceDeprecation) {
+            console.trace(msg);
+          } else {
+            console.error(msg);
+          }
+          warned2 = true;
+        }
+        return fn.apply(this, arguments);
+      }
+      return deprecated;
+    };
+    var debugs = {};
+    var debugEnviron;
+    exports.debuglog = function(set) {
+      if (isUndefined(debugEnviron))
+        debugEnviron = process.env.NODE_DEBUG || "";
+      set = set.toUpperCase();
+      if (!debugs[set]) {
+        if (new RegExp("\\b" + set + "\\b", "i").test(debugEnviron)) {
+          var pid = process.pid;
+          debugs[set] = function() {
+            var msg = exports.format.apply(exports, arguments);
+            console.error("%s %d: %s", set, pid, msg);
+          };
+        } else {
+          debugs[set] = function() {
+          };
+        }
+      }
+      return debugs[set];
+    };
+    function inspect(obj, opts) {
+      var ctx = {
+        seen: [],
+        stylize: stylizeNoColor
+      };
+      if (arguments.length >= 3)
+        ctx.depth = arguments[2];
+      if (arguments.length >= 4)
+        ctx.colors = arguments[3];
+      if (isBoolean(opts)) {
+        ctx.showHidden = opts;
+      } else if (opts) {
+        exports._extend(ctx, opts);
+      }
+      if (isUndefined(ctx.showHidden))
+        ctx.showHidden = false;
+      if (isUndefined(ctx.depth))
+        ctx.depth = 2;
+      if (isUndefined(ctx.colors))
+        ctx.colors = false;
+      if (isUndefined(ctx.customInspect))
+        ctx.customInspect = true;
+      if (ctx.colors)
+        ctx.stylize = stylizeWithColor;
+      return formatValue(ctx, obj, ctx.depth);
+    }
+    exports.inspect = inspect;
+    inspect.colors = {
+      "bold": [1, 22],
+      "italic": [3, 23],
+      "underline": [4, 24],
+      "inverse": [7, 27],
+      "white": [37, 39],
+      "grey": [90, 39],
+      "black": [30, 39],
+      "blue": [34, 39],
+      "cyan": [36, 39],
+      "green": [32, 39],
+      "magenta": [35, 39],
+      "red": [31, 39],
+      "yellow": [33, 39]
+    };
+    inspect.styles = {
+      "special": "cyan",
+      "number": "yellow",
+      "boolean": "yellow",
+      "undefined": "grey",
+      "null": "bold",
+      "string": "green",
+      "date": "magenta",
+      // "name": intentionally not styling
+      "regexp": "red"
+    };
+    function stylizeWithColor(str, styleType) {
+      var style = inspect.styles[styleType];
+      if (style) {
+        return "\x1B[" + inspect.colors[style][0] + "m" + str + "\x1B[" + inspect.colors[style][1] + "m";
+      } else {
+        return str;
+      }
+    }
+    function stylizeNoColor(str, styleType) {
+      return str;
+    }
+    function arrayToHash(array) {
+      var hash = {};
+      array.forEach(function(val, idx) {
+        hash[val] = true;
+      });
+      return hash;
+    }
+    function formatValue(ctx, value, recurseTimes) {
+      if (ctx.customInspect && value && isFunction(value.inspect) && // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect && // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+        var ret = value.inspect(recurseTimes, ctx);
+        if (!isString(ret)) {
+          ret = formatValue(ctx, ret, recurseTimes);
+        }
+        return ret;
+      }
+      var primitive = formatPrimitive(ctx, value);
+      if (primitive) {
+        return primitive;
+      }
+      var keys = Object.keys(value);
+      var visibleKeys = arrayToHash(keys);
+      if (ctx.showHidden) {
+        keys = Object.getOwnPropertyNames(value);
+      }
+      if (isError(value) && (keys.indexOf("message") >= 0 || keys.indexOf("description") >= 0)) {
+        return formatError(value);
+      }
+      if (keys.length === 0) {
+        if (isFunction(value)) {
+          var name = value.name ? ": " + value.name : "";
+          return ctx.stylize("[Function" + name + "]", "special");
+        }
+        if (isRegExp(value)) {
+          return ctx.stylize(RegExp.prototype.toString.call(value), "regexp");
+        }
+        if (isDate(value)) {
+          return ctx.stylize(Date.prototype.toString.call(value), "date");
+        }
+        if (isError(value)) {
+          return formatError(value);
+        }
+      }
+      var base = "", array = false, braces = ["{", "}"];
+      if (isArray(value)) {
+        array = true;
+        braces = ["[", "]"];
+      }
+      if (isFunction(value)) {
+        var n = value.name ? ": " + value.name : "";
+        base = " [Function" + n + "]";
+      }
+      if (isRegExp(value)) {
+        base = " " + RegExp.prototype.toString.call(value);
+      }
+      if (isDate(value)) {
+        base = " " + Date.prototype.toUTCString.call(value);
+      }
+      if (isError(value)) {
+        base = " " + formatError(value);
+      }
+      if (keys.length === 0 && (!array || value.length == 0)) {
+        return braces[0] + base + braces[1];
+      }
+      if (recurseTimes < 0) {
+        if (isRegExp(value)) {
+          return ctx.stylize(RegExp.prototype.toString.call(value), "regexp");
+        } else {
+          return ctx.stylize("[Object]", "special");
+        }
+      }
+      ctx.seen.push(value);
+      var output;
+      if (array) {
+        output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+      } else {
+        output = keys.map(function(key) {
+          return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+        });
+      }
+      ctx.seen.pop();
+      return reduceToSingleString(output, base, braces);
+    }
+    function formatPrimitive(ctx, value) {
+      if (isUndefined(value))
+        return ctx.stylize("undefined", "undefined");
+      if (isString(value)) {
+        var simple = "'" + JSON.stringify(value).replace(/^"|"$/g, "").replace(/'/g, "\\'").replace(/\\"/g, '"') + "'";
+        return ctx.stylize(simple, "string");
+      }
+      if (isNumber(value))
+        return ctx.stylize("" + value, "number");
+      if (isBoolean(value))
+        return ctx.stylize("" + value, "boolean");
+      if (isNull(value))
+        return ctx.stylize("null", "null");
+    }
+    function formatError(value) {
+      return "[" + Error.prototype.toString.call(value) + "]";
+    }
+    function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+      var output = [];
+      for (var i = 0, l = value.length; i < l; ++i) {
+        if (hasOwnProperty(value, String(i))) {
+          output.push(formatProperty(
+            ctx,
+            value,
+            recurseTimes,
+            visibleKeys,
+            String(i),
+            true
+          ));
+        } else {
+          output.push("");
+        }
+      }
+      keys.forEach(function(key) {
+        if (!key.match(/^\d+$/)) {
+          output.push(formatProperty(
+            ctx,
+            value,
+            recurseTimes,
+            visibleKeys,
+            key,
+            true
+          ));
+        }
+      });
+      return output;
+    }
+    function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+      var name, str, desc;
+      desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+      if (desc.get) {
+        if (desc.set) {
+          str = ctx.stylize("[Getter/Setter]", "special");
+        } else {
+          str = ctx.stylize("[Getter]", "special");
+        }
+      } else {
+        if (desc.set) {
+          str = ctx.stylize("[Setter]", "special");
+        }
+      }
+      if (!hasOwnProperty(visibleKeys, key)) {
+        name = "[" + key + "]";
+      }
+      if (!str) {
+        if (ctx.seen.indexOf(desc.value) < 0) {
+          if (isNull(recurseTimes)) {
+            str = formatValue(ctx, desc.value, null);
+          } else {
+            str = formatValue(ctx, desc.value, recurseTimes - 1);
+          }
+          if (str.indexOf("\n") > -1) {
+            if (array) {
+              str = str.split("\n").map(function(line) {
+                return "  " + line;
+              }).join("\n").substr(2);
+            } else {
+              str = "\n" + str.split("\n").map(function(line) {
+                return "   " + line;
+              }).join("\n");
+            }
+          }
+        } else {
+          str = ctx.stylize("[Circular]", "special");
+        }
+      }
+      if (isUndefined(name)) {
+        if (array && key.match(/^\d+$/)) {
+          return str;
+        }
+        name = JSON.stringify("" + key);
+        if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+          name = name.substr(1, name.length - 2);
+          name = ctx.stylize(name, "name");
+        } else {
+          name = name.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'");
+          name = ctx.stylize(name, "string");
+        }
+      }
+      return name + ": " + str;
+    }
+    function reduceToSingleString(output, base, braces) {
+      var numLinesEst = 0;
+      var length = output.reduce(function(prev, cur) {
+        numLinesEst++;
+        if (cur.indexOf("\n") >= 0)
+          numLinesEst++;
+        return prev + cur.replace(/\u001b\[\d\d?m/g, "").length + 1;
+      }, 0);
+      if (length > 60) {
+        return braces[0] + (base === "" ? "" : base + "\n ") + " " + output.join(",\n  ") + " " + braces[1];
+      }
+      return braces[0] + base + " " + output.join(", ") + " " + braces[1];
+    }
+    function isArray(ar) {
+      return Array.isArray(ar);
+    }
+    exports.isArray = isArray;
+    function isBoolean(arg) {
+      return typeof arg === "boolean";
+    }
+    exports.isBoolean = isBoolean;
+    function isNull(arg) {
+      return arg === null;
+    }
+    exports.isNull = isNull;
+    function isNullOrUndefined(arg) {
+      return arg == null;
+    }
+    exports.isNullOrUndefined = isNullOrUndefined;
+    function isNumber(arg) {
+      return typeof arg === "number";
+    }
+    exports.isNumber = isNumber;
+    function isString(arg) {
+      return typeof arg === "string";
+    }
+    exports.isString = isString;
+    function isSymbol(arg) {
+      return typeof arg === "symbol";
+    }
+    exports.isSymbol = isSymbol;
+    function isUndefined(arg) {
+      return arg === void 0;
+    }
+    exports.isUndefined = isUndefined;
+    function isRegExp(re) {
+      return isObject(re) && objectToString(re) === "[object RegExp]";
+    }
+    exports.isRegExp = isRegExp;
+    function isObject(arg) {
+      return typeof arg === "object" && arg !== null;
+    }
+    exports.isObject = isObject;
+    function isDate(d) {
+      return isObject(d) && objectToString(d) === "[object Date]";
+    }
+    exports.isDate = isDate;
+    function isError(e) {
+      return isObject(e) && (objectToString(e) === "[object Error]" || e instanceof Error);
+    }
+    exports.isError = isError;
+    function isFunction(arg) {
+      return typeof arg === "function";
+    }
+    exports.isFunction = isFunction;
+    function isPrimitive(arg) {
+      return arg === null || typeof arg === "boolean" || typeof arg === "number" || typeof arg === "string" || typeof arg === "symbol" || // ES6 symbol
+      typeof arg === "undefined";
+    }
+    exports.isPrimitive = isPrimitive;
+    exports.isBuffer = require_isBufferBrowser();
+    function objectToString(o) {
+      return Object.prototype.toString.call(o);
+    }
+    function pad(n) {
+      return n < 10 ? "0" + n.toString(10) : n.toString(10);
+    }
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    function timestamp() {
+      var d = /* @__PURE__ */ new Date();
+      var time = [
+        pad(d.getHours()),
+        pad(d.getMinutes()),
+        pad(d.getSeconds())
+      ].join(":");
+      return [d.getDate(), months[d.getMonth()], time].join(" ");
+    }
+    exports.log = function() {
+      console.log("%s - %s", timestamp(), exports.format.apply(exports, arguments));
+    };
+    exports.inherits = require_inherits_browser();
+    exports._extend = function(origin, add) {
+      if (!add || !isObject(add))
+        return origin;
+      var keys = Object.keys(add);
+      var i = keys.length;
+      while (i--) {
+        origin[keys[i]] = add[keys[i]];
+      }
+      return origin;
+    };
+    function hasOwnProperty(obj, prop) {
+      return Object.prototype.hasOwnProperty.call(obj, prop);
+    }
+  }
+});
+
+// node_modules/path/path.js
+var require_path = __commonJS({
+  "node_modules/path/path.js"(exports, module) {
+    "use strict";
+    var isWindows = process.platform === "win32";
+    var util = require_util2();
+    function normalizeArray(parts, allowAboveRoot) {
+      var res = [];
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        if (!p || p === ".")
+          continue;
+        if (p === "..") {
+          if (res.length && res[res.length - 1] !== "..") {
+            res.pop();
+          } else if (allowAboveRoot) {
+            res.push("..");
+          }
+        } else {
+          res.push(p);
+        }
+      }
+      return res;
+    }
+    function trimArray(arr) {
+      var lastIndex = arr.length - 1;
+      var start = 0;
+      for (; start <= lastIndex; start++) {
+        if (arr[start])
+          break;
+      }
+      var end = lastIndex;
+      for (; end >= 0; end--) {
+        if (arr[end])
+          break;
+      }
+      if (start === 0 && end === lastIndex)
+        return arr;
+      if (start > end)
+        return [];
+      return arr.slice(start, end + 1);
+    }
+    var splitDeviceRe = /^([a-zA-Z]:|[\\\/]{2}[^\\\/]+[\\\/]+[^\\\/]+)?([\\\/])?([\s\S]*?)$/;
+    var splitTailRe = /^([\s\S]*?)((?:\.{1,2}|[^\\\/]+?|)(\.[^.\/\\]*|))(?:[\\\/]*)$/;
+    var win322 = {};
+    function win32SplitPath(filename) {
+      var result = splitDeviceRe.exec(filename), device = (result[1] || "") + (result[2] || ""), tail = result[3] || "";
+      var result2 = splitTailRe.exec(tail), dir = result2[1], basename = result2[2], ext2 = result2[3];
+      return [device, dir, basename, ext2];
+    }
+    function win32StatPath(path2) {
+      var result = splitDeviceRe.exec(path2), device = result[1] || "", isUnc = !!device && device[1] !== ":";
+      return {
+        device,
+        isUnc,
+        isAbsolute: isUnc || !!result[2],
+        // UNC paths are always absolute
+        tail: result[3]
+      };
+    }
+    function normalizeUNCRoot(device) {
+      return "\\\\" + device.replace(/^[\\\/]+/, "").replace(/[\\\/]+/g, "\\");
+    }
+    win322.resolve = function() {
+      var resolvedDevice = "", resolvedTail = "", resolvedAbsolute = false;
+      for (var i = arguments.length - 1; i >= -1; i--) {
+        var path2;
+        if (i >= 0) {
+          path2 = arguments[i];
+        } else if (!resolvedDevice) {
+          path2 = process.cwd();
+        } else {
+          path2 = process.env["=" + resolvedDevice];
+          if (!path2 || path2.substr(0, 3).toLowerCase() !== resolvedDevice.toLowerCase() + "\\") {
+            path2 = resolvedDevice + "\\";
+          }
+        }
+        if (!util.isString(path2)) {
+          throw new TypeError("Arguments to path.resolve must be strings");
+        } else if (!path2) {
+          continue;
+        }
+        var result = win32StatPath(path2), device = result.device, isUnc = result.isUnc, isAbsolute = result.isAbsolute, tail = result.tail;
+        if (device && resolvedDevice && device.toLowerCase() !== resolvedDevice.toLowerCase()) {
+          continue;
+        }
+        if (!resolvedDevice) {
+          resolvedDevice = device;
+        }
+        if (!resolvedAbsolute) {
+          resolvedTail = tail + "\\" + resolvedTail;
+          resolvedAbsolute = isAbsolute;
+        }
+        if (resolvedDevice && resolvedAbsolute) {
+          break;
+        }
+      }
+      if (isUnc) {
+        resolvedDevice = normalizeUNCRoot(resolvedDevice);
+      }
+      resolvedTail = normalizeArray(
+        resolvedTail.split(/[\\\/]+/),
+        !resolvedAbsolute
+      ).join("\\");
+      return resolvedDevice + (resolvedAbsolute ? "\\" : "") + resolvedTail || ".";
+    };
+    win322.normalize = function(path2) {
+      var result = win32StatPath(path2), device = result.device, isUnc = result.isUnc, isAbsolute = result.isAbsolute, tail = result.tail, trailingSlash = /[\\\/]$/.test(tail);
+      tail = normalizeArray(tail.split(/[\\\/]+/), !isAbsolute).join("\\");
+      if (!tail && !isAbsolute) {
+        tail = ".";
+      }
+      if (tail && trailingSlash) {
+        tail += "\\";
+      }
+      if (isUnc) {
+        device = normalizeUNCRoot(device);
+      }
+      return device + (isAbsolute ? "\\" : "") + tail;
+    };
+    win322.isAbsolute = function(path2) {
+      return win32StatPath(path2).isAbsolute;
+    };
+    win322.join = function() {
+      var paths = [];
+      for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (!util.isString(arg)) {
+          throw new TypeError("Arguments to path.join must be strings");
+        }
+        if (arg) {
+          paths.push(arg);
+        }
+      }
+      var joined = paths.join("\\");
+      if (!/^[\\\/]{2}[^\\\/]/.test(paths[0])) {
+        joined = joined.replace(/^[\\\/]{2,}/, "\\");
+      }
+      return win322.normalize(joined);
+    };
+    win322.relative = function(from, to) {
+      from = win322.resolve(from);
+      to = win322.resolve(to);
+      var lowerFrom = from.toLowerCase();
+      var lowerTo = to.toLowerCase();
+      var toParts = trimArray(to.split("\\"));
+      var lowerFromParts = trimArray(lowerFrom.split("\\"));
+      var lowerToParts = trimArray(lowerTo.split("\\"));
+      var length = Math.min(lowerFromParts.length, lowerToParts.length);
+      var samePartsLength = length;
+      for (var i = 0; i < length; i++) {
+        if (lowerFromParts[i] !== lowerToParts[i]) {
+          samePartsLength = i;
+          break;
+        }
+      }
+      if (samePartsLength == 0) {
+        return to;
+      }
+      var outputParts = [];
+      for (var i = samePartsLength; i < lowerFromParts.length; i++) {
+        outputParts.push("..");
+      }
+      outputParts = outputParts.concat(toParts.slice(samePartsLength));
+      return outputParts.join("\\");
+    };
+    win322._makeLong = function(path2) {
+      if (!util.isString(path2))
+        return path2;
+      if (!path2) {
+        return "";
+      }
+      var resolvedPath = win322.resolve(path2);
+      if (/^[a-zA-Z]\:\\/.test(resolvedPath)) {
+        return "\\\\?\\" + resolvedPath;
+      } else if (/^\\\\[^?.]/.test(resolvedPath)) {
+        return "\\\\?\\UNC\\" + resolvedPath.substring(2);
+      }
+      return path2;
+    };
+    win322.dirname = function(path2) {
+      var result = win32SplitPath(path2), root = result[0], dir = result[1];
+      if (!root && !dir) {
+        return ".";
+      }
+      if (dir) {
+        dir = dir.substr(0, dir.length - 1);
+      }
+      return root + dir;
+    };
+    win322.basename = function(path2, ext2) {
+      var f = win32SplitPath(path2)[2];
+      if (ext2 && f.substr(-1 * ext2.length) === ext2) {
+        f = f.substr(0, f.length - ext2.length);
+      }
+      return f;
+    };
+    win322.extname = function(path2) {
+      return win32SplitPath(path2)[3];
+    };
+    win322.format = function(pathObject) {
+      if (!util.isObject(pathObject)) {
+        throw new TypeError(
+          "Parameter 'pathObject' must be an object, not " + typeof pathObject
+        );
+      }
+      var root = pathObject.root || "";
+      if (!util.isString(root)) {
+        throw new TypeError(
+          "'pathObject.root' must be a string or undefined, not " + typeof pathObject.root
+        );
+      }
+      var dir = pathObject.dir;
+      var base = pathObject.base || "";
+      if (!dir) {
+        return base;
+      }
+      if (dir[dir.length - 1] === win322.sep) {
+        return dir + base;
+      }
+      return dir + win322.sep + base;
+    };
+    win322.parse = function(pathString) {
+      if (!util.isString(pathString)) {
+        throw new TypeError(
+          "Parameter 'pathString' must be a string, not " + typeof pathString
+        );
+      }
+      var allParts = win32SplitPath(pathString);
+      if (!allParts || allParts.length !== 4) {
+        throw new TypeError("Invalid path '" + pathString + "'");
+      }
+      return {
+        root: allParts[0],
+        dir: allParts[0] + allParts[1].slice(0, -1),
+        base: allParts[2],
+        ext: allParts[3],
+        name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
+      };
+    };
+    win322.sep = "\\";
+    win322.delimiter = ";";
+    var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+    var posix2 = {};
+    function posixSplitPath(filename) {
+      return splitPathRe.exec(filename).slice(1);
+    }
+    posix2.resolve = function() {
+      var resolvedPath = "", resolvedAbsolute = false;
+      for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+        var path2 = i >= 0 ? arguments[i] : process.cwd();
+        if (!util.isString(path2)) {
+          throw new TypeError("Arguments to path.resolve must be strings");
+        } else if (!path2) {
+          continue;
+        }
+        resolvedPath = path2 + "/" + resolvedPath;
+        resolvedAbsolute = path2[0] === "/";
+      }
+      resolvedPath = normalizeArray(
+        resolvedPath.split("/"),
+        !resolvedAbsolute
+      ).join("/");
+      return (resolvedAbsolute ? "/" : "") + resolvedPath || ".";
+    };
+    posix2.normalize = function(path2) {
+      var isAbsolute = posix2.isAbsolute(path2), trailingSlash = path2 && path2[path2.length - 1] === "/";
+      path2 = normalizeArray(path2.split("/"), !isAbsolute).join("/");
+      if (!path2 && !isAbsolute) {
+        path2 = ".";
+      }
+      if (path2 && trailingSlash) {
+        path2 += "/";
+      }
+      return (isAbsolute ? "/" : "") + path2;
+    };
+    posix2.isAbsolute = function(path2) {
+      return path2.charAt(0) === "/";
+    };
+    posix2.join = function() {
+      var path2 = "";
+      for (var i = 0; i < arguments.length; i++) {
+        var segment = arguments[i];
+        if (!util.isString(segment)) {
+          throw new TypeError("Arguments to path.join must be strings");
+        }
+        if (segment) {
+          if (!path2) {
+            path2 += segment;
+          } else {
+            path2 += "/" + segment;
+          }
+        }
+      }
+      return posix2.normalize(path2);
+    };
+    posix2.relative = function(from, to) {
+      from = posix2.resolve(from).substr(1);
+      to = posix2.resolve(to).substr(1);
+      var fromParts = trimArray(from.split("/"));
+      var toParts = trimArray(to.split("/"));
+      var length = Math.min(fromParts.length, toParts.length);
+      var samePartsLength = length;
+      for (var i = 0; i < length; i++) {
+        if (fromParts[i] !== toParts[i]) {
+          samePartsLength = i;
+          break;
+        }
+      }
+      var outputParts = [];
+      for (var i = samePartsLength; i < fromParts.length; i++) {
+        outputParts.push("..");
+      }
+      outputParts = outputParts.concat(toParts.slice(samePartsLength));
+      return outputParts.join("/");
+    };
+    posix2._makeLong = function(path2) {
+      return path2;
+    };
+    posix2.dirname = function(path2) {
+      var result = posixSplitPath(path2), root = result[0], dir = result[1];
+      if (!root && !dir) {
+        return ".";
+      }
+      if (dir) {
+        dir = dir.substr(0, dir.length - 1);
+      }
+      return root + dir;
+    };
+    posix2.basename = function(path2, ext2) {
+      var f = posixSplitPath(path2)[2];
+      if (ext2 && f.substr(-1 * ext2.length) === ext2) {
+        f = f.substr(0, f.length - ext2.length);
+      }
+      return f;
+    };
+    posix2.extname = function(path2) {
+      return posixSplitPath(path2)[3];
+    };
+    posix2.format = function(pathObject) {
+      if (!util.isObject(pathObject)) {
+        throw new TypeError(
+          "Parameter 'pathObject' must be an object, not " + typeof pathObject
+        );
+      }
+      var root = pathObject.root || "";
+      if (!util.isString(root)) {
+        throw new TypeError(
+          "'pathObject.root' must be a string or undefined, not " + typeof pathObject.root
+        );
+      }
+      var dir = pathObject.dir ? pathObject.dir + posix2.sep : "";
+      var base = pathObject.base || "";
+      return dir + base;
+    };
+    posix2.parse = function(pathString) {
+      if (!util.isString(pathString)) {
+        throw new TypeError(
+          "Parameter 'pathString' must be a string, not " + typeof pathString
+        );
+      }
+      var allParts = posixSplitPath(pathString);
+      if (!allParts || allParts.length !== 4) {
+        throw new TypeError("Invalid path '" + pathString + "'");
+      }
+      allParts[1] = allParts[1] || "";
+      allParts[2] = allParts[2] || "";
+      allParts[3] = allParts[3] || "";
+      return {
+        root: allParts[0],
+        dir: allParts[0] + allParts[1].slice(0, -1),
+        base: allParts[2],
+        ext: allParts[3],
+        name: allParts[2].slice(0, allParts[2].length - allParts[3].length)
+      };
+    };
+    posix2.sep = "/";
+    posix2.delimiter = ":";
+    if (isWindows)
+      module.exports = win322;
+    else
+      module.exports = posix2;
+    module.exports.posix = posix2;
+    module.exports.win32 = win322;
+  }
+});
+
 // node_modules/events/events.js
 var require_events = __commonJS({
   "node_modules/events/events.js"(exports, module) {
@@ -4439,84 +4439,100 @@ var require_events = __commonJS({
   }
 });
 
-// node_modules/emitter-component/index.js
-var require_emitter_component = __commonJS({
-  "node_modules/emitter-component/index.js"(exports, module) {
-    module.exports = Emitter;
-    function Emitter(obj) {
-      if (obj)
-        return mixin(obj);
-    }
-    function mixin(obj) {
-      for (var key in Emitter.prototype) {
-        obj[key] = Emitter.prototype[key];
+// node_modules/component-emitter/index.js
+var require_component_emitter = __commonJS({
+  "node_modules/component-emitter/index.js"(exports, module) {
+    function Emitter(object) {
+      if (object) {
+        return mixin(object);
       }
-      return obj;
+      this._callbacks = /* @__PURE__ */ new Map();
     }
-    Emitter.prototype.on = Emitter.prototype.addEventListener = function(event, fn) {
-      this._callbacks = this._callbacks || {};
-      (this._callbacks[event] = this._callbacks[event] || []).push(fn);
+    function mixin(object) {
+      Object.assign(object, Emitter.prototype);
+      object._callbacks = /* @__PURE__ */ new Map();
+      return object;
+    }
+    Emitter.prototype.on = function(event, listener) {
+      const callbacks = this._callbacks.get(event) ?? [];
+      callbacks.push(listener);
+      this._callbacks.set(event, callbacks);
       return this;
     };
-    Emitter.prototype.once = function(event, fn) {
-      var self = this;
-      this._callbacks = this._callbacks || {};
-      function on() {
-        self.off(event, on);
-        fn.apply(this, arguments);
-      }
-      on.fn = fn;
+    Emitter.prototype.once = function(event, listener) {
+      const on = (...arguments_) => {
+        this.off(event, on);
+        listener.apply(this, arguments_);
+      };
+      on.fn = listener;
       this.on(event, on);
       return this;
     };
-    Emitter.prototype.off = Emitter.prototype.removeListener = Emitter.prototype.removeAllListeners = Emitter.prototype.removeEventListener = function(event, fn) {
-      this._callbacks = this._callbacks || {};
-      if (0 == arguments.length) {
-        this._callbacks = {};
+    Emitter.prototype.off = function(event, listener) {
+      if (event === void 0 && listener === void 0) {
+        this._callbacks.clear();
         return this;
       }
-      var callbacks = this._callbacks[event];
-      if (!callbacks)
-        return this;
-      if (1 == arguments.length) {
-        delete this._callbacks[event];
+      if (listener === void 0) {
+        this._callbacks.delete(event);
         return this;
       }
-      var cb;
-      for (var i = 0; i < callbacks.length; i++) {
-        cb = callbacks[i];
-        if (cb === fn || cb.fn === fn) {
-          callbacks.splice(i, 1);
-          break;
+      const callbacks = this._callbacks.get(event);
+      if (callbacks) {
+        for (const [index, callback] of callbacks.entries()) {
+          if (callback === listener || callback.fn === listener) {
+            callbacks.splice(index, 1);
+            break;
+          }
+        }
+        if (callbacks.length === 0) {
+          this._callbacks.delete(event);
+        } else {
+          this._callbacks.set(event, callbacks);
         }
       }
       return this;
     };
-    Emitter.prototype.emit = function(event) {
-      this._callbacks = this._callbacks || {};
-      var args = [].slice.call(arguments, 1), callbacks = this._callbacks[event];
+    Emitter.prototype.emit = function(event, ...arguments_) {
+      const callbacks = this._callbacks.get(event);
       if (callbacks) {
-        callbacks = callbacks.slice(0);
-        for (var i = 0, len = callbacks.length; i < len; ++i) {
-          callbacks[i].apply(this, args);
+        const callbacksCopy = [...callbacks];
+        for (const callback of callbacksCopy) {
+          callback.apply(this, arguments_);
         }
       }
       return this;
     };
     Emitter.prototype.listeners = function(event) {
-      this._callbacks = this._callbacks || {};
-      return this._callbacks[event] || [];
+      return this._callbacks.get(event) ?? [];
+    };
+    Emitter.prototype.listenerCount = function(event) {
+      if (event) {
+        return this.listeners(event).length;
+      }
+      let totalCount = 0;
+      for (const callbacks of this._callbacks.values()) {
+        totalCount += callbacks.length;
+      }
+      return totalCount;
     };
     Emitter.prototype.hasListeners = function(event) {
-      return !!this.listeners(event).length;
+      return this.listenerCount(event) > 0;
     };
+    Emitter.prototype.addEventListener = Emitter.prototype.on;
+    Emitter.prototype.removeListener = Emitter.prototype.off;
+    Emitter.prototype.removeEventListener = Emitter.prototype.off;
+    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+    if (typeof module !== "undefined") {
+      module.exports = Emitter;
+    }
   }
 });
 
 // node_modules/stream/index.js
 var require_stream = __commonJS({
   "node_modules/stream/index.js"(exports, module) {
-    var Emitter = require_emitter_component();
+    var Emitter = require_component_emitter();
     function Stream2() {
       Emitter.call(this);
     }
@@ -8115,6 +8131,9 @@ minimatch.AST = AST;
 minimatch.Minimatch = Minimatch;
 minimatch.escape = escape2;
 minimatch.unescape = unescape2;
+
+// node_modules/glob/dist/esm/glob.js
+var import_node_url2 = __toESM(require_url(), 1);
 
 // node_modules/path-scurry/node_modules/lru-cache/dist/esm/index.js
 var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
@@ -12070,9 +12089,6 @@ var PathScurryDarwin = class extends PathScurryPosix {
 var Path = process.platform === "win32" ? PathWin32 : PathPosix;
 var PathScurry = process.platform === "win32" ? PathScurryWin32 : process.platform === "darwin" ? PathScurryDarwin : PathScurryPosix;
 
-// node_modules/glob/dist/esm/glob.js
-var import_url = __toESM(require_url(), 1);
-
 // node_modules/glob/dist/esm/pattern.js
 var isPatternList = (pl) => pl.length >= 1;
 var isGlobList = (gl) => gl.length >= 1;
@@ -12245,12 +12261,15 @@ var Ignore = class {
   relativeChildren;
   absolute;
   absoluteChildren;
+  platform;
+  mmopts;
   constructor(ignored, { nobrace, nocase, noext, noglobstar, platform = defaultPlatform2 }) {
     this.relative = [];
     this.absolute = [];
     this.relativeChildren = [];
     this.absoluteChildren = [];
-    const mmopts = {
+    this.platform = platform;
+    this.mmopts = {
       dot: true,
       nobrace,
       nocase,
@@ -12261,28 +12280,34 @@ var Ignore = class {
       nocomment: true,
       nonegate: true
     };
-    for (const ign of ignored) {
-      const mm = new Minimatch(ign, mmopts);
-      for (let i = 0; i < mm.set.length; i++) {
-        const parsed = mm.set[i];
-        const globParts = mm.globParts[i];
-        if (!parsed || !globParts) {
-          throw new Error("invalid pattern object");
-        }
-        const p = new Pattern(parsed, globParts, 0, platform);
-        const m = new Minimatch(p.globString(), mmopts);
-        const children = globParts[globParts.length - 1] === "**";
-        const absolute = p.isAbsolute();
+    for (const ign of ignored)
+      this.add(ign);
+  }
+  add(ign) {
+    const mm = new Minimatch(ign, this.mmopts);
+    for (let i = 0; i < mm.set.length; i++) {
+      const parsed = mm.set[i];
+      const globParts = mm.globParts[i];
+      if (!parsed || !globParts) {
+        throw new Error("invalid pattern object");
+      }
+      while (parsed[0] === "." && globParts[0] === ".") {
+        parsed.shift();
+        globParts.shift();
+      }
+      const p = new Pattern(parsed, globParts, 0, this.platform);
+      const m = new Minimatch(p.globString(), this.mmopts);
+      const children = globParts[globParts.length - 1] === "**";
+      const absolute = p.isAbsolute();
+      if (absolute)
+        this.absolute.push(m);
+      else
+        this.relative.push(m);
+      if (children) {
         if (absolute)
-          this.absolute.push(m);
+          this.absoluteChildren.push(m);
         else
-          this.relative.push(m);
-        if (children) {
-          if (absolute)
-            this.absoluteChildren.push(m);
-          else
-            this.relativeChildren.push(m);
-        }
+          this.relativeChildren.push(m);
       }
     }
   }
@@ -12551,13 +12576,19 @@ var GlobUtil = class {
   #sep;
   signal;
   maxDepth;
+  includeChildMatches;
   constructor(patterns, path2, opts) {
     this.patterns = patterns;
     this.path = path2;
     this.opts = opts;
     this.#sep = !opts.posix && opts.platform === "win32" ? "\\" : "/";
-    if (opts.ignore) {
-      this.#ignore = makeIgnore(opts.ignore, opts);
+    this.includeChildMatches = opts.includeChildMatches !== false;
+    if (opts.ignore || !this.includeChildMatches) {
+      this.#ignore = makeIgnore(opts.ignore ?? [], opts);
+      if (!this.includeChildMatches && typeof this.#ignore.add !== "function") {
+        const m = "cannot ignore child matches, ignore lacks add() method.";
+        throw new Error(m);
+      }
     }
     this.maxDepth = opts.maxDepth || Infinity;
     if (opts.signal) {
@@ -12608,10 +12639,17 @@ var GlobUtil = class {
       e = rpc;
     }
     const needStat = e.isUnknown() || this.opts.stat;
-    return this.matchCheckTest(needStat ? await e.lstat() : e, ifDir);
+    const s = needStat ? await e.lstat() : e;
+    if (this.opts.follow && this.opts.nodir && s?.isSymbolicLink()) {
+      const target = await s.realpath();
+      if (target && (target.isUnknown() || this.opts.stat)) {
+        await target.lstat();
+      }
+    }
+    return this.matchCheckTest(s, ifDir);
   }
   matchCheckTest(e, ifDir) {
-    return e && (this.maxDepth === Infinity || e.depth() <= this.maxDepth) && (!ifDir || e.canReaddir()) && (!this.opts.nodir || !e.isDirectory()) && !this.#ignored(e) ? e : void 0;
+    return e && (this.maxDepth === Infinity || e.depth() <= this.maxDepth) && (!ifDir || e.canReaddir()) && (!this.opts.nodir || !e.isDirectory()) && (!this.opts.nodir || !this.opts.follow || !e.isSymbolicLink() || !e.realpathCached()?.isDirectory()) && !this.#ignored(e) ? e : void 0;
   }
   matchCheckSync(e, ifDir) {
     if (ifDir && this.opts.nodir)
@@ -12624,11 +12662,22 @@ var GlobUtil = class {
       e = rpc;
     }
     const needStat = e.isUnknown() || this.opts.stat;
-    return this.matchCheckTest(needStat ? e.lstatSync() : e, ifDir);
+    const s = needStat ? e.lstatSync() : e;
+    if (this.opts.follow && this.opts.nodir && s?.isSymbolicLink()) {
+      const target = s.realpathSync();
+      if (target && (target?.isUnknown() || this.opts.stat)) {
+        target.lstatSync();
+      }
+    }
+    return this.matchCheckTest(s, ifDir);
   }
   matchFinish(e, absolute) {
     if (this.#ignored(e))
       return;
+    if (!this.includeChildMatches && this.#ignore?.add) {
+      const ign = `${e.relativePosix()}/**`;
+      this.#ignore.add(ign);
+    }
     const abs = this.opts.absolute === void 0 ? absolute : this.opts.absolute;
     this.seen.add(e);
     const mark = this.opts.mark && e.isDirectory() ? this.#sep : "";
@@ -12767,10 +12816,9 @@ var GlobUtil = class {
   }
 };
 var GlobWalker = class extends GlobUtil {
-  matches;
+  matches = /* @__PURE__ */ new Set();
   constructor(patterns, path2, opts) {
     super(patterns, path2, opts);
-    this.matches = /* @__PURE__ */ new Set();
   }
   matchEmit(e) {
     this.matches.add(e);
@@ -12868,6 +12916,7 @@ var Glob = class {
   signal;
   windowsPathsNoEscape;
   withFileTypes;
+  includeChildMatches;
   /**
    * The options provided to the constructor.
    */
@@ -12901,7 +12950,7 @@ var Glob = class {
     if (!opts.cwd) {
       this.cwd = "";
     } else if (opts.cwd instanceof URL || opts.cwd.startsWith("file://")) {
-      opts.cwd = (0, import_url.fileURLToPath)(opts.cwd);
+      opts.cwd = (0, import_node_url2.fileURLToPath)(opts.cwd);
     }
     this.cwd = opts.cwd || "";
     this.root = opts.root;
@@ -12910,6 +12959,7 @@ var Glob = class {
     this.noext = !!opts.noext;
     this.realpath = !!opts.realpath;
     this.absolute = opts.absolute;
+    this.includeChildMatches = opts.includeChildMatches !== false;
     this.noglobstar = !!opts.noglobstar;
     this.matchBase = !!opts.matchBase;
     this.maxDepth = typeof opts.maxDepth === "number" ? opts.maxDepth : Infinity;
@@ -12983,7 +13033,8 @@ var Glob = class {
         ...this.opts,
         maxDepth: this.maxDepth !== Infinity ? this.maxDepth + this.scurry.cwd.depth() : Infinity,
         platform: this.platform,
-        nocase: this.nocase
+        nocase: this.nocase,
+        includeChildMatches: this.includeChildMatches
       }).walk()
     ];
   }
@@ -12993,7 +13044,8 @@ var Glob = class {
         ...this.opts,
         maxDepth: this.maxDepth !== Infinity ? this.maxDepth + this.scurry.cwd.depth() : Infinity,
         platform: this.platform,
-        nocase: this.nocase
+        nocase: this.nocase,
+        includeChildMatches: this.includeChildMatches
       }).walkSync()
     ];
   }
@@ -13002,7 +13054,8 @@ var Glob = class {
       ...this.opts,
       maxDepth: this.maxDepth !== Infinity ? this.maxDepth + this.scurry.cwd.depth() : Infinity,
       platform: this.platform,
-      nocase: this.nocase
+      nocase: this.nocase,
+      includeChildMatches: this.includeChildMatches
     }).stream();
   }
   streamSync() {
@@ -13010,7 +13063,8 @@ var Glob = class {
       ...this.opts,
       maxDepth: this.maxDepth !== Infinity ? this.maxDepth + this.scurry.cwd.depth() : Infinity,
       platform: this.platform,
-      nocase: this.nocase
+      nocase: this.nocase,
+      includeChildMatches: this.includeChildMatches
     }).streamSync();
   }
   /**
@@ -13096,6 +13150,7 @@ var glob = Object.assign(glob_, {
 glob.glob = glob;
 export {
   Glob,
+  Ignore,
   escape2 as escape,
   glob,
   globIterate,
