@@ -241,18 +241,18 @@ var require_brace_expansion = __commonJS({
   }
 });
 
-// node_modules/util/support/isBufferBrowser.js
+// node_modules/path/node_modules/util/support/isBufferBrowser.js
 var require_isBufferBrowser = __commonJS({
-  "node_modules/util/support/isBufferBrowser.js"(exports, module) {
+  "node_modules/path/node_modules/util/support/isBufferBrowser.js"(exports, module) {
     module.exports = function isBuffer(arg) {
       return arg && typeof arg === "object" && typeof arg.copy === "function" && typeof arg.fill === "function" && typeof arg.readUInt8 === "function";
     };
   }
 });
 
-// node_modules/inherits/inherits_browser.js
+// node_modules/path/node_modules/inherits/inherits_browser.js
 var require_inherits_browser = __commonJS({
-  "node_modules/inherits/inherits_browser.js"(exports, module) {
+  "node_modules/path/node_modules/inherits/inherits_browser.js"(exports, module) {
     if (typeof Object.create === "function") {
       module.exports = function inherits(ctor, superCtor) {
         ctor.super_ = superCtor;
@@ -278,9 +278,9 @@ var require_inherits_browser = __commonJS({
   }
 });
 
-// node_modules/util/util.js
+// node_modules/path/node_modules/util/util.js
 var require_util = __commonJS({
-  "node_modules/util/util.js"(exports) {
+  "node_modules/path/node_modules/util/util.js"(exports) {
     var formatRegExp = /%[sdj%]/g;
     exports.format = function(f) {
       if (!isString(f)) {
@@ -1369,6 +1369,62 @@ var require_punycode = __commonJS({
   }
 });
 
+// node_modules/es-errors/index.js
+var require_es_errors = __commonJS({
+  "node_modules/es-errors/index.js"(exports, module) {
+    "use strict";
+    module.exports = Error;
+  }
+});
+
+// node_modules/es-errors/eval.js
+var require_eval = __commonJS({
+  "node_modules/es-errors/eval.js"(exports, module) {
+    "use strict";
+    module.exports = EvalError;
+  }
+});
+
+// node_modules/es-errors/range.js
+var require_range = __commonJS({
+  "node_modules/es-errors/range.js"(exports, module) {
+    "use strict";
+    module.exports = RangeError;
+  }
+});
+
+// node_modules/es-errors/ref.js
+var require_ref = __commonJS({
+  "node_modules/es-errors/ref.js"(exports, module) {
+    "use strict";
+    module.exports = ReferenceError;
+  }
+});
+
+// node_modules/es-errors/syntax.js
+var require_syntax = __commonJS({
+  "node_modules/es-errors/syntax.js"(exports, module) {
+    "use strict";
+    module.exports = SyntaxError;
+  }
+});
+
+// node_modules/es-errors/type.js
+var require_type = __commonJS({
+  "node_modules/es-errors/type.js"(exports, module) {
+    "use strict";
+    module.exports = TypeError;
+  }
+});
+
+// node_modules/es-errors/uri.js
+var require_uri = __commonJS({
+  "node_modules/es-errors/uri.js"(exports, module) {
+    "use strict";
+    module.exports = URIError;
+  }
+});
+
 // node_modules/has-symbols/shams.js
 var require_shams = __commonJS({
   "node_modules/has-symbols/shams.js"(exports, module) {
@@ -1450,11 +1506,12 @@ var require_has_proto = __commonJS({
   "node_modules/has-proto/index.js"(exports, module) {
     "use strict";
     var test = {
+      __proto__: null,
       foo: {}
     };
     var $Object = Object;
     module.exports = function hasProto() {
-      return { __proto__: test }.foo === test.foo && !({ __proto__: null } instanceof $Object);
+      return { __proto__: test }.foo === test.foo && !(test instanceof $Object);
     };
   }
 });
@@ -1464,39 +1521,65 @@ var require_implementation = __commonJS({
   "node_modules/function-bind/implementation.js"(exports, module) {
     "use strict";
     var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
-    var slice = Array.prototype.slice;
     var toStr = Object.prototype.toString;
+    var max = Math.max;
     var funcType = "[object Function]";
+    var concatty = function concatty2(a, b) {
+      var arr = [];
+      for (var i = 0; i < a.length; i += 1) {
+        arr[i] = a[i];
+      }
+      for (var j = 0; j < b.length; j += 1) {
+        arr[j + a.length] = b[j];
+      }
+      return arr;
+    };
+    var slicy = function slicy2(arrLike, offset) {
+      var arr = [];
+      for (var i = offset || 0, j = 0; i < arrLike.length; i += 1, j += 1) {
+        arr[j] = arrLike[i];
+      }
+      return arr;
+    };
+    var joiny = function(arr, joiner) {
+      var str = "";
+      for (var i = 0; i < arr.length; i += 1) {
+        str += arr[i];
+        if (i + 1 < arr.length) {
+          str += joiner;
+        }
+      }
+      return str;
+    };
     module.exports = function bind(that) {
       var target = this;
-      if (typeof target !== "function" || toStr.call(target) !== funcType) {
+      if (typeof target !== "function" || toStr.apply(target) !== funcType) {
         throw new TypeError(ERROR_MESSAGE + target);
       }
-      var args = slice.call(arguments, 1);
+      var args = slicy(arguments, 1);
       var bound;
       var binder = function() {
         if (this instanceof bound) {
           var result = target.apply(
             this,
-            args.concat(slice.call(arguments))
+            concatty(args, arguments)
           );
           if (Object(result) === result) {
             return result;
           }
           return this;
-        } else {
-          return target.apply(
-            that,
-            args.concat(slice.call(arguments))
-          );
         }
+        return target.apply(
+          that,
+          concatty(args, arguments)
+        );
       };
-      var boundLength = Math.max(0, target.length - args.length);
+      var boundLength = max(0, target.length - args.length);
       var boundArgs = [];
       for (var i = 0; i < boundLength; i++) {
-        boundArgs.push("$" + i);
+        boundArgs[i] = "$" + i;
       }
-      bound = Function("binder", "return function (" + boundArgs.join(",") + "){ return binder.apply(this,arguments); }")(binder);
+      bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
       if (target.prototype) {
         var Empty = function Empty2() {
         };
@@ -1518,12 +1601,14 @@ var require_function_bind = __commonJS({
   }
 });
 
-// node_modules/has/src/index.js
-var require_src = __commonJS({
-  "node_modules/has/src/index.js"(exports, module) {
+// node_modules/hasown/index.js
+var require_hasown = __commonJS({
+  "node_modules/hasown/index.js"(exports, module) {
     "use strict";
+    var call = Function.prototype.call;
+    var $hasOwn = Object.prototype.hasOwnProperty;
     var bind = require_function_bind();
-    module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+    module.exports = bind.call(call, $hasOwn);
   }
 });
 
@@ -1532,9 +1617,14 @@ var require_get_intrinsic = __commonJS({
   "node_modules/get-intrinsic/index.js"(exports, module) {
     "use strict";
     var undefined2;
-    var $SyntaxError = SyntaxError;
+    var $Error = require_es_errors();
+    var $EvalError = require_eval();
+    var $RangeError = require_range();
+    var $ReferenceError = require_ref();
+    var $SyntaxError = require_syntax();
+    var $TypeError = require_type();
+    var $URIError = require_uri();
     var $Function = Function;
-    var $TypeError = TypeError;
     var getEvalledConstructor = function(expressionSyntax) {
       try {
         return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
@@ -1572,6 +1662,7 @@ var require_get_intrinsic = __commonJS({
     var needsEval = {};
     var TypedArray = typeof Uint8Array === "undefined" || !getProto ? undefined2 : getProto(Uint8Array);
     var INTRINSICS = {
+      __proto__: null,
       "%AggregateError%": typeof AggregateError === "undefined" ? undefined2 : AggregateError,
       "%Array%": Array,
       "%ArrayBuffer%": typeof ArrayBuffer === "undefined" ? undefined2 : ArrayBuffer,
@@ -1592,10 +1683,10 @@ var require_get_intrinsic = __commonJS({
       "%decodeURIComponent%": decodeURIComponent,
       "%encodeURI%": encodeURI,
       "%encodeURIComponent%": encodeURIComponent,
-      "%Error%": Error,
+      "%Error%": $Error,
       "%eval%": eval,
       // eslint-disable-line no-eval
-      "%EvalError%": EvalError,
+      "%EvalError%": $EvalError,
       "%Float32Array%": typeof Float32Array === "undefined" ? undefined2 : Float32Array,
       "%Float64Array%": typeof Float64Array === "undefined" ? undefined2 : Float64Array,
       "%FinalizationRegistry%": typeof FinalizationRegistry === "undefined" ? undefined2 : FinalizationRegistry,
@@ -1617,8 +1708,8 @@ var require_get_intrinsic = __commonJS({
       "%parseInt%": parseInt,
       "%Promise%": typeof Promise === "undefined" ? undefined2 : Promise,
       "%Proxy%": typeof Proxy === "undefined" ? undefined2 : Proxy,
-      "%RangeError%": RangeError,
-      "%ReferenceError%": ReferenceError,
+      "%RangeError%": $RangeError,
+      "%ReferenceError%": $ReferenceError,
       "%Reflect%": typeof Reflect === "undefined" ? undefined2 : Reflect,
       "%RegExp%": RegExp,
       "%Set%": typeof Set === "undefined" ? undefined2 : Set,
@@ -1635,7 +1726,7 @@ var require_get_intrinsic = __commonJS({
       "%Uint8ClampedArray%": typeof Uint8ClampedArray === "undefined" ? undefined2 : Uint8ClampedArray,
       "%Uint16Array%": typeof Uint16Array === "undefined" ? undefined2 : Uint16Array,
       "%Uint32Array%": typeof Uint32Array === "undefined" ? undefined2 : Uint32Array,
-      "%URIError%": URIError,
+      "%URIError%": $URIError,
       "%WeakMap%": typeof WeakMap === "undefined" ? undefined2 : WeakMap,
       "%WeakRef%": typeof WeakRef === "undefined" ? undefined2 : WeakRef,
       "%WeakSet%": typeof WeakSet === "undefined" ? undefined2 : WeakSet
@@ -1672,6 +1763,7 @@ var require_get_intrinsic = __commonJS({
       return value;
     };
     var LEGACY_ALIASES = {
+      __proto__: null,
       "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
       "%ArrayPrototype%": ["Array", "prototype"],
       "%ArrayProto_entries%": ["Array", "prototype", "entries"],
@@ -1725,7 +1817,7 @@ var require_get_intrinsic = __commonJS({
       "%WeakSetPrototype%": ["WeakSet", "prototype"]
     };
     var bind = require_function_bind();
-    var hasOwn = require_src();
+    var hasOwn = require_hasown();
     var $concat = bind.call(Function.call, Array.prototype.concat);
     var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
     var $replace = bind.call(Function.call, String.prototype.replace);
@@ -1834,38 +1926,186 @@ var require_get_intrinsic = __commonJS({
   }
 });
 
+// node_modules/es-define-property/index.js
+var require_es_define_property = __commonJS({
+  "node_modules/es-define-property/index.js"(exports, module) {
+    "use strict";
+    var GetIntrinsic = require_get_intrinsic();
+    var $defineProperty = GetIntrinsic("%Object.defineProperty%", true) || false;
+    if ($defineProperty) {
+      try {
+        $defineProperty({}, "a", { value: 1 });
+      } catch (e) {
+        $defineProperty = false;
+      }
+    }
+    module.exports = $defineProperty;
+  }
+});
+
+// node_modules/gopd/index.js
+var require_gopd = __commonJS({
+  "node_modules/gopd/index.js"(exports, module) {
+    "use strict";
+    var GetIntrinsic = require_get_intrinsic();
+    var $gOPD = GetIntrinsic("%Object.getOwnPropertyDescriptor%", true);
+    if ($gOPD) {
+      try {
+        $gOPD([], "length");
+      } catch (e) {
+        $gOPD = null;
+      }
+    }
+    module.exports = $gOPD;
+  }
+});
+
+// node_modules/define-data-property/index.js
+var require_define_data_property = __commonJS({
+  "node_modules/define-data-property/index.js"(exports, module) {
+    "use strict";
+    var $defineProperty = require_es_define_property();
+    var $SyntaxError = require_syntax();
+    var $TypeError = require_type();
+    var gopd = require_gopd();
+    module.exports = function defineDataProperty(obj, property, value) {
+      if (!obj || typeof obj !== "object" && typeof obj !== "function") {
+        throw new $TypeError("`obj` must be an object or a function`");
+      }
+      if (typeof property !== "string" && typeof property !== "symbol") {
+        throw new $TypeError("`property` must be a string or a symbol`");
+      }
+      if (arguments.length > 3 && typeof arguments[3] !== "boolean" && arguments[3] !== null) {
+        throw new $TypeError("`nonEnumerable`, if provided, must be a boolean or null");
+      }
+      if (arguments.length > 4 && typeof arguments[4] !== "boolean" && arguments[4] !== null) {
+        throw new $TypeError("`nonWritable`, if provided, must be a boolean or null");
+      }
+      if (arguments.length > 5 && typeof arguments[5] !== "boolean" && arguments[5] !== null) {
+        throw new $TypeError("`nonConfigurable`, if provided, must be a boolean or null");
+      }
+      if (arguments.length > 6 && typeof arguments[6] !== "boolean") {
+        throw new $TypeError("`loose`, if provided, must be a boolean");
+      }
+      var nonEnumerable = arguments.length > 3 ? arguments[3] : null;
+      var nonWritable = arguments.length > 4 ? arguments[4] : null;
+      var nonConfigurable = arguments.length > 5 ? arguments[5] : null;
+      var loose = arguments.length > 6 ? arguments[6] : false;
+      var desc = !!gopd && gopd(obj, property);
+      if ($defineProperty) {
+        $defineProperty(obj, property, {
+          configurable: nonConfigurable === null && desc ? desc.configurable : !nonConfigurable,
+          enumerable: nonEnumerable === null && desc ? desc.enumerable : !nonEnumerable,
+          value,
+          writable: nonWritable === null && desc ? desc.writable : !nonWritable
+        });
+      } else if (loose || !nonEnumerable && !nonWritable && !nonConfigurable) {
+        obj[property] = value;
+      } else {
+        throw new $SyntaxError("This environment does not support defining a property as non-configurable, non-writable, or non-enumerable.");
+      }
+    };
+  }
+});
+
+// node_modules/has-property-descriptors/index.js
+var require_has_property_descriptors = __commonJS({
+  "node_modules/has-property-descriptors/index.js"(exports, module) {
+    "use strict";
+    var $defineProperty = require_es_define_property();
+    var hasPropertyDescriptors = function hasPropertyDescriptors2() {
+      return !!$defineProperty;
+    };
+    hasPropertyDescriptors.hasArrayLengthDefineBug = function hasArrayLengthDefineBug() {
+      if (!$defineProperty) {
+        return null;
+      }
+      try {
+        return $defineProperty([], "length", { value: 1 }).length !== 1;
+      } catch (e) {
+        return true;
+      }
+    };
+    module.exports = hasPropertyDescriptors;
+  }
+});
+
+// node_modules/set-function-length/index.js
+var require_set_function_length = __commonJS({
+  "node_modules/set-function-length/index.js"(exports, module) {
+    "use strict";
+    var GetIntrinsic = require_get_intrinsic();
+    var define2 = require_define_data_property();
+    var hasDescriptors = require_has_property_descriptors()();
+    var gOPD = require_gopd();
+    var $TypeError = require_type();
+    var $floor = GetIntrinsic("%Math.floor%");
+    module.exports = function setFunctionLength(fn, length) {
+      if (typeof fn !== "function") {
+        throw new $TypeError("`fn` is not a function");
+      }
+      if (typeof length !== "number" || length < 0 || length > 4294967295 || $floor(length) !== length) {
+        throw new $TypeError("`length` must be a positive 32-bit integer");
+      }
+      var loose = arguments.length > 2 && !!arguments[2];
+      var functionLengthIsConfigurable = true;
+      var functionLengthIsWritable = true;
+      if ("length" in fn && gOPD) {
+        var desc = gOPD(fn, "length");
+        if (desc && !desc.configurable) {
+          functionLengthIsConfigurable = false;
+        }
+        if (desc && !desc.writable) {
+          functionLengthIsWritable = false;
+        }
+      }
+      if (functionLengthIsConfigurable || functionLengthIsWritable || !loose) {
+        if (hasDescriptors) {
+          define2(
+            /** @type {Parameters<define>[0]} */
+            fn,
+            "length",
+            length,
+            true,
+            true
+          );
+        } else {
+          define2(
+            /** @type {Parameters<define>[0]} */
+            fn,
+            "length",
+            length
+          );
+        }
+      }
+      return fn;
+    };
+  }
+});
+
 // node_modules/call-bind/index.js
 var require_call_bind = __commonJS({
   "node_modules/call-bind/index.js"(exports, module) {
     "use strict";
     var bind = require_function_bind();
     var GetIntrinsic = require_get_intrinsic();
+    var setFunctionLength = require_set_function_length();
+    var $TypeError = require_type();
     var $apply = GetIntrinsic("%Function.prototype.apply%");
     var $call = GetIntrinsic("%Function.prototype.call%");
     var $reflectApply = GetIntrinsic("%Reflect.apply%", true) || bind.call($call, $apply);
-    var $gOPD = GetIntrinsic("%Object.getOwnPropertyDescriptor%", true);
-    var $defineProperty = GetIntrinsic("%Object.defineProperty%", true);
+    var $defineProperty = require_es_define_property();
     var $max = GetIntrinsic("%Math.max%");
-    if ($defineProperty) {
-      try {
-        $defineProperty({}, "a", { value: 1 });
-      } catch (e) {
-        $defineProperty = null;
-      }
-    }
     module.exports = function callBind(originalFunction) {
-      var func = $reflectApply(bind, $call, arguments);
-      if ($gOPD && $defineProperty) {
-        var desc = $gOPD(func, "length");
-        if (desc.configurable) {
-          $defineProperty(
-            func,
-            "length",
-            { value: 1 + $max(0, originalFunction.length - (arguments.length - 1)) }
-          );
-        }
+      if (typeof originalFunction !== "function") {
+        throw new $TypeError("a function is required");
       }
-      return func;
+      var func = $reflectApply(bind, $call, arguments);
+      return setFunctionLength(
+        func,
+        1 + $max(0, originalFunction.length - (arguments.length - 1)),
+        true
+      );
     };
     var applyBind = function applyBind2() {
       return $reflectApply(bind, $apply, arguments);
@@ -2116,6 +2356,12 @@ var require_object_inspect = __commonJS({
       }
       if (isString(obj)) {
         return markBoxed(inspect(String(obj)));
+      }
+      if (typeof window !== "undefined" && obj === window) {
+        return "{ [object Window] }";
+      }
+      if (typeof globalThis !== "undefined" && obj === globalThis || typeof global !== "undefined" && obj === global) {
+        return "{ [object globalThis] }";
       }
       if (!isDate(obj) && !isRegExp(obj)) {
         var ys = arrObjKeys(obj, inspect);
@@ -2417,7 +2663,7 @@ var require_side_channel = __commonJS({
     var GetIntrinsic = require_get_intrinsic();
     var callBound = require_callBound();
     var inspect = require_object_inspect();
-    var $TypeError = GetIntrinsic("%TypeError%");
+    var $TypeError = require_type();
     var $WeakMap = GetIntrinsic("%WeakMap%", true);
     var $Map = GetIntrinsic("%Map%", true);
     var $weakMapGet = callBound("WeakMap.prototype.get", true);
@@ -2427,10 +2673,13 @@ var require_side_channel = __commonJS({
     var $mapSet = callBound("Map.prototype.set", true);
     var $mapHas = callBound("Map.prototype.has", true);
     var listGetNode = function(list, key) {
-      for (var prev = list, curr; (curr = prev.next) !== null; prev = curr) {
+      var prev = list;
+      var curr;
+      for (; (curr = prev.next) !== null; prev = curr) {
         if (curr.key === key) {
           prev.next = curr.next;
-          curr.next = list.next;
+          curr.next = /** @type {NonNullable<typeof list.next>} */
+          list.next;
           list.next = curr;
           return curr;
         }
@@ -2445,8 +2694,9 @@ var require_side_channel = __commonJS({
       if (node) {
         node.value = value;
       } else {
-        objects.next = {
-          // eslint-disable-line no-param-reassign
+        objects.next = /** @type {import('.').ListNode<typeof value>} */
+        {
+          // eslint-disable-line no-param-reassign, no-extra-parens
           key,
           next: objects.next,
           value
@@ -2650,6 +2900,7 @@ var require_utils = __commonJS({
         return strWithoutPlus;
       }
     };
+    var limit = 1024;
     var encode = function encode2(str, defaultEncoder, charset, kind, format) {
       if (str.length === 0) {
         return str;
@@ -2666,27 +2917,32 @@ var require_utils = __commonJS({
         });
       }
       var out = "";
-      for (var i = 0; i < string.length; ++i) {
-        var c = string.charCodeAt(i);
-        if (c === 45 || c === 46 || c === 95 || c === 126 || c >= 48 && c <= 57 || c >= 65 && c <= 90 || c >= 97 && c <= 122 || format === formats.RFC1738 && (c === 40 || c === 41)) {
-          out += string.charAt(i);
-          continue;
+      for (var j = 0; j < string.length; j += limit) {
+        var segment = string.length >= limit ? string.slice(j, j + limit) : string;
+        var arr = [];
+        for (var i = 0; i < segment.length; ++i) {
+          var c = segment.charCodeAt(i);
+          if (c === 45 || c === 46 || c === 95 || c === 126 || c >= 48 && c <= 57 || c >= 65 && c <= 90 || c >= 97 && c <= 122 || format === formats.RFC1738 && (c === 40 || c === 41)) {
+            arr[arr.length] = segment.charAt(i);
+            continue;
+          }
+          if (c < 128) {
+            arr[arr.length] = hexTable[c];
+            continue;
+          }
+          if (c < 2048) {
+            arr[arr.length] = hexTable[192 | c >> 6] + hexTable[128 | c & 63];
+            continue;
+          }
+          if (c < 55296 || c >= 57344) {
+            arr[arr.length] = hexTable[224 | c >> 12] + hexTable[128 | c >> 6 & 63] + hexTable[128 | c & 63];
+            continue;
+          }
+          i += 1;
+          c = 65536 + ((c & 1023) << 10 | segment.charCodeAt(i) & 1023);
+          arr[arr.length] = hexTable[240 | c >> 18] + hexTable[128 | c >> 12 & 63] + hexTable[128 | c >> 6 & 63] + hexTable[128 | c & 63];
         }
-        if (c < 128) {
-          out = out + hexTable[c];
-          continue;
-        }
-        if (c < 2048) {
-          out = out + (hexTable[192 | c >> 6] + hexTable[128 | c & 63]);
-          continue;
-        }
-        if (c < 55296 || c >= 57344) {
-          out = out + (hexTable[224 | c >> 12] + hexTable[128 | c >> 6 & 63] + hexTable[128 | c & 63]);
-          continue;
-        }
-        i += 1;
-        c = 65536 + ((c & 1023) << 10 | string.charCodeAt(i) & 1023);
-        out += hexTable[240 | c >> 18] + hexTable[128 | c >> 12 & 63] + hexTable[128 | c >> 6 & 63] + hexTable[128 | c & 63];
+        out += arr.join("");
       }
       return out;
     };
@@ -2776,10 +3032,13 @@ var require_stringify = __commonJS({
     var defaults2 = {
       addQueryPrefix: false,
       allowDots: false,
+      allowEmptyArrays: false,
+      arrayFormat: "indices",
       charset: "utf-8",
       charsetSentinel: false,
       delimiter: "&",
       encode: true,
+      encodeDotInKeys: false,
       encoder: utils.encode,
       encodeValuesOnly: false,
       format: defaultFormat,
@@ -2796,7 +3055,7 @@ var require_stringify = __commonJS({
       return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
     };
     var sentinel = {};
-    var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter2, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+    var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, allowEmptyArrays, strictNullHandling, skipNulls, encodeDotInKeys, encoder, filter2, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
       var obj = object;
       var tmpSc = sideChannel;
       var step = 0;
@@ -2856,14 +3115,19 @@ var require_stringify = __commonJS({
         var keys = Object.keys(obj);
         objKeys = sort ? keys.sort(sort) : keys;
       }
-      var adjustedPrefix = commaRoundTrip && isArray(obj) && obj.length === 1 ? prefix + "[]" : prefix;
+      var encodedPrefix = encodeDotInKeys ? prefix.replace(/\./g, "%2E") : prefix;
+      var adjustedPrefix = commaRoundTrip && isArray(obj) && obj.length === 1 ? encodedPrefix + "[]" : encodedPrefix;
+      if (allowEmptyArrays && isArray(obj) && obj.length === 0) {
+        return adjustedPrefix + "[]";
+      }
       for (var j = 0; j < objKeys.length; ++j) {
         var key = objKeys[j];
         var value = typeof key === "object" && typeof key.value !== "undefined" ? key.value : obj[key];
         if (skipNulls && value === null) {
           continue;
         }
-        var keyPrefix = isArray(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(adjustedPrefix, key) : adjustedPrefix : adjustedPrefix + (allowDots ? "." + key : "[" + key + "]");
+        var encodedKey = allowDots && encodeDotInKeys ? key.replace(/\./g, "%2E") : key;
+        var keyPrefix = isArray(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(adjustedPrefix, encodedKey) : adjustedPrefix : adjustedPrefix + (allowDots ? "." + encodedKey : "[" + encodedKey + "]");
         sideChannel.set(object, step);
         var valueSideChannel = getSideChannel();
         valueSideChannel.set(sentinel, sideChannel);
@@ -2872,8 +3136,10 @@ var require_stringify = __commonJS({
           keyPrefix,
           generateArrayPrefix,
           commaRoundTrip,
+          allowEmptyArrays,
           strictNullHandling,
           skipNulls,
+          encodeDotInKeys,
           generateArrayPrefix === "comma" && encodeValuesOnly && isArray(obj) ? null : encoder,
           filter2,
           sort,
@@ -2891,6 +3157,12 @@ var require_stringify = __commonJS({
     var normalizeStringifyOptions = function normalizeStringifyOptions2(opts) {
       if (!opts) {
         return defaults2;
+      }
+      if (typeof opts.allowEmptyArrays !== "undefined" && typeof opts.allowEmptyArrays !== "boolean") {
+        throw new TypeError("`allowEmptyArrays` option can only be `true` or `false`, when provided");
+      }
+      if (typeof opts.encodeDotInKeys !== "undefined" && typeof opts.encodeDotInKeys !== "boolean") {
+        throw new TypeError("`encodeDotInKeys` option can only be `true` or `false`, when provided");
       }
       if (opts.encoder !== null && typeof opts.encoder !== "undefined" && typeof opts.encoder !== "function") {
         throw new TypeError("Encoder has to be a function.");
@@ -2911,13 +3183,29 @@ var require_stringify = __commonJS({
       if (typeof opts.filter === "function" || isArray(opts.filter)) {
         filter2 = opts.filter;
       }
+      var arrayFormat;
+      if (opts.arrayFormat in arrayPrefixGenerators) {
+        arrayFormat = opts.arrayFormat;
+      } else if ("indices" in opts) {
+        arrayFormat = opts.indices ? "indices" : "repeat";
+      } else {
+        arrayFormat = defaults2.arrayFormat;
+      }
+      if ("commaRoundTrip" in opts && typeof opts.commaRoundTrip !== "boolean") {
+        throw new TypeError("`commaRoundTrip` must be a boolean, or absent");
+      }
+      var allowDots = typeof opts.allowDots === "undefined" ? opts.encodeDotInKeys === true ? true : defaults2.allowDots : !!opts.allowDots;
       return {
         addQueryPrefix: typeof opts.addQueryPrefix === "boolean" ? opts.addQueryPrefix : defaults2.addQueryPrefix,
-        allowDots: typeof opts.allowDots === "undefined" ? defaults2.allowDots : !!opts.allowDots,
+        allowDots,
+        allowEmptyArrays: typeof opts.allowEmptyArrays === "boolean" ? !!opts.allowEmptyArrays : defaults2.allowEmptyArrays,
+        arrayFormat,
         charset,
         charsetSentinel: typeof opts.charsetSentinel === "boolean" ? opts.charsetSentinel : defaults2.charsetSentinel,
+        commaRoundTrip: opts.commaRoundTrip,
         delimiter: typeof opts.delimiter === "undefined" ? defaults2.delimiter : opts.delimiter,
         encode: typeof opts.encode === "boolean" ? opts.encode : defaults2.encode,
+        encodeDotInKeys: typeof opts.encodeDotInKeys === "boolean" ? opts.encodeDotInKeys : defaults2.encodeDotInKeys,
         encoder: typeof opts.encoder === "function" ? opts.encoder : defaults2.encoder,
         encodeValuesOnly: typeof opts.encodeValuesOnly === "boolean" ? opts.encodeValuesOnly : defaults2.encodeValuesOnly,
         filter: filter2,
@@ -2945,19 +3233,8 @@ var require_stringify = __commonJS({
       if (typeof obj !== "object" || obj === null) {
         return "";
       }
-      var arrayFormat;
-      if (opts && opts.arrayFormat in arrayPrefixGenerators) {
-        arrayFormat = opts.arrayFormat;
-      } else if (opts && "indices" in opts) {
-        arrayFormat = opts.indices ? "indices" : "repeat";
-      } else {
-        arrayFormat = "indices";
-      }
-      var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
-      if (opts && "commaRoundTrip" in opts && typeof opts.commaRoundTrip !== "boolean") {
-        throw new TypeError("`commaRoundTrip` must be a boolean, or absent");
-      }
-      var commaRoundTrip = generateArrayPrefix === "comma" && opts && opts.commaRoundTrip;
+      var generateArrayPrefix = arrayPrefixGenerators[options.arrayFormat];
+      var commaRoundTrip = generateArrayPrefix === "comma" && options.commaRoundTrip;
       if (!objKeys) {
         objKeys = Object.keys(obj);
       }
@@ -2975,8 +3252,10 @@ var require_stringify = __commonJS({
           key,
           generateArrayPrefix,
           commaRoundTrip,
+          options.allowEmptyArrays,
           options.strictNullHandling,
           options.skipNulls,
+          options.encodeDotInKeys,
           options.encode ? options.encoder : null,
           options.filter,
           options.sort,
@@ -3012,15 +3291,18 @@ var require_parse = __commonJS({
     var isArray = Array.isArray;
     var defaults2 = {
       allowDots: false,
+      allowEmptyArrays: false,
       allowPrototypes: false,
       allowSparse: false,
       arrayLimit: 20,
       charset: "utf-8",
       charsetSentinel: false,
       comma: false,
+      decodeDotInKeys: false,
       decoder: utils.decode,
       delimiter: "&",
       depth: 5,
+      duplicates: "combine",
       ignoreQueryPrefix: false,
       interpretNumericEntities: false,
       parameterLimit: 1e3,
@@ -3088,9 +3370,10 @@ var require_parse = __commonJS({
         if (part.indexOf("[]=") > -1) {
           val = isArray(val) ? [val] : val;
         }
-        if (has.call(obj, key)) {
+        var existing = has.call(obj, key);
+        if (existing && options.duplicates === "combine") {
           obj[key] = utils.combine(obj[key], val);
-        } else {
+        } else if (!existing || options.duplicates === "last") {
           obj[key] = val;
         }
       }
@@ -3102,18 +3385,19 @@ var require_parse = __commonJS({
         var obj;
         var root = chain[i];
         if (root === "[]" && options.parseArrays) {
-          obj = [].concat(leaf);
+          obj = options.allowEmptyArrays && leaf === "" ? [] : [].concat(leaf);
         } else {
           obj = options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
           var cleanRoot = root.charAt(0) === "[" && root.charAt(root.length - 1) === "]" ? root.slice(1, -1) : root;
-          var index = parseInt(cleanRoot, 10);
-          if (!options.parseArrays && cleanRoot === "") {
+          var decodedRoot = options.decodeDotInKeys ? cleanRoot.replace(/%2E/g, ".") : cleanRoot;
+          var index = parseInt(decodedRoot, 10);
+          if (!options.parseArrays && decodedRoot === "") {
             obj = { 0: leaf };
-          } else if (!isNaN(index) && root !== cleanRoot && String(index) === cleanRoot && index >= 0 && (options.parseArrays && index <= options.arrayLimit)) {
+          } else if (!isNaN(index) && root !== decodedRoot && String(index) === decodedRoot && index >= 0 && (options.parseArrays && index <= options.arrayLimit)) {
             obj = [];
             obj[index] = leaf;
-          } else if (cleanRoot !== "__proto__") {
-            obj[cleanRoot] = leaf;
+          } else if (decodedRoot !== "__proto__") {
+            obj[decodedRoot] = leaf;
           }
         }
         leaf = obj;
@@ -3157,25 +3441,39 @@ var require_parse = __commonJS({
       if (!opts) {
         return defaults2;
       }
-      if (opts.decoder !== null && opts.decoder !== void 0 && typeof opts.decoder !== "function") {
+      if (typeof opts.allowEmptyArrays !== "undefined" && typeof opts.allowEmptyArrays !== "boolean") {
+        throw new TypeError("`allowEmptyArrays` option can only be `true` or `false`, when provided");
+      }
+      if (typeof opts.decodeDotInKeys !== "undefined" && typeof opts.decodeDotInKeys !== "boolean") {
+        throw new TypeError("`decodeDotInKeys` option can only be `true` or `false`, when provided");
+      }
+      if (opts.decoder !== null && typeof opts.decoder !== "undefined" && typeof opts.decoder !== "function") {
         throw new TypeError("Decoder has to be a function.");
       }
       if (typeof opts.charset !== "undefined" && opts.charset !== "utf-8" && opts.charset !== "iso-8859-1") {
         throw new TypeError("The charset option must be either utf-8, iso-8859-1, or undefined");
       }
       var charset = typeof opts.charset === "undefined" ? defaults2.charset : opts.charset;
+      var duplicates = typeof opts.duplicates === "undefined" ? defaults2.duplicates : opts.duplicates;
+      if (duplicates !== "combine" && duplicates !== "first" && duplicates !== "last") {
+        throw new TypeError("The duplicates option must be either combine, first, or last");
+      }
+      var allowDots = typeof opts.allowDots === "undefined" ? opts.decodeDotInKeys === true ? true : defaults2.allowDots : !!opts.allowDots;
       return {
-        allowDots: typeof opts.allowDots === "undefined" ? defaults2.allowDots : !!opts.allowDots,
+        allowDots,
+        allowEmptyArrays: typeof opts.allowEmptyArrays === "boolean" ? !!opts.allowEmptyArrays : defaults2.allowEmptyArrays,
         allowPrototypes: typeof opts.allowPrototypes === "boolean" ? opts.allowPrototypes : defaults2.allowPrototypes,
         allowSparse: typeof opts.allowSparse === "boolean" ? opts.allowSparse : defaults2.allowSparse,
         arrayLimit: typeof opts.arrayLimit === "number" ? opts.arrayLimit : defaults2.arrayLimit,
         charset,
         charsetSentinel: typeof opts.charsetSentinel === "boolean" ? opts.charsetSentinel : defaults2.charsetSentinel,
         comma: typeof opts.comma === "boolean" ? opts.comma : defaults2.comma,
+        decodeDotInKeys: typeof opts.decodeDotInKeys === "boolean" ? opts.decodeDotInKeys : defaults2.decodeDotInKeys,
         decoder: typeof opts.decoder === "function" ? opts.decoder : defaults2.decoder,
         delimiter: typeof opts.delimiter === "string" || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults2.delimiter,
         // eslint-disable-next-line no-implicit-coercion, no-extra-parens
         depth: typeof opts.depth === "number" || opts.depth === false ? +opts.depth : defaults2.depth,
+        duplicates,
         ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
         interpretNumericEntities: typeof opts.interpretNumericEntities === "boolean" ? opts.interpretNumericEntities : defaults2.interpretNumericEntities,
         parameterLimit: typeof opts.parameterLimit === "number" ? opts.parameterLimit : defaults2.parameterLimit,
@@ -3504,7 +3802,10 @@ var require_url = __commonJS({
         }
       }
       if (this.query && typeof this.query === "object" && Object.keys(this.query).length) {
-        query = querystring.stringify(this.query);
+        query = querystring.stringify(this.query, {
+          arrayFormat: "repeat",
+          addQueryPrefix: false
+        });
       }
       var search = this.search || query && "?" + query || "";
       if (protocol && protocol.substr(-1) !== ":") {
@@ -6484,10 +6785,10 @@ var require_string_decoder = __commonJS({
   }
 });
 
-// node_modules/minimatch/dist/mjs/index.js
+// node_modules/minimatch/dist/esm/index.js
 var import_brace_expansion = __toESM(require_brace_expansion(), 1);
 
-// node_modules/minimatch/dist/mjs/assert-valid-pattern.js
+// node_modules/minimatch/dist/esm/assert-valid-pattern.js
 var MAX_PATTERN_LENGTH = 1024 * 64;
 var assertValidPattern = (pattern) => {
   if (typeof pattern !== "string") {
@@ -6498,7 +6799,7 @@ var assertValidPattern = (pattern) => {
   }
 };
 
-// node_modules/minimatch/dist/mjs/brace-expressions.js
+// node_modules/minimatch/dist/esm/brace-expressions.js
 var posixClasses = {
   "[:alnum:]": ["\\p{L}\\p{Nl}\\p{Nd}", true],
   "[:alpha:]": ["\\p{L}\\p{Nl}", true],
@@ -6608,12 +6909,12 @@ var parseClass = (glob2, position) => {
   return [comb, uflag, endPos - pos, true];
 };
 
-// node_modules/minimatch/dist/mjs/unescape.js
+// node_modules/minimatch/dist/esm/unescape.js
 var unescape2 = (s, { windowsPathsNoEscape = false } = {}) => {
   return windowsPathsNoEscape ? s.replace(/\[([^\/\\])\]/g, "$1") : s.replace(/((?!\\).|^)\[([^\/\\])\]/g, "$1$2").replace(/\\([^\/])/g, "$1");
 };
 
-// node_modules/minimatch/dist/mjs/ast.js
+// node_modules/minimatch/dist/esm/ast.js
 var types = /* @__PURE__ */ new Set(["!", "?", "+", "*", "@"]);
 var isExtglobType = (c) => types.has(c);
 var startNoTraversal = "(?!(?:^|/)\\.\\.?(?:$|/))";
@@ -6887,6 +7188,9 @@ var AST = class _AST {
       _glob: glob2
     });
   }
+  get options() {
+    return this.#options;
+  }
   // returns the string match, the regexp source, whether there's magic
   // in the regexp (so a regular expression is required) and whether or
   // not the uflag is needed for the regular expression (for posix classes)
@@ -7089,12 +7393,12 @@ var AST = class _AST {
   }
 };
 
-// node_modules/minimatch/dist/mjs/escape.js
+// node_modules/minimatch/dist/esm/escape.js
 var escape2 = (s, { windowsPathsNoEscape = false } = {}) => {
   return windowsPathsNoEscape ? s.replace(/[?*()[\]]/g, "[$&]") : s.replace(/[?*()[\]\\]/g, "\\$&");
 };
 
-// node_modules/minimatch/dist/mjs/index.js
+// node_modules/minimatch/dist/esm/index.js
 var minimatch = (p, pattern, options = {}) => {
   assertValidPattern(pattern);
   if (!options.nocomment && pattern.charAt(0) === "#") {
@@ -7515,10 +7819,11 @@ var Minimatch = class {
     for (let i = 0; i < globParts.length - 1; i++) {
       for (let j = i + 1; j < globParts.length; j++) {
         const matched = this.partsMatch(globParts[i], globParts[j], !this.preserveMultipleSlashes);
-        if (!matched)
-          continue;
-        globParts[i] = matched;
-        globParts[j] = [];
+        if (matched) {
+          globParts[i] = [];
+          globParts[j] = matched;
+          break;
+        }
       }
     }
     return globParts.filter((gs) => gs.length);
@@ -7693,7 +7998,10 @@ var Minimatch = class {
       fastTest = dotStarTest;
     }
     const re = AST.fromGlob(pattern, this.options).toMMPattern();
-    return fastTest ? Object.assign(re, { test: fastTest }) : re;
+    if (fastTest && typeof re === "object") {
+      Reflect.defineProperty(re, "test", { value: fastTest });
+    }
+    return re;
   }
   makeRe() {
     if (this.regexp || this.regexp === false)
@@ -7808,7 +8116,7 @@ minimatch.Minimatch = Minimatch;
 minimatch.escape = escape2;
 minimatch.unescape = unescape2;
 
-// node_modules/lru-cache/dist/mjs/index.js
+// node_modules/path-scurry/node_modules/lru-cache/dist/esm/index.js
 var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
 var warned = /* @__PURE__ */ new Set();
 var PROCESS = typeof process === "object" && !!process ? process : {};
@@ -7890,14 +8198,13 @@ var Stack = class _Stack {
   }
 };
 var LRUCache = class _LRUCache {
-  // properties coming in from the options of these, only max and maxSize
-  // really *need* to be protected. The rest can be modified, as they just
-  // set defaults for various methods.
+  // options that cannot be changed without disaster
   #max;
   #maxSize;
   #dispose;
   #disposeAfter;
   #fetchMethod;
+  #memoMethod;
   /**
    * {@link LRUCache.OptionsBase.ttl}
    */
@@ -8043,6 +8350,9 @@ var LRUCache = class _LRUCache {
   get fetchMethod() {
     return this.#fetchMethod;
   }
+  get memoMethod() {
+    return this.#memoMethod;
+  }
   /**
    * {@link LRUCache.OptionsBase.dispose} (read-only)
    */
@@ -8056,7 +8366,7 @@ var LRUCache = class _LRUCache {
     return this.#disposeAfter;
   }
   constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
+    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
     if (max !== 0 && !isPosInt(max)) {
       throw new TypeError("max option must be a nonnegative integer");
     }
@@ -8076,6 +8386,10 @@ var LRUCache = class _LRUCache {
         throw new TypeError("sizeCalculation set to non-function");
       }
     }
+    if (memoMethod !== void 0 && typeof memoMethod !== "function") {
+      throw new TypeError("memoMethod must be a function if defined");
+    }
+    this.#memoMethod = memoMethod;
     if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
       throw new TypeError("fetchMethod must be a function if specified");
     }
@@ -8146,7 +8460,8 @@ var LRUCache = class _LRUCache {
     }
   }
   /**
-   * Return the remaining TTL time for a given entry key
+   * Return the number of ms left in the item's TTL. If item is not in cache,
+   * returns `0`. Returns `Infinity` if item is in cache without a defined TTL.
    */
   getRemainingTTL(key) {
     return this.#keyMap.has(key) ? Infinity : 0;
@@ -8162,7 +8477,7 @@ var LRUCache = class _LRUCache {
       if (ttl !== 0 && this.ttlAutopurge) {
         const t = setTimeout(() => {
           if (this.#isStale(index)) {
-            this.delete(this.#keyList[index]);
+            this.#delete(this.#keyList[index], "expire");
           }
         }, ttl + 1);
         if (t.unref) {
@@ -8177,6 +8492,8 @@ var LRUCache = class _LRUCache {
       if (ttls[index]) {
         const ttl = ttls[index];
         const start = starts[index];
+        if (!ttl || !start)
+          return;
         status.ttl = ttl;
         status.start = start;
         status.now = cachedNow || getNow();
@@ -8203,14 +8520,16 @@ var LRUCache = class _LRUCache {
       }
       const ttl = ttls[index];
       const start = starts[index];
-      if (ttl === 0 || start === 0) {
+      if (!ttl || !start) {
         return Infinity;
       }
       const age = (cachedNow || getNow()) - start;
       return ttl - age;
     };
     this.#isStale = (index) => {
-      return ttls[index] !== 0 && starts[index] !== 0 && (cachedNow || getNow()) - starts[index] > ttls[index];
+      const s = starts[index];
+      const t = ttls[index];
+      return !!t && !!s && (cachedNow || getNow()) - s > t;
     };
   }
   // conditionally set private methods related to TTL
@@ -8395,8 +8714,14 @@ var LRUCache = class _LRUCache {
     return this.entries();
   }
   /**
+   * A String value that is used in the creation of the default string
+   * description of an object. Called by the built-in method
+   * `Object.prototype.toString`.
+   */
+  [Symbol.toStringTag] = "LRUCache";
+  /**
    * Find a value for which the supplied fn method returns a truthy value,
-   * similar to Array.find().  fn is called as fn(value, key, cache).
+   * similar to `Array.find()`. fn is called as `fn(value, key, cache)`.
    */
   find(fn, getOptions = {}) {
     for (const i of this.#indexes()) {
@@ -8410,10 +8735,15 @@ var LRUCache = class _LRUCache {
     }
   }
   /**
-   * Call the supplied function on each item in the cache, in order from
-   * most recently used to least recently used.  fn is called as
-   * fn(value, key, cache).  Does not update age or recenty of use.
-   * Does not iterate over stale values.
+   * Call the supplied function on each item in the cache, in order from most
+   * recently used to least recently used.
+   *
+   * `fn` is called as `fn(value, key, cache)`.
+   *
+   * If `thisp` is provided, function will be called in the `this`-context of
+   * the provided object, or the cache if no `thisp` object is provided.
+   *
+   * Does not update age or recenty of use, or iterate over stale values.
    */
   forEach(fn, thisp = this) {
     for (const i of this.#indexes()) {
@@ -8445,15 +8775,59 @@ var LRUCache = class _LRUCache {
     let deleted = false;
     for (const i of this.#rindexes({ allowStale: true })) {
       if (this.#isStale(i)) {
-        this.delete(this.#keyList[i]);
+        this.#delete(this.#keyList[i], "expire");
         deleted = true;
       }
     }
     return deleted;
   }
   /**
+   * Get the extended info about a given entry, to get its value, size, and
+   * TTL info simultaneously. Returns `undefined` if the key is not present.
+   *
+   * Unlike {@link LRUCache#dump}, which is designed to be portable and survive
+   * serialization, the `start` value is always the current timestamp, and the
+   * `ttl` is a calculated remaining time to live (negative if expired).
+   *
+   * Always returns stale values, if their info is found in the cache, so be
+   * sure to check for expirations (ie, a negative {@link LRUCache.Entry#ttl})
+   * if relevant.
+   */
+  info(key) {
+    const i = this.#keyMap.get(key);
+    if (i === void 0)
+      return void 0;
+    const v = this.#valList[i];
+    const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+    if (value === void 0)
+      return void 0;
+    const entry = { value };
+    if (this.#ttls && this.#starts) {
+      const ttl = this.#ttls[i];
+      const start = this.#starts[i];
+      if (ttl && start) {
+        const remain = ttl - (perf.now() - start);
+        entry.ttl = remain;
+        entry.start = Date.now();
+      }
+    }
+    if (this.#sizes) {
+      entry.size = this.#sizes[i];
+    }
+    return entry;
+  }
+  /**
    * Return an array of [key, {@link LRUCache.Entry}] tuples which can be
-   * passed to cache.load()
+   * passed to {@link LRLUCache#load}.
+   *
+   * The `start` fields are calculated relative to a portable `Date.now()`
+   * timestamp, even if `performance.now()` is available.
+   *
+   * Stale entries are always included in the `dump`, even if
+   * {@link LRUCache.OptionsBase.allowStale} is false.
+   *
+   * Note: this returns an actual array, not a generator, so it can be more
+   * easily passed around.
    */
   dump() {
     const arr = [];
@@ -8478,8 +8852,12 @@ var LRUCache = class _LRUCache {
   }
   /**
    * Reset the cache and load in the items in entries in the order listed.
-   * Note that the shape of the resulting cache may be different if the
-   * same options are not used in both caches.
+   *
+   * The shape of the resulting cache may be different if the same options are
+   * not used in both caches.
+   *
+   * The `start` fields are assumed to be calculated relative to a portable
+   * `Date.now()` timestamp, even if `performance.now()` is available.
    */
   load(arr) {
     this.clear();
@@ -8496,6 +8874,30 @@ var LRUCache = class _LRUCache {
    *
    * Note: if `undefined` is specified as a value, this is an alias for
    * {@link LRUCache#delete}
+   *
+   * Fields on the {@link LRUCache.SetOptions} options param will override
+   * their corresponding values in the constructor options for the scope
+   * of this single `set()` operation.
+   *
+   * If `start` is provided, then that will set the effective start
+   * time for the TTL calculation. Note that this must be a previous
+   * value of `performance.now()` if supported, or a previous value of
+   * `Date.now()` if not.
+   *
+   * Options object may also include `size`, which will prevent
+   * calling the `sizeCalculation` function and just use the specified
+   * number if it is a positive integer, and `noDisposeOnSet` which
+   * will prevent calling a `dispose` function in the case of
+   * overwrites.
+   *
+   * If the `size` (or return value of `sizeCalculation`) for a given
+   * entry is greater than `maxEntrySize`, then the item will not be
+   * added to the cache.
+   *
+   * Will update the recency of the entry.
+   *
+   * If the value is `undefined`, then this is an alias for
+   * `cache.delete(key)`. `undefined` is never stored in the cache.
    */
   set(k, v, setOptions = {}) {
     if (v === void 0) {
@@ -8510,7 +8912,7 @@ var LRUCache = class _LRUCache {
         status.set = "miss";
         status.maxEntrySizeExceeded = true;
       }
-      this.delete(k);
+      this.#delete(k, "set");
       return this;
     }
     let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
@@ -8644,6 +9046,14 @@ var LRUCache = class _LRUCache {
    * Will return false if the item is stale, even though it is technically
    * in the cache.
    *
+   * Check if a key is in the cache, without updating the recency of
+   * use. Age is updated if {@link LRUCache.OptionsBase.updateAgeOnHas} is set
+   * to `true` in either the options or the constructor.
+   *
+   * Will return `false` if the item is stale, even though it is technically in
+   * the cache. The difference can be determined (if it matters) by using a
+   * `status` argument, and inspecting the `has` field.
+   *
    * Will not update item age unless
    * {@link LRUCache.OptionsBase.updateAgeOnHas} is set.
    */
@@ -8683,10 +9093,11 @@ var LRUCache = class _LRUCache {
   peek(k, peekOptions = {}) {
     const { allowStale = this.allowStale } = peekOptions;
     const index = this.#keyMap.get(k);
-    if (index !== void 0 && (allowStale || !this.#isStale(index))) {
-      const v = this.#valList[index];
-      return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+    if (index === void 0 || !allowStale && this.#isStale(index)) {
+      return;
     }
+    const v = this.#valList[index];
+    return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
   }
   #backgroundFetch(k, index, options, context) {
     const v = index === void 0 ? void 0 : this.#valList[index];
@@ -8725,7 +9136,7 @@ var LRUCache = class _LRUCache {
           if (bf2.__staleWhileFetching) {
             this.#valList[index] = bf2.__staleWhileFetching;
           } else {
-            this.delete(k);
+            this.#delete(k, "fetch");
           }
         } else {
           if (options.status)
@@ -8751,7 +9162,7 @@ var LRUCache = class _LRUCache {
       if (this.#valList[index] === p) {
         const del = !noDelete || bf2.__staleWhileFetching === void 0;
         if (del) {
-          this.delete(k);
+          this.#delete(k, "fetch");
         } else if (!allowStaleAborted) {
           this.#valList[index] = bf2.__staleWhileFetching;
         }
@@ -8889,6 +9300,28 @@ var LRUCache = class _LRUCache {
       return staleVal ? p.__staleWhileFetching : p.__returned = p;
     }
   }
+  async forceFetch(k, fetchOptions = {}) {
+    const v = await this.fetch(k, fetchOptions);
+    if (v === void 0)
+      throw new Error("fetch() returned undefined");
+    return v;
+  }
+  memo(k, memoOptions = {}) {
+    const memoMethod = this.#memoMethod;
+    if (!memoMethod) {
+      throw new Error("no memoMethod provided to constructor");
+    }
+    const { context, forceRefresh, ...options } = memoOptions;
+    const v = this.get(k, options);
+    if (!forceRefresh && v !== void 0)
+      return v;
+    const vv = memoMethod(k, v, {
+      options,
+      context
+    });
+    this.set(k, vv, options);
+    return vv;
+  }
   /**
    * Return a value from the cache. Will update the recency of the cache
    * entry found.
@@ -8908,7 +9341,7 @@ var LRUCache = class _LRUCache {
           status.get = "stale";
         if (!fetching) {
           if (!noDeleteOnStaleGet) {
-            this.delete(k);
+            this.#delete(k, "expire");
           }
           if (status && allowStale)
             status.returnedStale = true;
@@ -8952,16 +9385,20 @@ var LRUCache = class _LRUCache {
   }
   /**
    * Deletes a key out of the cache.
+   *
    * Returns true if the key was deleted, false otherwise.
    */
   delete(k) {
+    return this.#delete(k, "delete");
+  }
+  #delete(k, reason) {
     let deleted = false;
     if (this.#size !== 0) {
       const index = this.#keyMap.get(k);
       if (index !== void 0) {
         deleted = true;
         if (this.#size === 1) {
-          this.clear();
+          this.#clear(reason);
         } else {
           this.#removeItemSize(index);
           const v = this.#valList[index];
@@ -8969,10 +9406,10 @@ var LRUCache = class _LRUCache {
             v.__abortController.abort(new Error("deleted"));
           } else if (this.#hasDispose || this.#hasDisposeAfter) {
             if (this.#hasDispose) {
-              this.#dispose?.(v, k, "delete");
+              this.#dispose?.(v, k, reason);
             }
             if (this.#hasDisposeAfter) {
-              this.#disposed?.push([v, k, "delete"]);
+              this.#disposed?.push([v, k, reason]);
             }
           }
           this.#keyMap.delete(k);
@@ -8983,8 +9420,10 @@ var LRUCache = class _LRUCache {
           } else if (index === this.#head) {
             this.#head = this.#next[index];
           } else {
-            this.#next[this.#prev[index]] = this.#next[index];
-            this.#prev[this.#next[index]] = this.#prev[index];
+            const pi = this.#prev[index];
+            this.#next[pi] = this.#next[index];
+            const ni = this.#next[index];
+            this.#prev[ni] = this.#prev[index];
           }
           this.#size--;
           this.#free.push(index);
@@ -9004,6 +9443,9 @@ var LRUCache = class _LRUCache {
    * Clear the cache entirely, throwing away all values.
    */
   clear() {
+    return this.#clear("delete");
+  }
+  #clear(reason) {
     for (const index of this.#rindexes({ allowStale: true })) {
       const v = this.#valList[index];
       if (this.#isBackgroundFetch(v)) {
@@ -9011,10 +9453,10 @@ var LRUCache = class _LRUCache {
       } else {
         const k = this.#keyList[index];
         if (this.#hasDispose) {
-          this.#dispose?.(v, k, "delete");
+          this.#dispose?.(v, k, reason);
         }
         if (this.#hasDisposeAfter) {
-          this.#disposed?.push([v, k, "delete"]);
+          this.#disposed?.push([v, k, reason]);
         }
       }
     }
@@ -9043,22 +9485,22 @@ var LRUCache = class _LRUCache {
   }
 };
 
-// node_modules/path-scurry/dist/mjs/index.js
-var import_path = __toESM(require_path(), 1);
-var import_url = __toESM(require_url(), 1);
+// node_modules/path-scurry/dist/esm/index.js
+var import_node_path = __toESM(require_path(), 1);
+var import_node_url = __toESM(require_url(), 1);
 
-// node_modules/minipass/dist/mjs/index.js
-var import_events = __toESM(require_events(), 1);
-var import_stream = __toESM(require_stream(), 1);
-var import_string_decoder = __toESM(require_string_decoder(), 1);
+// node_modules/minipass/dist/esm/index.js
+var import_node_events = __toESM(require_events(), 1);
+var import_node_stream = __toESM(require_stream(), 1);
+var import_node_string_decoder = __toESM(require_string_decoder(), 1);
 var proc = typeof process === "object" && process ? process : {
   stdout: null,
   stderr: null
 };
-var isStream = (s) => !!s && typeof s === "object" && (s instanceof Minipass || s instanceof import_stream.default || isReadable(s) || isWritable(s));
-var isReadable = (s) => !!s && typeof s === "object" && s instanceof import_events.EventEmitter && typeof s.pipe === "function" && // node core Writable streams have a pipe() method, but it throws
-s.pipe !== import_stream.default.Writable.prototype.pipe;
-var isWritable = (s) => !!s && typeof s === "object" && s instanceof import_events.EventEmitter && typeof s.write === "function" && typeof s.end === "function";
+var isStream = (s) => !!s && typeof s === "object" && (s instanceof Minipass || s instanceof import_node_stream.default || isReadable(s) || isWritable(s));
+var isReadable = (s) => !!s && typeof s === "object" && s instanceof import_node_events.EventEmitter && typeof s.pipe === "function" && // node core Writable streams have a pipe() method, but it throws
+s.pipe !== import_node_stream.default.Writable.prototype.pipe;
+var isWritable = (s) => !!s && typeof s === "object" && s instanceof import_node_events.EventEmitter && typeof s.write === "function" && typeof s.end === "function";
 var EOF = Symbol("EOF");
 var MAYBE_EMIT_END = Symbol("maybeEmitEnd");
 var EMITTED_END = Symbol("emittedEnd");
@@ -9134,7 +9576,7 @@ var PipeProxyErrors = class extends Pipe {
 };
 var isObjectModeOptions = (o) => !!o.objectMode;
 var isEncodingOptions = (o) => !o.objectMode && !!o.encoding && o.encoding !== "buffer";
-var Minipass = class extends import_events.EventEmitter {
+var Minipass = class extends import_node_events.EventEmitter {
   [FLOWING] = false;
   [PAUSED] = false;
   [PIPES] = [];
@@ -9185,7 +9627,7 @@ var Minipass = class extends import_events.EventEmitter {
       this[ENCODING] = null;
     }
     this[ASYNC] = !!options.async;
-    this[DECODER] = this[ENCODING] ? new import_string_decoder.StringDecoder(this[ENCODING]) : null;
+    this[DECODER] = this[ENCODING] ? new import_node_string_decoder.StringDecoder(this[ENCODING]) : null;
     if (options && options.debugExposeBuffer === true) {
       Object.defineProperty(this, "buffer", { get: () => this[BUFFER] });
     }
@@ -9925,7 +10367,7 @@ var Minipass = class extends import_events.EventEmitter {
   }
 };
 
-// node_modules/path-scurry/dist/mjs/index.js
+// node_modules/path-scurry/dist/esm/index.js
 var fsFromOption = (fsOption) => fsOption;
 var uncDriveRegexp = /^\\\\\?\\([a-z]:)\\?$/i;
 var uncToDrive = (rootPath) => rootPath.replace(/\//g, "\\").replace(uncDriveRegexp, "$1\\");
@@ -10016,6 +10458,11 @@ var PathBase = class {
    * @internal
    */
   nocase;
+  /**
+   * boolean indicating that this path is the current working directory
+   * of the PathScurry collection that contains it.
+   */
+  isCWD = false;
   // potential default fs override
   #fs;
   // Stats fields
@@ -10103,13 +10550,19 @@ var PathBase = class {
   #realpath;
   /**
    * This property is for compatibility with the Dirent class as of
-   * Node v20, where Dirent['path'] refers to the path of the directory
-   * that was passed to readdir.  So, somewhat counterintuitively, this
-   * property refers to the *parent* path, not the path object itself.
-   * For root entries, it's the path to the entry itself.
+   * Node v20, where Dirent['parentPath'] refers to the path of the
+   * directory that was passed to readdir. For root entries, it's the path
+   * to the entry itself.
+   */
+  get parentPath() {
+    return (this.parent || this).fullpath();
+  }
+  /**
+   * Deprecated alias for Dirent['parentPath'] Somewhat counterintuitively,
+   * this property refers to the *parent* path, not the path object itself.
    */
   get path() {
-    return (this.parent || this).fullpath();
+    return this.parentPath;
   }
   /**
    * Do not create new Path objects directly.  They should always be accessed
@@ -10236,6 +10689,8 @@ var PathBase = class {
    * the cwd, then this ends up being equivalent to the fullpath()
    */
   relative() {
+    if (this.isCWD)
+      return "";
     if (this.#relative !== void 0) {
       return this.#relative;
     }
@@ -10256,6 +10711,8 @@ var PathBase = class {
   relativePosix() {
     if (this.sep === "/")
       return this.relative();
+    if (this.isCWD)
+      return "";
     if (this.#relativePosix !== void 0)
       return this.#relativePosix;
     const name = this.name;
@@ -10476,7 +10933,7 @@ var PathBase = class {
     }
     try {
       const read = await this.#fs.promises.readlink(this.fullpath());
-      const linkTarget = this.parent.resolve(read);
+      const linkTarget = (await this.parent.realpath())?.resolve(read);
       if (linkTarget) {
         return this.#linkTarget = linkTarget;
       }
@@ -10501,7 +10958,7 @@ var PathBase = class {
     }
     try {
       const read = this.#fs.readlinkSync(this.fullpath());
-      const linkTarget = this.parent.resolve(read);
+      const linkTarget = this.parent.realpathSync()?.resolve(read);
       if (linkTarget) {
         return this.#linkTarget = linkTarget;
       }
@@ -10513,7 +10970,9 @@ var PathBase = class {
   #readdirSuccess(children) {
     this.#type |= READDIR_CALLED;
     for (let p = children.provisional; p < children.length; p++) {
-      children[p].#markENOENT();
+      const c = children[p];
+      if (c)
+        c.#markENOENT();
     }
   }
   #markENOENT() {
@@ -10860,6 +11319,8 @@ var PathBase = class {
   [setAsCwd](oldCwd) {
     if (oldCwd === this)
       return;
+    oldCwd.isCWD = false;
+    this.isCWD = true;
     const changed = /* @__PURE__ */ new Set([]);
     let rp = [];
     let p = this;
@@ -10906,7 +11367,7 @@ var PathWin32 = class _PathWin32 extends PathBase {
    * @internal
    */
   getRootString(path2) {
-    return import_path.win32.parse(path2).root;
+    return import_node_path.win32.parse(path2).root;
   }
   /**
    * @internal
@@ -11002,10 +11463,10 @@ var PathScurryBase = class {
    *
    * @internal
    */
-  constructor(cwd = process.cwd(), pathImpl, sep2, { nocase, childrenCacheSize = 16 * 1024, fs } = {}) {
+  constructor(cwd = process.cwd(), pathImpl, sep2, { nocase, childrenCacheSize = 16 * 1024, fs = defaultFS } = {}) {
     this.#fs = fsFromOption(fs);
     if (cwd instanceof URL || cwd.startsWith("file://")) {
-      cwd = (0, import_url.fileURLToPath)(cwd);
+      cwd = (0, import_node_url.fileURLToPath)(cwd);
     }
     const cwdPath = pathImpl.resolve(cwd);
     this.roots = /* @__PURE__ */ Object.create(null);
@@ -11546,7 +12007,7 @@ var PathScurryWin32 = class extends PathScurryBase {
   sep = "\\";
   constructor(cwd = process.cwd(), opts = {}) {
     const { nocase = true } = opts;
-    super(cwd, import_path.win32, "\\", { ...opts, nocase });
+    super(cwd, import_node_path.win32, "\\", { ...opts, nocase });
     this.nocase = nocase;
     for (let p = this.cwd; p; p = p.parent) {
       p.nocase = this.nocase;
@@ -11556,7 +12017,7 @@ var PathScurryWin32 = class extends PathScurryBase {
    * @internal
    */
   parseRootPath(dir) {
-    return import_path.win32.parse(dir).root.toUpperCase();
+    return import_node_path.win32.parse(dir).root.toUpperCase();
   }
   /**
    * @internal
@@ -11578,7 +12039,7 @@ var PathScurryPosix = class extends PathScurryBase {
   sep = "/";
   constructor(cwd = process.cwd(), opts = {}) {
     const { nocase = false } = opts;
-    super(cwd, import_path.posix, "/", { ...opts, nocase });
+    super(cwd, import_node_path.posix, "/", { ...opts, nocase });
     this.nocase = nocase;
   }
   /**
@@ -11610,7 +12071,7 @@ var Path = process.platform === "win32" ? PathWin32 : PathPosix;
 var PathScurry = process.platform === "win32" ? PathScurryWin32 : process.platform === "darwin" ? PathScurryDarwin : PathScurryPosix;
 
 // node_modules/glob/dist/esm/glob.js
-var import_url2 = __toESM(require_url(), 1);
+var import_url = __toESM(require_url(), 1);
 
 // node_modules/glob/dist/esm/pattern.js
 var isPatternList = (pl) => pl.length >= 1;
@@ -12440,7 +12901,7 @@ var Glob = class {
     if (!opts.cwd) {
       this.cwd = "";
     } else if (opts.cwd instanceof URL || opts.cwd.startsWith("file://")) {
-      opts.cwd = (0, import_url2.fileURLToPath)(opts.cwd);
+      opts.cwd = (0, import_url.fileURLToPath)(opts.cwd);
     }
     this.cwd = opts.cwd || "";
     this.root = opts.root;
