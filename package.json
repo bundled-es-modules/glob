@@ -1,6 +1,6 @@
 {
   "name": "@bundled-es-modules/glob",
-  "version": "13.0.1",
+  "version": "13.0.3",
   "description": "mirror of glob, bundled and exposed as ES module including for browser",
   "author": "Joren Broekema <joren.broekema@gmail.com>",
   "type": "module",
@@ -32,7 +32,7 @@
   "dependencies": {
     "buffer": "^6.0.3",
     "events": "^3.3.0",
-    "glob": "^13.0.1",
+    "glob": "^13.0.3",
     "path": "^0.12.7",
     "stream": "^0.0.3",
     "string_decoder": "^1.3.0",

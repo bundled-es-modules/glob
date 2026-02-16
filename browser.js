@@ -2718,7 +2718,7 @@ var require_utils = __commonJS({
     var hexTable = (function() {
       var array = [];
       for (var i = 0; i < 256; ++i) {
-        array.push("%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase());
+        array[array.length] = "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase();
       }
       return array;
     })();
@@ -2730,7 +2730,7 @@ var require_utils = __commonJS({
           var compacted = [];
           for (var j = 0; j < obj.length; ++j) {
             if (typeof obj[j] !== "undefined") {
-              compacted.push(obj[j]);
+              compacted[compacted.length] = obj[j];
             }
           }
           item.obj[item.prop] = compacted;
@@ -2752,12 +2752,18 @@ var require_utils = __commonJS({
       }
       if (typeof source !== "object" && typeof source !== "function") {
         if (isArray(target)) {
-          target.push(source);
+          var nextIndex = target.length;
+          if (options && typeof options.arrayLimit === "number" && nextIndex > options.arrayLimit) {
+            return markOverflow(arrayToObject(target.concat(source), options), nextIndex);
+          }
+          target[nextIndex] = source;
         } else if (target && typeof target === "object") {
           if (isOverflow(target)) {
             var newIndex = getMaxIndex(target) + 1;
             target[newIndex] = source;
             setMaxIndex(target, newIndex);
+          } else if (options && options.strictMerge) {
+            return [target, source];
           } else if (options && (options.plainObjects || options.allowPrototypes) || !has.call(Object.prototype, source)) {
             target[source] = true;
           }
@@ -2776,7 +2782,11 @@ var require_utils = __commonJS({
           }
           return markOverflow(result, getMaxIndex(source) + 1);
         }
-        return [target].concat(source);
+        var combined = [target].concat(source);
+        if (options && typeof options.arrayLimit === "number" && combined.length > options.arrayLimit) {
+          return markOverflow(arrayToObject(combined, options), combined.length - 1);
+        }
+        return combined;
       }
       var mergeTarget = target;
       if (isArray(target) && !isArray(source)) {
@@ -2789,7 +2799,7 @@ var require_utils = __commonJS({
             if (targetItem && typeof targetItem === "object" && item && typeof item === "object") {
               target[i] = merge2(targetItem, item, options);
             } else {
-              target.push(item);
+              target[target.length] = item;
             }
           } else {
             target[i] = item;
@@ -2803,6 +2813,15 @@ var require_utils = __commonJS({
           acc[key] = merge2(acc[key], value, options);
         } else {
           acc[key] = value;
+        }
+        if (isOverflow(source) && !isOverflow(acc)) {
+          markOverflow(acc, getMaxIndex(source));
+        }
+        if (isOverflow(acc)) {
+          var keyNum = parseInt(key, 10);
+          if (String(keyNum) === key && keyNum >= 0 && keyNum > getMaxIndex(acc)) {
+            setMaxIndex(acc, keyNum);
+          }
         }
         return acc;
       }, mergeTarget);
@@ -2881,8 +2900,8 @@ var require_utils = __commonJS({
           var key = keys[j];
           var val = obj[key];
           if (typeof val === "object" && val !== null && refs.indexOf(val) === -1) {
-            queue.push({ obj, prop: key });
-            refs.push(val);
+            queue[queue.length] = { obj, prop: key };
+            refs[refs.length] = val;
           }
         }
       }
@@ -2915,7 +2934,7 @@ var require_utils = __commonJS({
       if (isArray(val)) {
         var mapped = [];
         for (var i = 0; i < val.length; i += 1) {
-          mapped.push(fn(val[i]));
+          mapped[mapped.length] = fn(val[i]);
         }
         return mapped;
       }
@@ -2931,6 +2950,7 @@ var require_utils = __commonJS({
       isBuffer,
       isOverflow,
       isRegExp,
+      markOverflow,
       maybeMap,
       merge
     };
@@ -3247,6 +3267,7 @@ var require_parse = __commonJS({
       parseArrays: true,
       plainObjects: false,
       strictDepth: false,
+      strictMerge: true,
       strictNullHandling: false,
       throwOnLimitExceeded: false
     };
@@ -3327,9 +3348,15 @@ var require_parse = __commonJS({
         if (part.indexOf("[]=") > -1) {
           val = isArray(val) ? [val] : val;
         }
+        if (options.comma && isArray(val) && val.length > options.arrayLimit) {
+          if (options.throwOnLimitExceeded) {
+            throw new RangeError("Array limit exceeded. Only " + options.arrayLimit + " element" + (options.arrayLimit === 1 ? "" : "s") + " allowed in an array.");
+          }
+          val = utils.combine([], val, options.arrayLimit, options.plainObjects);
+        }
         if (key !== null) {
           var existing = has.call(obj, key);
-          if (existing && options.duplicates === "combine") {
+          if (existing && (options.duplicates === "combine" || part.indexOf("[]=") > -1)) {
             obj[key] = utils.combine(
               obj[key],
               val,
@@ -3369,11 +3396,17 @@ var require_parse = __commonJS({
           var cleanRoot = root.charAt(0) === "[" && root.charAt(root.length - 1) === "]" ? root.slice(1, -1) : root;
           var decodedRoot = options.decodeDotInKeys ? cleanRoot.replace(/%2E/g, ".") : cleanRoot;
           var index = parseInt(decodedRoot, 10);
+          var isValidArrayIndex = !isNaN(index) && root !== decodedRoot && String(index) === decodedRoot && index >= 0 && options.parseArrays;
           if (!options.parseArrays && decodedRoot === "") {
             obj = { 0: leaf };
-          } else if (!isNaN(index) && root !== decodedRoot && String(index) === decodedRoot && index >= 0 && (options.parseArrays && index <= options.arrayLimit)) {
+          } else if (isValidArrayIndex && index < options.arrayLimit) {
             obj = [];
             obj[index] = leaf;
+          } else if (isValidArrayIndex && options.throwOnLimitExceeded) {
+            throw new RangeError("Array limit exceeded. Only " + options.arrayLimit + " element" + (options.arrayLimit === 1 ? "" : "s") + " allowed in an array.");
+          } else if (isValidArrayIndex) {
+            obj[index] = leaf;
+            utils.markOverflow(obj, index);
           } else if (decodedRoot !== "__proto__") {
             obj[decodedRoot] = leaf;
           }
@@ -3403,7 +3436,7 @@ var require_parse = __commonJS({
             return;
           }
         }
-        keys.push(parent);
+        keys[keys.length] = parent;
       }
       var i = 0;
       while ((segment = child.exec(key)) !== null && i < options.depth) {
@@ -3414,13 +3447,13 @@ var require_parse = __commonJS({
             return;
           }
         }
-        keys.push(segment[1]);
+        keys[keys.length] = segment[1];
       }
       if (segment) {
         if (options.strictDepth === true) {
           throw new RangeError("Input depth exceeded depth option of " + options.depth + " and strictDepth is true");
         }
-        keys.push("[" + key.slice(segment.index) + "]");
+        keys[keys.length] = "[" + key.slice(segment.index) + "]";
       }
       return keys;
     };
@@ -3480,6 +3513,7 @@ var require_parse = __commonJS({
         parseArrays: opts.parseArrays !== false,
         plainObjects: typeof opts.plainObjects === "boolean" ? opts.plainObjects : defaults2.plainObjects,
         strictDepth: typeof opts.strictDepth === "boolean" ? !!opts.strictDepth : defaults2.strictDepth,
+        strictMerge: typeof opts.strictMerge === "boolean" ? !!opts.strictMerge : defaults2.strictMerge,
         strictNullHandling: typeof opts.strictNullHandling === "boolean" ? opts.strictNullHandling : defaults2.strictNullHandling,
         throwOnLimitExceeded: typeof opts.throwOnLimitExceeded === "boolean" ? opts.throwOnLimitExceeded : false
       };
@@ -7542,7 +7576,7 @@ var require_string_decoder = __commonJS({
   }
 });
 
-// node_modules/@isaacs/balanced-match/dist/esm/index.js
+// node_modules/minimatch/node_modules/balanced-match/dist/esm/index.js
 var balanced = (a, b, str) => {
   const ma = a instanceof RegExp ? maybeMatch(a, str) : a;
   const mb = b instanceof RegExp ? maybeMatch(b, str) : b;
@@ -7595,7 +7629,7 @@ var range = (a, b, str) => {
   return result;
 };
 
-// node_modules/@isaacs/brace-expansion/dist/esm/index.js
+// node_modules/minimatch/node_modules/brace-expansion/dist/esm/index.js
 var escSlash = "\0SLASH" + Math.random() + "\0";
 var escOpen = "\0OPEN" + Math.random() + "\0";
 var escClose = "\0CLOSE" + Math.random() + "\0";
@@ -8483,7 +8517,7 @@ var braceExpand = (pattern, options = {}) => {
   if (options.nobrace || !/\{(?:(?!\{).)*\}/.test(pattern)) {
     return [pattern];
   }
-  return expand(pattern);
+  return expand(pattern, { max: options.braceExpandMax });
 };
 minimatch.braceExpand = braceExpand;
 var makeRe = (pattern, options = {}) => new Minimatch(pattern, options).makeRe();
@@ -8524,7 +8558,8 @@ var Minimatch = class {
     this.pattern = pattern;
     this.platform = options.platform || defaultPlatform;
     this.isWindows = this.platform === "win32";
-    this.windowsPathsNoEscape = !!options.windowsPathsNoEscape || options.allowWindowsEscape === false;
+    const awe = "allowWindowsEscape";
+    this.windowsPathsNoEscape = !!options.windowsPathsNoEscape || options[awe] === false;
     if (this.windowsPathsNoEscape) {
       this.pattern = this.pattern.replace(/\\/g, "/");
     }
@@ -8581,7 +8616,10 @@ var Minimatch = class {
         const isUNC = s[0] === "" && s[1] === "" && (s[2] === "?" || !globMagic.test(s[2])) && !globMagic.test(s[3]);
         const isDrive = /^[a-z]:/i.test(s[0]);
         if (isUNC) {
-          return [...s.slice(0, 4), ...s.slice(4).map((ss) => this.parse(ss))];
+          return [
+            ...s.slice(0, 4),
+            ...s.slice(4).map((ss) => this.parse(ss))
+          ];
         } else if (isDrive) {
           return [s[0], ...s.slice(1).map((ss) => this.parse(ss))];
         }
@@ -8862,7 +8900,10 @@ var Minimatch = class {
       const fdi = fileUNC ? 3 : fileDrive ? 0 : void 0;
       const pdi = patternUNC ? 3 : patternDrive ? 0 : void 0;
       if (typeof fdi === "number" && typeof pdi === "number") {
-        const [fd, pd] = [file[fdi], pattern[pdi]];
+        const [fd, pd] = [
+          file[fdi],
+          pattern[pdi]
+        ];
         if (fd.toLowerCase() === pd.toLowerCase()) {
           pattern[pdi] = fd;
           if (pdi > fdi) {
