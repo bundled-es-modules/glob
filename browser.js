@@ -365,8 +365,8 @@ var require_object_inspect = __commonJS({
       if (has(opts, "maxStringLength") && (typeof opts.maxStringLength === "number" ? opts.maxStringLength < 0 && opts.maxStringLength !== Infinity : opts.maxStringLength !== null)) {
         throw new TypeError('option "maxStringLength", if provided, must be a positive integer, Infinity, or `null`');
       }
-      var customInspect = has(opts, "customInspect") ? opts.customInspect : true;
-      if (typeof customInspect !== "boolean" && customInspect !== "symbol") {
+      var customInspect2 = has(opts, "customInspect") ? opts.customInspect : true;
+      if (typeof customInspect2 !== "boolean" && customInspect2 !== "symbol") {
         throw new TypeError("option \"customInspect\", if provided, must be `true`, `false`, or `'symbol'`");
       }
       if (has(opts, "indent") && opts.indent !== null && opts.indent !== "	" && !(parseInt(opts.indent, 10) === opts.indent && opts.indent > 0)) {
@@ -470,10 +470,10 @@ var require_object_inspect = __commonJS({
         }
         return "{ [" + String(obj) + "] " + $join.call(parts, ", ") + " }";
       }
-      if (typeof obj === "object" && customInspect) {
+      if (typeof obj === "object" && customInspect2) {
         if (inspectSymbol && typeof obj[inspectSymbol] === "function" && utilInspect) {
           return utilInspect(obj, { depth: maxDepth - depth });
-        } else if (customInspect !== "symbol" && typeof obj.inspect === "function") {
+        } else if (customInspect2 !== "symbol" && typeof obj.inspect === "function") {
           return obj.inspect();
         }
       }
@@ -618,100 +618,100 @@ var require_object_inspect = __commonJS({
       }
       return null;
     }
-    function indexOf(xs, x) {
+    function indexOf(xs, x2) {
       if (xs.indexOf) {
-        return xs.indexOf(x);
+        return xs.indexOf(x2);
       }
       for (var i = 0, l = xs.length; i < l; i++) {
-        if (xs[i] === x) {
+        if (xs[i] === x2) {
           return i;
         }
       }
       return -1;
     }
-    function isMap(x) {
-      if (!mapSize || !x || typeof x !== "object") {
+    function isMap(x2) {
+      if (!mapSize || !x2 || typeof x2 !== "object") {
         return false;
       }
       try {
-        mapSize.call(x);
+        mapSize.call(x2);
         try {
-          setSize.call(x);
+          setSize.call(x2);
         } catch (s) {
           return true;
         }
-        return x instanceof Map;
+        return x2 instanceof Map;
       } catch (e) {
       }
       return false;
     }
-    function isWeakMap(x) {
-      if (!weakMapHas || !x || typeof x !== "object") {
+    function isWeakMap(x2) {
+      if (!weakMapHas || !x2 || typeof x2 !== "object") {
         return false;
       }
       try {
-        weakMapHas.call(x, weakMapHas);
+        weakMapHas.call(x2, weakMapHas);
         try {
-          weakSetHas.call(x, weakSetHas);
+          weakSetHas.call(x2, weakSetHas);
         } catch (s) {
           return true;
         }
-        return x instanceof WeakMap;
+        return x2 instanceof WeakMap;
       } catch (e) {
       }
       return false;
     }
-    function isWeakRef(x) {
-      if (!weakRefDeref || !x || typeof x !== "object") {
+    function isWeakRef(x2) {
+      if (!weakRefDeref || !x2 || typeof x2 !== "object") {
         return false;
       }
       try {
-        weakRefDeref.call(x);
+        weakRefDeref.call(x2);
         return true;
       } catch (e) {
       }
       return false;
     }
-    function isSet(x) {
-      if (!setSize || !x || typeof x !== "object") {
+    function isSet(x2) {
+      if (!setSize || !x2 || typeof x2 !== "object") {
         return false;
       }
       try {
-        setSize.call(x);
+        setSize.call(x2);
         try {
-          mapSize.call(x);
+          mapSize.call(x2);
         } catch (m) {
           return true;
         }
-        return x instanceof Set;
+        return x2 instanceof Set;
       } catch (e) {
       }
       return false;
     }
-    function isWeakSet(x) {
-      if (!weakSetHas || !x || typeof x !== "object") {
+    function isWeakSet(x2) {
+      if (!weakSetHas || !x2 || typeof x2 !== "object") {
         return false;
       }
       try {
-        weakSetHas.call(x, weakSetHas);
+        weakSetHas.call(x2, weakSetHas);
         try {
-          weakMapHas.call(x, weakMapHas);
+          weakMapHas.call(x2, weakMapHas);
         } catch (s) {
           return true;
         }
-        return x instanceof WeakSet;
+        return x2 instanceof WeakSet;
       } catch (e) {
       }
       return false;
     }
-    function isElement(x) {
-      if (!x || typeof x !== "object") {
+    function isElement(x2) {
+      if (!x2 || typeof x2 !== "object") {
         return false;
       }
-      if (typeof HTMLElement !== "undefined" && x instanceof HTMLElement) {
+      if (typeof HTMLElement !== "undefined" && x2 instanceof HTMLElement) {
         return true;
       }
-      return typeof x.nodeName === "string" && typeof x.getAttribute === "function";
+      return typeof x2.nodeName === "string" && typeof x2.getAttribute === "function";
     }
     function inspectString(str, opts) {
       if (str.length > opts.maxStringLength) {
@@ -726,15 +726,15 @@ var require_object_inspect = __commonJS({
     }
     function lowbyte(c) {
       var n = c.charCodeAt(0);
-      var x = {
+      var x2 = {
         8: "b",
         9: "t",
         10: "n",
         12: "f",
         13: "r"
       }[n];
-      if (x) {
-        return "\\" + x;
+      if (x2) {
+        return "\\" + x2;
       }
       return "\\x" + (n < 16 ? "0" : "") + $toUpperCase.call(n.toString(16));
     }
@@ -1023,8 +1023,8 @@ var require_round = __commonJS({
 var require_isNaN = __commonJS({
   "node_modules/math-intrinsics/isNaN.js"(exports, module) {
     "use strict";
-    module.exports = Number.isNaN || function isNaN2(a) {
-      return a !== a;
+    module.exports = Number.isNaN || function isNaN2(a3) {
+      return a3 !== a3;
     };
   }
 });
@@ -1187,13 +1187,13 @@ var require_implementation = __commonJS({
     var toStr = Object.prototype.toString;
     var max = Math.max;
     var funcType = "[object Function]";
-    var concatty = function concatty2(a, b) {
+    var concatty = function concatty2(a3, b) {
       var arr = [];
-      for (var i = 0; i < a.length; i += 1) {
-        arr[i] = a[i];
+      for (var i = 0; i < a3.length; i += 1) {
+        arr[i] = a3[i];
       }
       for (var j = 0; j < b.length; j += 1) {
-        arr[j + a.length] = b[j];
+        arr[j + a3.length] = b[j];
       }
       return arr;
     };
@@ -2917,14 +2917,14 @@ var require_utils = __commonJS({
       }
       return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
     };
-    var combine = function combine2(a, b, arrayLimit, plainObjects) {
-      if (isOverflow(a)) {
-        var newIndex = getMaxIndex(a) + 1;
-        a[newIndex] = b;
-        setMaxIndex(a, newIndex);
-        return a;
+    var combine = function combine2(a3, b, arrayLimit, plainObjects) {
+      if (isOverflow(a3)) {
+        var newIndex = getMaxIndex(a3) + 1;
+        a3[newIndex] = b;
+        setMaxIndex(a3, newIndex);
+        return a3;
       }
-      var result = [].concat(a, b);
+      var result = [].concat(a3, b);
       if (result.length > arrayLimit) {
         return markOverflow(arrayToObject(result, { plainObjects }), result.length - 1);
       }
@@ -4155,10 +4155,10 @@ var require_util2 = __commonJS({
       var i = 1;
       var args = arguments;
       var len = args.length;
-      var str = String(f).replace(formatRegExp, function(x2) {
-        if (x2 === "%%") return "%";
-        if (i >= len) return x2;
-        switch (x2) {
+      var str = String(f).replace(formatRegExp, function(x3) {
+        if (x3 === "%%") return "%";
+        if (i >= len) return x3;
+        switch (x3) {
           case "%s":
             return String(args[i++]);
           case "%d":
@@ -4170,14 +4170,14 @@ var require_util2 = __commonJS({
               return "[Circular]";
             }
           default:
-            return x2;
+            return x3;
         }
       });
-      for (var x = args[i]; i < len; x = args[++i]) {
-        if (isNull(x) || !isObject(x)) {
-          str += " " + x;
+      for (var x2 = args[i]; i < len; x2 = args[++i]) {
+        if (isNull(x2) || !isObject(x2)) {
+          str += " " + x2;
         } else {
-          str += " " + inspect(x);
+          str += " " + inspect(x2);
         }
       }
       return str;
@@ -4191,9 +4191,9 @@ var require_util2 = __commonJS({
       if (process.noDeprecation === true) {
         return fn;
       }
-      var warned2 = false;
+      var warned = false;
       function deprecated() {
-        if (!warned2) {
+        if (!warned) {
           if (process.throwDeprecation) {
             throw new Error(msg);
           } else if (process.traceDeprecation) {
@@ -4201,7 +4201,7 @@ var require_util2 = __commonJS({
           } else {
             console.error(msg);
           }
-          warned2 = true;
+          warned = true;
         }
         return fn.apply(this, arguments);
       }
@@ -4978,13 +4978,13 @@ var require_path = __commonJS({
 var require_events = __commonJS({
   "node_modules/events/events.js"(exports, module) {
     "use strict";
-    var R = typeof Reflect === "object" ? Reflect : null;
-    var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply2(target, receiver, args) {
+    var R2 = typeof Reflect === "object" ? Reflect : null;
+    var ReflectApply = R2 && typeof R2.apply === "function" ? R2.apply : function ReflectApply2(target, receiver, args) {
       return Function.prototype.apply.call(target, receiver, args);
     };
     var ReflectOwnKeys;
-    if (R && typeof R.ownKeys === "function") {
-      ReflectOwnKeys = R.ownKeys;
+    if (R2 && typeof R2.ownKeys === "function") {
+      ReflectOwnKeys = R2.ownKeys;
     } else if (Object.getOwnPropertySymbols) {
       ReflectOwnKeys = function ReflectOwnKeys2(target) {
         return Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target));
@@ -5907,26 +5907,26 @@ var require_buffer = __commonJS({
     Buffer2.isBuffer = function isBuffer(b) {
       return b != null && b._isBuffer === true && b !== Buffer2.prototype;
     };
-    Buffer2.compare = function compare(a, b) {
-      if (isInstance(a, Uint8Array)) a = Buffer2.from(a, a.offset, a.byteLength);
+    Buffer2.compare = function compare(a3, b) {
+      if (isInstance(a3, Uint8Array)) a3 = Buffer2.from(a3, a3.offset, a3.byteLength);
       if (isInstance(b, Uint8Array)) b = Buffer2.from(b, b.offset, b.byteLength);
-      if (!Buffer2.isBuffer(a) || !Buffer2.isBuffer(b)) {
+      if (!Buffer2.isBuffer(a3) || !Buffer2.isBuffer(b)) {
         throw new TypeError(
           'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
         );
       }
-      if (a === b) return 0;
-      let x = a.length;
-      let y = b.length;
-      for (let i = 0, len = Math.min(x, y); i < len; ++i) {
-        if (a[i] !== b[i]) {
-          x = a[i];
-          y = b[i];
+      if (a3 === b) return 0;
+      let x2 = a3.length;
+      let y2 = b.length;
+      for (let i = 0, len = Math.min(x2, y2); i < len; ++i) {
+        if (a3[i] !== b[i]) {
+          x2 = a3[i];
+          y2 = b[i];
           break;
         }
       }
-      if (x < y) return -1;
-      if (y < x) return 1;
+      if (x2 < y2) return -1;
+      if (y2 < x2) return 1;
       return 0;
     };
     Buffer2.isEncoding = function isEncoding(encoding) {
@@ -6175,20 +6175,20 @@ var require_buffer = __commonJS({
       thisStart >>>= 0;
       thisEnd >>>= 0;
       if (this === target) return 0;
-      let x = thisEnd - thisStart;
-      let y = end - start;
-      const len = Math.min(x, y);
+      let x2 = thisEnd - thisStart;
+      let y2 = end - start;
+      const len = Math.min(x2, y2);
       const thisCopy = this.slice(thisStart, thisEnd);
       const targetCopy = target.slice(start, end);
       for (let i = 0; i < len; ++i) {
         if (thisCopy[i] !== targetCopy[i]) {
-          x = thisCopy[i];
-          y = targetCopy[i];
+          x2 = thisCopy[i];
+          y2 = targetCopy[i];
           break;
         }
       }
-      if (x < y) return -1;
-      if (y < x) return 1;
+      if (x2 < y2) return -1;
+      if (y2 < x2) return 1;
       return 0;
     };
     function bidirectionalIndexOf(buffer, val, byteOffset, encoding, dir) {
@@ -7577,8 +7577,8 @@ var require_string_decoder = __commonJS({
 });
 
 // node_modules/minimatch/node_modules/balanced-match/dist/esm/index.js
-var balanced = (a, b, str) => {
-  const ma = a instanceof RegExp ? maybeMatch(a, str) : a;
+var balanced = (a3, b, str) => {
+  const ma = a3 instanceof RegExp ? maybeMatch(a3, str) : a3;
   const mb = b instanceof RegExp ? maybeMatch(b, str) : b;
   const r = ma !== null && mb != null && range(ma, mb, str);
   return r && {
@@ -7593,13 +7593,13 @@ var maybeMatch = (reg, str) => {
   const m = str.match(reg);
   return m ? m[0] : null;
 };
-var range = (a, b, str) => {
+var range = (a3, b, str) => {
   let begs, beg, left, right = void 0, result;
-  let ai = str.indexOf(a);
+  let ai = str.indexOf(a3);
   let bi = str.indexOf(b, ai + 1);
   let i = ai;
   if (ai >= 0 && bi > 0) {
-    if (a === b) {
+    if (a3 === b) {
       return [ai, bi];
     }
     begs = [];
@@ -7607,7 +7607,7 @@ var range = (a, b, str) => {
     while (i >= 0 && !result) {
       if (i === ai) {
         begs.push(i);
-        ai = str.indexOf(a, i + 1);
+        ai = str.indexOf(a3, i + 1);
       } else if (begs.length === 1) {
         const r = begs.pop();
         if (r !== void 0)
@@ -7644,7 +7644,7 @@ var slashPattern = /\\\\/g;
 var openPattern = /\\{/g;
 var closePattern = /\\}/g;
 var commaPattern = /\\,/g;
-var periodPattern = /\\./g;
+var periodPattern = /\\\./g;
 var EXPANSION_MAX = 1e5;
 function numeric(str) {
   return !isNaN(str) ? parseInt(str, 10) : str.charCodeAt(0);
@@ -7692,11 +7692,11 @@ function embrace(str) {
 function isPadded(el) {
   return /^-?0\d/.test(el);
 }
-function lte(i, y) {
-  return i <= y;
+function lte(i, y2) {
+  return i <= y2;
 }
-function gte(i, y) {
-  return i >= y;
+function gte(i, y2) {
+  return i >= y2;
 }
 function expand_(str, max, isTop) {
   const expansions = [];
@@ -7736,19 +7736,19 @@ function expand_(str, max, isTop) {
     }
     let N;
     if (isSequence && n[0] !== void 0 && n[1] !== void 0) {
-      const x = numeric(n[0]);
-      const y = numeric(n[1]);
+      const x2 = numeric(n[0]);
+      const y2 = numeric(n[1]);
       const width = Math.max(n[0].length, n[1].length);
       let incr = n.length === 3 && n[2] !== void 0 ? Math.abs(numeric(n[2])) : 1;
       let test = lte;
-      const reverse = y < x;
+      const reverse = y2 < x2;
       if (reverse) {
         incr *= -1;
         test = gte;
       }
       const pad = n.some(isPadded);
       N = [];
-      for (let i = x; test(i, y); i += incr) {
+      for (let i = x2; test(i, y2); i += incr) {
         let c;
         if (isAlphaSequence) {
           c = String.fromCharCode(i);
@@ -7760,11 +7760,11 @@ function expand_(str, max, isTop) {
           if (pad) {
             const need = width - c.length;
             if (need > 0) {
-              const z = new Array(need + 1).join("0");
+              const z2 = new Array(need + 1).join("0");
               if (i < 0) {
-                c = "-" + z + c.slice(1);
+                c = "-" + z2 + c.slice(1);
               } else {
-                c = z + c;
+                c = z2 + c;
               }
             }
           }
@@ -7918,8 +7918,56 @@ var unescape2 = (s, { windowsPathsNoEscape = false, magicalBraces = true } = {})
 };
 
 // node_modules/minimatch/dist/esm/ast.js
+var _a;
 var types = /* @__PURE__ */ new Set(["!", "?", "+", "*", "@"]);
 var isExtglobType = (c) => types.has(c);
+var isExtglobAST = (c) => isExtglobType(c.type);
+var adoptionMap = /* @__PURE__ */ new Map([
+  ["!", ["@"]],
+  ["?", ["?", "@"]],
+  ["@", ["@"]],
+  ["*", ["*", "+", "?", "@"]],
+  ["+", ["+", "@"]]
+]);
+var adoptionWithSpaceMap = /* @__PURE__ */ new Map([
+  ["!", ["?"]],
+  ["@", ["?"]],
+  ["+", ["?", "*"]]
+]);
+var adoptionAnyMap = /* @__PURE__ */ new Map([
+  ["!", ["?", "@"]],
+  ["?", ["?", "@"]],
+  ["@", ["?", "@"]],
+  ["*", ["*", "+", "?", "@"]],
+  ["+", ["+", "@", "?", "*"]]
+]);
+var usurpMap = /* @__PURE__ */ new Map([
+  ["!", /* @__PURE__ */ new Map([["!", "@"]])],
+  [
+    "?",
+    /* @__PURE__ */ new Map([
+      ["*", "*"],
+      ["+", "*"]
+    ])
+  ],
+  [
+    "@",
+    /* @__PURE__ */ new Map([
+      ["!", "!"],
+      ["?", "?"],
+      ["@", "@"],
+      ["*", "*"],
+      ["+", "+"]
+    ])
+  ],
+  [
+    "+",
+    /* @__PURE__ */ new Map([
+      ["?", "*"],
+      ["*", "*"]
+    ])
+  ]
+]);
 var startNoTraversal = "(?!(?:^|/)\\.\\.?(?:$|/))";
 var startNoDot = "(?!\\.)";
 var addPatternStart = /* @__PURE__ */ new Set(["[", "."]);
@@ -7929,7 +7977,8 @@ var regExpEscape = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 var qmark = "[^/]";
 var star = qmark + "*?";
 var starNoEmpty = qmark + "+?";
-var AST = class _AST {
+var ID = 0;
+var AST = class {
   type;
   #root;
   #hasMagic;
@@ -7944,6 +7993,22 @@ var AST = class _AST {
   // set to true if it's an extglob with no children
   // (which really means one child of '')
   #emptyExt = false;
+  id = ++ID;
+  get depth() {
+    return (this.#parent?.depth ?? -1) + 1;
+  }
+  [Symbol.for("nodejs.util.inspect.custom")]() {
+    return {
+      "@@type": "AST",
+      id: this.id,
+      type: this.type,
+      root: this.#root.id,
+      parent: this.#parent?.id,
+      depth: this.depth,
+      partsLength: this.#parts.length,
+      parts: this.#parts
+    };
+  }
   constructor(type, parent, options = {}) {
     this.type = type;
     if (type)
@@ -8009,7 +8074,7 @@ var AST = class _AST {
     for (const p of parts) {
       if (p === "")
         continue;
-      if (typeof p !== "string" && !(p instanceof _AST && p.#parent === this)) {
+      if (typeof p !== "string" && !(p instanceof _a && p.#parent === this)) {
         throw new Error("invalid part: " + p);
       }
       this.#parts.push(p);
@@ -8034,7 +8099,7 @@ var AST = class _AST {
     const p = this.#parent;
     for (let i = 0; i < this.#parentIndex; i++) {
       const pp = p.#parts[i];
-      if (!(pp instanceof _AST && pp.type === "!")) {
+      if (!(pp instanceof _a && pp.type === "!")) {
         return false;
       }
     }
@@ -8059,13 +8124,14 @@ var AST = class _AST {
       this.push(part.clone(this));
   }
   clone(parent) {
-    const c = new _AST(this.type, parent);
+    const c = new _a(this.type, parent);
     for (const p of this.#parts) {
       c.copyIn(p);
     }
     return c;
   }
-  static #parseAST(str, ast, pos, opt) {
+  static #parseAST(str, ast, pos, opt, extDepth) {
+    const maxDepth = opt.maxExtglobRecursion ?? 2;
     let escaping = false;
     let inBrace = false;
     let braceStart = -1;
@@ -8097,11 +8163,12 @@ var AST = class _AST {
           acc2 += c;
           continue;
         }
-        if (!opt.noext && isExtglobType(c) && str.charAt(i2) === "(") {
+        const doRecurse = !opt.noext && isExtglobType(c) && str.charAt(i2) === "(" && extDepth <= maxDepth;
+        if (doRecurse) {
           ast.push(acc2);
           acc2 = "";
-          const ext2 = new _AST(c, ast);
-          i2 = _AST.#parseAST(str, ext2, i2, opt);
+          const ext2 = new _a(c, ast);
+          i2 = _a.#parseAST(str, ext2, i2, opt, extDepth + 1);
           ast.push(ext2);
           continue;
         }
@@ -8111,7 +8178,7 @@ var AST = class _AST {
       return i2;
     }
     let i = pos + 1;
-    let part = new _AST(null, ast);
+    let part = new _a(null, ast);
     const parts = [];
     let acc = "";
     while (i < str.length) {
@@ -8138,19 +8205,22 @@ var AST = class _AST {
         acc += c;
         continue;
       }
-      if (isExtglobType(c) && str.charAt(i) === "(") {
+      const doRecurse = !opt.noext && isExtglobType(c) && str.charAt(i) === "(" && /* c8 ignore start - the maxDepth is sufficient here */
+      (extDepth <= maxDepth || ast && ast.#canAdoptType(c));
+      if (doRecurse) {
+        const depthAdd = ast && ast.#canAdoptType(c) ? 0 : 1;
         part.push(acc);
         acc = "";
-        const ext2 = new _AST(c, part);
+        const ext2 = new _a(c, part);
         part.push(ext2);
-        i = _AST.#parseAST(str, ext2, i, opt);
+        i = _a.#parseAST(str, ext2, i, opt, extDepth + depthAdd);
         continue;
       }
       if (c === "|") {
         part.push(acc);
         acc = "";
         parts.push(part);
-        part = new _AST(null, ast);
+        part = new _a(null, ast);
         continue;
       }
       if (c === ")") {
@@ -8169,9 +8239,71 @@ var AST = class _AST {
     ast.#parts = [str.substring(pos - 1)];
     return i;
   }
+  #canAdoptWithSpace(child) {
+    return this.#canAdopt(child, adoptionWithSpaceMap);
+  }
+  #canAdopt(child, map = adoptionMap) {
+    if (!child || typeof child !== "object" || child.type !== null || child.#parts.length !== 1 || this.type === null) {
+      return false;
+    }
+    const gc = child.#parts[0];
+    if (!gc || typeof gc !== "object" || gc.type === null) {
+      return false;
+    }
+    return this.#canAdoptType(gc.type, map);
+  }
+  #canAdoptType(c, map = adoptionAnyMap) {
+    return !!map.get(this.type)?.includes(c);
+  }
+  #adoptWithSpace(child, index) {
+    const gc = child.#parts[0];
+    const blank = new _a(null, gc, this.options);
+    blank.#parts.push("");
+    gc.push(blank);
+    this.#adopt(child, index);
+  }
+  #adopt(child, index) {
+    const gc = child.#parts[0];
+    this.#parts.splice(index, 1, ...gc.#parts);
+    for (const p of gc.#parts) {
+      if (typeof p === "object")
+        p.#parent = this;
+    }
+    this.#toString = void 0;
+  }
+  #canUsurpType(c) {
+    const m = usurpMap.get(this.type);
+    return !!m?.has(c);
+  }
+  #canUsurp(child) {
+    if (!child || typeof child !== "object" || child.type !== null || child.#parts.length !== 1 || this.type === null || this.#parts.length !== 1) {
+      return false;
+    }
+    const gc = child.#parts[0];
+    if (!gc || typeof gc !== "object" || gc.type === null) {
+      return false;
+    }
+    return this.#canUsurpType(gc.type);
+  }
+  #usurp(child) {
+    const m = usurpMap.get(this.type);
+    const gc = child.#parts[0];
+    const nt = m?.get(gc.type);
+    if (!nt)
+      return false;
+    this.#parts = gc.#parts;
+    for (const p of this.#parts) {
+      if (typeof p === "object") {
+        p.#parent = this;
+      }
+    }
+    this.type = nt;
+    this.#toString = void 0;
+    this.#emptyExt = false;
+  }
   static fromGlob(pattern, options = {}) {
-    const ast = new _AST(null, void 0, options);
-    _AST.#parseAST(pattern, ast, 0, options);
+    const ast = new _a(null, void 0, options);
+    _a.#parseAST(pattern, ast, 0, options, 0);
     return ast;
   }
   // returns the regular expression if there's magic, or the unescaped
@@ -8265,12 +8397,14 @@ var AST = class _AST {
   // or start or whatever) and prepend ^ or / at the Regexp construction.
   toRegExpSource(allowDot) {
     const dot = allowDot ?? !!this.#options.dot;
-    if (this.#root === this)
+    if (this.#root === this) {
+      this.#flatten();
       this.#fillNegs();
-    if (!this.type) {
+    }
+    if (!isExtglobAST(this)) {
       const noEmpty = this.isStart() && this.isEnd() && !this.#parts.some((s) => typeof s !== "string");
       const src = this.#parts.map((p) => {
-        const [re, _, hasMagic2, uflag] = typeof p === "string" ? _AST.#parseGlob(p, this.#hasMagic, noEmpty) : p.toRegExpSource(allowDot);
+        const [re, _, hasMagic2, uflag] = typeof p === "string" ? _a.#parseGlob(p, this.#hasMagic, noEmpty) : p.toRegExpSource(allowDot);
         this.#hasMagic = this.#hasMagic || hasMagic2;
         this.#uflag = this.#uflag || uflag;
         return re;
@@ -8309,9 +8443,10 @@ var AST = class _AST {
     let body = this.#partsToRegExp(dot);
     if (this.isStart() && this.isEnd() && !body && this.type !== "!") {
       const s = this.toString();
-      this.#parts = [s];
-      this.type = null;
-      this.#hasMagic = void 0;
+      const me = this;
+      me.#parts = [s];
+      me.type = null;
+      me.#hasMagic = void 0;
       return [s, unescape2(this.toString()), false, false];
     }
     let bodyDotAllowed = !repeated || allowDot || dot || !startNoDot ? "" : this.#partsToRegExp(true);
@@ -8338,6 +8473,38 @@ var AST = class _AST {
       this.#uflag
     ];
   }
+  #flatten() {
+    if (!isExtglobAST(this)) {
+      for (const p of this.#parts) {
+        if (typeof p === "object") {
+          p.#flatten();
+        }
+      }
+    } else {
+      let iterations = 0;
+      let done = false;
+      do {
+        done = true;
+        for (let i = 0; i < this.#parts.length; i++) {
+          const c = this.#parts[i];
+          if (typeof c === "object") {
+            c.#flatten();
+            if (this.#canAdopt(c)) {
+              done = false;
+              this.#adopt(c, i);
+            } else if (this.#canAdoptWithSpace(c)) {
+              done = false;
+              this.#adoptWithSpace(c, i);
+            } else if (this.#canUsurp(c)) {
+              done = false;
+              this.#usurp(c);
+            }
+          }
+        }
+      } while (!done && ++iterations < 10);
+    }
+    this.#toString = void 0;
+  }
   #partsToRegExp(dot) {
     return this.#parts.map((p) => {
       if (typeof p === "string") {
@@ -8352,12 +8519,23 @@ var AST = class _AST {
     let escaping = false;
     let re = "";
     let uflag = false;
+    let inStar = false;
     for (let i = 0; i < glob2.length; i++) {
       const c = glob2.charAt(i);
       if (escaping) {
         escaping = false;
         re += (reSpecials.has(c) ? "\\" : "") + c;
         continue;
+      }
+      if (c === "*") {
+        if (inStar)
+          continue;
+        inStar = true;
+        re += noEmpty && /^[*]+$/.test(glob2) ? starNoEmpty : star;
+        hasMagic2 = true;
+        continue;
+      } else {
+        inStar = false;
       }
       if (c === "\\") {
         if (i === glob2.length - 1) {
@@ -8377,11 +8555,6 @@ var AST = class _AST {
           continue;
         }
       }
-      if (c === "*") {
-        re += noEmpty && glob2 === "*" ? starNoEmpty : star;
-        hasMagic2 = true;
-        continue;
-      }
       if (c === "?") {
         re += qmark;
         hasMagic2 = true;
@@ -8392,6 +8565,7 @@ var AST = class _AST {
     return [re, unescape2(glob2), !!hasMagic2, uflag];
   }
 };
+_a = AST;
 
 // node_modules/minimatch/dist/esm/escape.js
 var escape2 = (s, { windowsPathsNoEscape = false, magicalBraces = false } = {}) => {
@@ -8474,7 +8648,7 @@ var twoStarDot = "(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?";
 var twoStarNoDot = "(?:(?!(?:\\/|^)\\.).)*?";
 var filter = (pattern, options = {}) => (p) => minimatch(p, pattern, options);
 minimatch.filter = filter;
-var ext = (a, b = {}) => Object.assign({}, a, b);
+var ext = (a3, b = {}) => Object.assign({}, a3, b);
 var defaults = (def) => {
   if (!def || typeof def !== "object" || !Object.keys(def).length) {
     return minimatch;
@@ -8550,11 +8724,13 @@ var Minimatch = class {
   isWindows;
   platform;
   windowsNoMagicRoot;
+  maxGlobstarRecursion;
   regexp;
   constructor(pattern, options = {}) {
     assertValidPattern(pattern);
     options = options || {};
     this.options = options;
+    this.maxGlobstarRecursion = options.maxGlobstarRecursion ?? 200;
     this.pattern = pattern;
     this.platform = options.platform || defaultPlatform;
     this.isWindows = this.platform === "win32";
@@ -8835,30 +9011,30 @@ var Minimatch = class {
     }
     return globParts.filter((gs) => gs.length);
   }
-  partsMatch(a, b, emptyGSMatch = false) {
+  partsMatch(a3, b, emptyGSMatch = false) {
     let ai = 0;
     let bi = 0;
     let result = [];
     let which = "";
-    while (ai < a.length && bi < b.length) {
-      if (a[ai] === b[bi]) {
-        result.push(which === "b" ? b[bi] : a[ai]);
+    while (ai < a3.length && bi < b.length) {
+      if (a3[ai] === b[bi]) {
+        result.push(which === "b" ? b[bi] : a3[ai]);
         ai++;
         bi++;
-      } else if (emptyGSMatch && a[ai] === "**" && b[bi] === a[ai + 1]) {
-        result.push(a[ai]);
+      } else if (emptyGSMatch && a3[ai] === "**" && b[bi] === a3[ai + 1]) {
+        result.push(a3[ai]);
         ai++;
-      } else if (emptyGSMatch && b[bi] === "**" && a[ai] === b[bi + 1]) {
+      } else if (emptyGSMatch && b[bi] === "**" && a3[ai] === b[bi + 1]) {
         result.push(b[bi]);
         bi++;
-      } else if (a[ai] === "*" && b[bi] && (this.options.dot || !b[bi].startsWith(".")) && b[bi] !== "**") {
+      } else if (a3[ai] === "*" && b[bi] && (this.options.dot || !b[bi].startsWith(".")) && b[bi] !== "**") {
         if (which === "b")
           return false;
         which = "a";
-        result.push(a[ai]);
+        result.push(a3[ai]);
         ai++;
         bi++;
-      } else if (b[bi] === "*" && a[ai] && (this.options.dot || !a[ai].startsWith(".")) && a[ai] !== "**") {
+      } else if (b[bi] === "*" && a3[ai] && (this.options.dot || !a3[ai].startsWith(".")) && a3[ai] !== "**") {
         if (which === "a")
           return false;
         which = "b";
@@ -8869,7 +9045,7 @@ var Minimatch = class {
         return false;
       }
     }
-    return a.length === b.length && result;
+    return a3.length === b.length && result;
   }
   parseNegate() {
     if (this.nonegate)
@@ -8891,7 +9067,8 @@ var Minimatch = class {
   // out of pattern, then that's fine, as long as all
   // the parts match.
   matchOne(file, pattern, partial = false) {
-    const options = this.options;
+    let fileStartIndex = 0;
+    let patternStartIndex = 0;
     if (this.isWindows) {
       const fileDrive = typeof file[0] === "string" && /^[a-z]:$/i.test(file[0]);
       const fileUNC = !fileDrive && file[0] === "" && file[1] === "" && file[2] === "?" && /^[a-z]:$/i.test(file[3]);
@@ -8906,11 +9083,8 @@ var Minimatch = class {
         ];
         if (fd.toLowerCase() === pd.toLowerCase()) {
           pattern[pdi] = fd;
-          if (pdi > fdi) {
-            pattern = pattern.slice(pdi);
-          } else if (fdi > pdi) {
-            file = file.slice(fdi);
-          }
+          patternStartIndex = pdi;
+          fileStartIndex = fdi;
         }
       }
     }
@@ -8918,49 +9092,123 @@ var Minimatch = class {
     if (optimizationLevel >= 2) {
       file = this.levelTwoFileOptimize(file);
     }
-    this.debug("matchOne", this, { file, pattern });
-    this.debug("matchOne", file.length, pattern.length);
-    for (var fi = 0, pi = 0, fl = file.length, pl = pattern.length; fi < fl && pi < pl; fi++, pi++) {
-      this.debug("matchOne loop");
-      var p = pattern[pi];
-      var f = file[fi];
-      this.debug(pattern, p, f);
-      if (p === false) {
+    if (pattern.includes(GLOBSTAR)) {
+      return this.#matchGlobstar(file, pattern, partial, fileStartIndex, patternStartIndex);
+    }
+    return this.#matchOne(file, pattern, partial, fileStartIndex, patternStartIndex);
+  }
+  #matchGlobstar(file, pattern, partial, fileIndex, patternIndex) {
+    const firstgs = pattern.indexOf(GLOBSTAR, patternIndex);
+    const lastgs = pattern.lastIndexOf(GLOBSTAR);
+    const [head, body, tail] = partial ? [
+      pattern.slice(patternIndex, firstgs),
+      pattern.slice(firstgs + 1),
+      []
+    ] : [
+      pattern.slice(patternIndex, firstgs),
+      pattern.slice(firstgs + 1, lastgs),
+      pattern.slice(lastgs + 1)
+    ];
+    if (head.length) {
+      const fileHead = file.slice(fileIndex, fileIndex + head.length);
+      if (!this.#matchOne(fileHead, head, partial, 0, 0)) {
         return false;
       }
-      if (p === GLOBSTAR) {
-        this.debug("GLOBSTAR", [pattern, p, f]);
-        var fr = fi;
-        var pr = pi + 1;
-        if (pr === pl) {
-          this.debug("** at the end");
-          for (; fi < fl; fi++) {
-            if (file[fi] === "." || file[fi] === ".." || !options.dot && file[fi].charAt(0) === ".")
-              return false;
-          }
-          return true;
+      fileIndex += head.length;
+      patternIndex += head.length;
+    }
+    let fileTailMatch = 0;
+    if (tail.length) {
+      if (tail.length + fileIndex > file.length)
+        return false;
+      let tailStart = file.length - tail.length;
+      if (this.#matchOne(file, tail, partial, tailStart, 0)) {
+        fileTailMatch = tail.length;
+      } else {
+        if (file[file.length - 1] !== "" || fileIndex + tail.length === file.length) {
+          return false;
         }
-        while (fr < fl) {
-          var swallowee = file[fr];
-          this.debug("\nglobstar while", file, fr, pattern, pr, swallowee);
-          if (this.matchOne(file.slice(fr), pattern.slice(pr), partial)) {
-            this.debug("globstar found match!", fr, fl, swallowee);
-            return true;
-          } else {
-            if (swallowee === "." || swallowee === ".." || !options.dot && swallowee.charAt(0) === ".") {
-              this.debug("dot detected!", file, fr, pattern, pr);
-              break;
-            }
-            this.debug("globstar swallow a segment, and continue");
-            fr++;
-          }
+        tailStart--;
+        if (!this.#matchOne(file, tail, partial, tailStart, 0)) {
+          return false;
         }
-        if (partial) {
-          this.debug("\n>>> no match, partial?", file, fr, pattern, pr);
-          if (fr === fl) {
-            return true;
-          }
+        fileTailMatch = tail.length + 1;
+      }
+    }
+    if (!body.length) {
+      let sawSome = !!fileTailMatch;
+      for (let i2 = fileIndex; i2 < file.length - fileTailMatch; i2++) {
+        const f = String(file[i2]);
+        sawSome = true;
+        if (f === "." || f === ".." || !this.options.dot && f.startsWith(".")) {
+          return false;
         }
+      }
+      return partial || sawSome;
+    }
+    const bodySegments = [[[], 0]];
+    let currentBody = bodySegments[0];
+    let nonGsParts = 0;
+    const nonGsPartsSums = [0];
+    for (const b of body) {
+      if (b === GLOBSTAR) {
+        nonGsPartsSums.push(nonGsParts);
+        currentBody = [[], 0];
+        bodySegments.push(currentBody);
+      } else {
+        currentBody[0].push(b);
+        nonGsParts++;
+      }
+    }
+    let i = bodySegments.length - 1;
+    const fileLength = file.length - fileTailMatch;
+    for (const b of bodySegments) {
+      b[1] = fileLength - (nonGsPartsSums[i--] + b[0].length);
+    }
+    return !!this.#matchGlobStarBodySections(file, bodySegments, fileIndex, 0, partial, 0, !!fileTailMatch);
+  }
+  // return false for "nope, not matching"
+  // return null for "not matching, cannot keep trying"
+  #matchGlobStarBodySections(file, bodySegments, fileIndex, bodyIndex, partial, globStarDepth, sawTail) {
+    const bs = bodySegments[bodyIndex];
+    if (!bs) {
+      for (let i = fileIndex; i < file.length; i++) {
+        sawTail = true;
+        const f = file[i];
+        if (f === "." || f === ".." || !this.options.dot && f.startsWith(".")) {
+          return false;
+        }
+      }
+      return sawTail;
+    }
+    const [body, after] = bs;
+    while (fileIndex <= after) {
+      const m = this.#matchOne(file.slice(0, fileIndex + body.length), body, partial, fileIndex, 0);
+      if (m && globStarDepth < this.maxGlobstarRecursion) {
+        const sub = this.#matchGlobStarBodySections(file, bodySegments, fileIndex + body.length, bodyIndex + 1, partial, globStarDepth + 1, sawTail);
+        if (sub !== false) {
+          return sub;
+        }
+      }
+      const f = file[fileIndex];
+      if (f === "." || f === ".." || !this.options.dot && f.startsWith(".")) {
+        return false;
+      }
+      fileIndex++;
+    }
+    return partial || null;
+  }
+  #matchOne(file, pattern, partial, fileIndex, patternIndex) {
+    let fi;
+    let pi;
+    let pl;
+    let fl;
+    for (fi = fileIndex, pi = patternIndex, fl = file.length, pl = pattern.length; fi < fl && pi < pl; fi++, pi++) {
+      this.debug("matchOne loop");
+      let p = pattern[pi];
+      let f = file[fi];
+      this.debug(pattern, p, f);
+      if (p === false || p === GLOBSTAR) {
         return false;
       }
       let hit;
@@ -9140,1389 +9388,546 @@ minimatch.unescape = unescape2;
 // node_modules/glob/dist/esm/glob.js
 var import_node_url2 = __toESM(require_url(), 1);
 
-// node_modules/path-scurry/node_modules/lru-cache/dist/esm/index.js
-var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
-var warned = /* @__PURE__ */ new Set();
-var PROCESS = typeof process === "object" && !!process ? process : {};
-var emitWarning = (msg, type, code, fn) => {
-  typeof PROCESS.emitWarning === "function" ? PROCESS.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
+// node_modules/path-scurry/node_modules/lru-cache/dist/esm/index.min.js
+var M = typeof performance == "object" && performance && typeof performance.now == "function" ? performance : Date;
+var I = /* @__PURE__ */ new Set();
+var R = typeof process == "object" && process ? process : {};
+var x = (a3, t, e, i) => {
+  typeof R.emitWarning == "function" ? R.emitWarning(a3, t, e, i) : console.error(`[${e}] ${t}: ${a3}`);
 };
-var AC = globalThis.AbortController;
-var AS = globalThis.AbortSignal;
-if (typeof AC === "undefined") {
-  AS = class AbortSignal {
+var C = globalThis.AbortController;
+var D = globalThis.AbortSignal;
+if (typeof C > "u") {
+  D = class {
     onabort;
     _onabort = [];
     reason;
     aborted = false;
-    addEventListener(_, fn) {
-      this._onabort.push(fn);
+    addEventListener(i, s) {
+      this._onabort.push(s);
     }
-  };
-  AC = class AbortController {
+  }, C = class {
     constructor() {
-      warnACPolyfill();
+      t();
     }
-    signal = new AS();
-    abort(reason) {
-      if (this.signal.aborted)
-        return;
-      this.signal.reason = reason;
-      this.signal.aborted = true;
-      for (const fn of this.signal._onabort) {
-        fn(reason);
+    signal = new D();
+    abort(i) {
+      if (!this.signal.aborted) {
+        this.signal.reason = i, this.signal.aborted = true;
+        for (let s of this.signal._onabort) s(i);
+        this.signal.onabort?.(i);
       }
-      this.signal.onabort?.(reason);
     }
   };
-  let printACPolyfillWarning = PROCESS.env?.LRU_CACHE_IGNORE_AC_WARNING !== "1";
-  const warnACPolyfill = () => {
-    if (!printACPolyfillWarning)
-      return;
-    printACPolyfillWarning = false;
-    emitWarning("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", warnACPolyfill);
+  let a3 = R.env?.LRU_CACHE_IGNORE_AC_WARNING !== "1", t = () => {
+    a3 && (a3 = false, x("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", t));
   };
 }
-var shouldWarn = (code) => !warned.has(code);
-var TYPE = Symbol("type");
-var isPosInt = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n);
-var getUintArray = (max) => !isPosInt(max) ? null : max <= Math.pow(2, 8) ? Uint8Array : max <= Math.pow(2, 16) ? Uint16Array : max <= Math.pow(2, 32) ? Uint32Array : max <= Number.MAX_SAFE_INTEGER ? ZeroArray : null;
-var ZeroArray = class extends Array {
-  constructor(size) {
-    super(size);
-    this.fill(0);
+var G = (a3) => !I.has(a3);
+var H = Symbol("type");
+var y = (a3) => a3 && a3 === Math.floor(a3) && a3 > 0 && isFinite(a3);
+var U = (a3) => y(a3) ? a3 <= Math.pow(2, 8) ? Uint8Array : a3 <= Math.pow(2, 16) ? Uint16Array : a3 <= Math.pow(2, 32) ? Uint32Array : a3 <= Number.MAX_SAFE_INTEGER ? z : null : null;
+var z = class extends Array {
+  constructor(t) {
+    super(t), this.fill(0);
   }
 };
-var Stack = class _Stack {
+var W = class a {
   heap;
   length;
-  // private constructor
-  static #constructing = false;
-  static create(max) {
-    const HeapCls = getUintArray(max);
-    if (!HeapCls)
-      return [];
-    _Stack.#constructing = true;
-    const s = new _Stack(max, HeapCls);
-    _Stack.#constructing = false;
-    return s;
+  static #o = false;
+  static create(t) {
+    let e = U(t);
+    if (!e) return [];
+    a.#o = true;
+    let i = new a(t, e);
+    return a.#o = false, i;
   }
-  constructor(max, HeapCls) {
-    if (!_Stack.#constructing) {
-      throw new TypeError("instantiate Stack using Stack.create(n)");
-    }
-    this.heap = new HeapCls(max);
-    this.length = 0;
+  constructor(t, e) {
+    if (!a.#o) throw new TypeError("instantiate Stack using Stack.create(n)");
+    this.heap = new e(t), this.length = 0;
   }
-  push(n) {
-    this.heap[this.length++] = n;
+  push(t) {
+    this.heap[this.length++] = t;
   }
   pop() {
     return this.heap[--this.length];
   }
 };
-var LRUCache = class _LRUCache {
-  // options that cannot be changed without disaster
-  #max;
-  #maxSize;
-  #dispose;
-  #onInsert;
-  #disposeAfter;
-  #fetchMethod;
-  #memoMethod;
-  /**
-   * {@link LRUCache.OptionsBase.ttl}
-   */
+var L = class a2 {
+  #o;
+  #c;
+  #w;
+  #C;
+  #S;
+  #L;
+  #I;
+  #m;
+  get perf() {
+    return this.#m;
+  }
   ttl;
-  /**
-   * {@link LRUCache.OptionsBase.ttlResolution}
-   */
   ttlResolution;
-  /**
-   * {@link LRUCache.OptionsBase.ttlAutopurge}
-   */
   ttlAutopurge;
-  /**
-   * {@link LRUCache.OptionsBase.updateAgeOnGet}
-   */
   updateAgeOnGet;
-  /**
-   * {@link LRUCache.OptionsBase.updateAgeOnHas}
-   */
   updateAgeOnHas;
-  /**
-   * {@link LRUCache.OptionsBase.allowStale}
-   */
   allowStale;
-  /**
-   * {@link LRUCache.OptionsBase.noDisposeOnSet}
-   */
   noDisposeOnSet;
-  /**
-   * {@link LRUCache.OptionsBase.noUpdateTTL}
-   */
   noUpdateTTL;
-  /**
-   * {@link LRUCache.OptionsBase.maxEntrySize}
-   */
   maxEntrySize;
-  /**
-   * {@link LRUCache.OptionsBase.sizeCalculation}
-   */
   sizeCalculation;
-  /**
-   * {@link LRUCache.OptionsBase.noDeleteOnFetchRejection}
-   */
   noDeleteOnFetchRejection;
-  /**
-   * {@link LRUCache.OptionsBase.noDeleteOnStaleGet}
-   */
   noDeleteOnStaleGet;
-  /**
-   * {@link LRUCache.OptionsBase.allowStaleOnFetchAbort}
-   */
   allowStaleOnFetchAbort;
-  /**
-   * {@link LRUCache.OptionsBase.allowStaleOnFetchRejection}
-   */
   allowStaleOnFetchRejection;
-  /**
-   * {@link LRUCache.OptionsBase.ignoreFetchAbort}
-   */
   ignoreFetchAbort;
-  // computed properties
-  #size;
-  #calculatedSize;
-  #keyMap;
-  #keyList;
-  #valList;
-  #next;
-  #prev;
-  #head;
-  #tail;
-  #free;
-  #disposed;
-  #sizes;
-  #starts;
-  #ttls;
-  #hasDispose;
-  #hasFetchMethod;
-  #hasDisposeAfter;
-  #hasOnInsert;
-  /**
-   * Do not call this method unless you need to inspect the
-   * inner workings of the cache.  If anything returned by this
-   * object is modified in any way, strange breakage may occur.
-   *
-   * These fields are private for a reason!
-   *
-   * @internal
-   */
-  static unsafeExposeInternals(c) {
-    return {
-      // properties
-      starts: c.#starts,
-      ttls: c.#ttls,
-      sizes: c.#sizes,
-      keyMap: c.#keyMap,
-      keyList: c.#keyList,
-      valList: c.#valList,
-      next: c.#next,
-      prev: c.#prev,
-      get head() {
-        return c.#head;
-      },
-      get tail() {
-        return c.#tail;
-      },
-      free: c.#free,
-      // methods
-      isBackgroundFetch: (p) => c.#isBackgroundFetch(p),
-      backgroundFetch: (k, index, options, context) => c.#backgroundFetch(k, index, options, context),
-      moveToTail: (index) => c.#moveToTail(index),
-      indexes: (options) => c.#indexes(options),
-      rindexes: (options) => c.#rindexes(options),
-      isStale: (index) => c.#isStale(index)
-    };
+  #n;
+  #_;
+  #s;
+  #i;
+  #t;
+  #a;
+  #u;
+  #l;
+  #h;
+  #b;
+  #r;
+  #y;
+  #A;
+  #d;
+  #g;
+  #T;
+  #v;
+  #f;
+  #x;
+  static unsafeExposeInternals(t) {
+    return { starts: t.#A, ttls: t.#d, autopurgeTimers: t.#g, sizes: t.#y, keyMap: t.#s, keyList: t.#i, valList: t.#t, next: t.#a, prev: t.#u, get head() {
+      return t.#l;
+    }, get tail() {
+      return t.#h;
+    }, free: t.#b, isBackgroundFetch: (e) => t.#e(e), backgroundFetch: (e, i, s, h) => t.#G(e, i, s, h), moveToTail: (e) => t.#D(e), indexes: (e) => t.#F(e), rindexes: (e) => t.#O(e), isStale: (e) => t.#p(e) };
   }
-  // Protected read-only members
-  /**
-   * {@link LRUCache.OptionsBase.max} (read-only)
-   */
   get max() {
-    return this.#max;
+    return this.#o;
   }
-  /**
-   * {@link LRUCache.OptionsBase.maxSize} (read-only)
-   */
   get maxSize() {
-    return this.#maxSize;
+    return this.#c;
   }
-  /**
-   * The total computed size of items in the cache (read-only)
-   */
   get calculatedSize() {
-    return this.#calculatedSize;
+    return this.#_;
   }
-  /**
-   * The number of items stored in the cache (read-only)
-   */
   get size() {
-    return this.#size;
+    return this.#n;
   }
-  /**
-   * {@link LRUCache.OptionsBase.fetchMethod} (read-only)
-   */
   get fetchMethod() {
-    return this.#fetchMethod;
+    return this.#L;
   }
   get memoMethod() {
-    return this.#memoMethod;
+    return this.#I;
   }
-  /**
-   * {@link LRUCache.OptionsBase.dispose} (read-only)
-   */
   get dispose() {
-    return this.#dispose;
+    return this.#w;
   }
-  /**
-   * {@link LRUCache.OptionsBase.onInsert} (read-only)
-   */
   get onInsert() {
-    return this.#onInsert;
+    return this.#C;
   }
-  /**
-   * {@link LRUCache.OptionsBase.disposeAfter} (read-only)
-   */
   get disposeAfter() {
-    return this.#disposeAfter;
+    return this.#S;
   }
-  constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, onInsert, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
-    if (max !== 0 && !isPosInt(max)) {
-      throw new TypeError("max option must be a nonnegative integer");
+  constructor(t) {
+    let { max: e = 0, ttl: i, ttlResolution: s = 1, ttlAutopurge: h, updateAgeOnGet: n, updateAgeOnHas: o, allowStale: r, dispose: f, onInsert: m, disposeAfter: c, noDisposeOnSet: d, noUpdateTTL: g, maxSize: A = 0, maxEntrySize: p = 0, sizeCalculation: _, fetchMethod: l, memoMethod: w, noDeleteOnFetchRejection: b, noDeleteOnStaleGet: S, allowStaleOnFetchRejection: u, allowStaleOnFetchAbort: T, ignoreFetchAbort: F, perf: v } = t;
+    if (v !== void 0 && typeof v?.now != "function") throw new TypeError("perf option must have a now() method if specified");
+    if (this.#m = v ?? M, e !== 0 && !y(e)) throw new TypeError("max option must be a nonnegative integer");
+    let O = e ? U(e) : Array;
+    if (!O) throw new Error("invalid max value: " + e);
+    if (this.#o = e, this.#c = A, this.maxEntrySize = p || this.#c, this.sizeCalculation = _, this.sizeCalculation) {
+      if (!this.#c && !this.maxEntrySize) throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");
+      if (typeof this.sizeCalculation != "function") throw new TypeError("sizeCalculation set to non-function");
     }
-    const UintArray = max ? getUintArray(max) : Array;
-    if (!UintArray) {
-      throw new Error("invalid max value: " + max);
+    if (w !== void 0 && typeof w != "function") throw new TypeError("memoMethod must be a function if defined");
+    if (this.#I = w, l !== void 0 && typeof l != "function") throw new TypeError("fetchMethod must be a function if specified");
+    if (this.#L = l, this.#v = !!l, this.#s = /* @__PURE__ */ new Map(), this.#i = new Array(e).fill(void 0), this.#t = new Array(e).fill(void 0), this.#a = new O(e), this.#u = new O(e), this.#l = 0, this.#h = 0, this.#b = W.create(e), this.#n = 0, this.#_ = 0, typeof f == "function" && (this.#w = f), typeof m == "function" && (this.#C = m), typeof c == "function" ? (this.#S = c, this.#r = []) : (this.#S = void 0, this.#r = void 0), this.#T = !!this.#w, this.#x = !!this.#C, this.#f = !!this.#S, this.noDisposeOnSet = !!d, this.noUpdateTTL = !!g, this.noDeleteOnFetchRejection = !!b, this.allowStaleOnFetchRejection = !!u, this.allowStaleOnFetchAbort = !!T, this.ignoreFetchAbort = !!F, this.maxEntrySize !== 0) {
+      if (this.#c !== 0 && !y(this.#c)) throw new TypeError("maxSize must be a positive integer if specified");
+      if (!y(this.maxEntrySize)) throw new TypeError("maxEntrySize must be a positive integer if specified");
+      this.#B();
     }
-    this.#max = max;
-    this.#maxSize = maxSize;
-    this.maxEntrySize = maxEntrySize || this.#maxSize;
-    this.sizeCalculation = sizeCalculation;
-    if (this.sizeCalculation) {
-      if (!this.#maxSize && !this.maxEntrySize) {
-        throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");
-      }
-      if (typeof this.sizeCalculation !== "function") {
-        throw new TypeError("sizeCalculation set to non-function");
-      }
+    if (this.allowStale = !!r, this.noDeleteOnStaleGet = !!S, this.updateAgeOnGet = !!n, this.updateAgeOnHas = !!o, this.ttlResolution = y(s) || s === 0 ? s : 1, this.ttlAutopurge = !!h, this.ttl = i || 0, this.ttl) {
+      if (!y(this.ttl)) throw new TypeError("ttl must be a positive integer if specified");
+      this.#j();
     }
-    if (memoMethod !== void 0 && typeof memoMethod !== "function") {
-      throw new TypeError("memoMethod must be a function if defined");
-    }
-    this.#memoMethod = memoMethod;
-    if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
-      throw new TypeError("fetchMethod must be a function if specified");
-    }
-    this.#fetchMethod = fetchMethod;
-    this.#hasFetchMethod = !!fetchMethod;
-    this.#keyMap = /* @__PURE__ */ new Map();
-    this.#keyList = new Array(max).fill(void 0);
-    this.#valList = new Array(max).fill(void 0);
-    this.#next = new UintArray(max);
-    this.#prev = new UintArray(max);
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free = Stack.create(max);
-    this.#size = 0;
-    this.#calculatedSize = 0;
-    if (typeof dispose === "function") {
-      this.#dispose = dispose;
-    }
-    if (typeof onInsert === "function") {
-      this.#onInsert = onInsert;
-    }
-    if (typeof disposeAfter === "function") {
-      this.#disposeAfter = disposeAfter;
-      this.#disposed = [];
-    } else {
-      this.#disposeAfter = void 0;
-      this.#disposed = void 0;
-    }
-    this.#hasDispose = !!this.#dispose;
-    this.#hasOnInsert = !!this.#onInsert;
-    this.#hasDisposeAfter = !!this.#disposeAfter;
-    this.noDisposeOnSet = !!noDisposeOnSet;
-    this.noUpdateTTL = !!noUpdateTTL;
-    this.noDeleteOnFetchRejection = !!noDeleteOnFetchRejection;
-    this.allowStaleOnFetchRejection = !!allowStaleOnFetchRejection;
-    this.allowStaleOnFetchAbort = !!allowStaleOnFetchAbort;
-    this.ignoreFetchAbort = !!ignoreFetchAbort;
-    if (this.maxEntrySize !== 0) {
-      if (this.#maxSize !== 0) {
-        if (!isPosInt(this.#maxSize)) {
-          throw new TypeError("maxSize must be a positive integer if specified");
-        }
-      }
-      if (!isPosInt(this.maxEntrySize)) {
-        throw new TypeError("maxEntrySize must be a positive integer if specified");
-      }
-      this.#initializeSizeTracking();
-    }
-    this.allowStale = !!allowStale;
-    this.noDeleteOnStaleGet = !!noDeleteOnStaleGet;
-    this.updateAgeOnGet = !!updateAgeOnGet;
-    this.updateAgeOnHas = !!updateAgeOnHas;
-    this.ttlResolution = isPosInt(ttlResolution) || ttlResolution === 0 ? ttlResolution : 1;
-    this.ttlAutopurge = !!ttlAutopurge;
-    this.ttl = ttl || 0;
-    if (this.ttl) {
-      if (!isPosInt(this.ttl)) {
-        throw new TypeError("ttl must be a positive integer if specified");
-      }
-      this.#initializeTTLTracking();
-    }
-    if (this.#max === 0 && this.ttl === 0 && this.#maxSize === 0) {
-      throw new TypeError("At least one of max, maxSize, or ttl is required");
-    }
-    if (!this.ttlAutopurge && !this.#max && !this.#maxSize) {
-      const code = "LRU_CACHE_UNBOUNDED";
-      if (shouldWarn(code)) {
-        warned.add(code);
-        const msg = "TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.";
-        emitWarning(msg, "UnboundedCacheWarning", code, _LRUCache);
-      }
+    if (this.#o === 0 && this.ttl === 0 && this.#c === 0) throw new TypeError("At least one of max, maxSize, or ttl is required");
+    if (!this.ttlAutopurge && !this.#o && !this.#c) {
+      let E = "LRU_CACHE_UNBOUNDED";
+      G(E) && (I.add(E), x("TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.", "UnboundedCacheWarning", E, a2));
     }
   }
-  /**
-   * Return the number of ms left in the item's TTL. If item is not in cache,
-   * returns `0`. Returns `Infinity` if item is in cache without a defined TTL.
-   */
-  getRemainingTTL(key) {
-    return this.#keyMap.has(key) ? Infinity : 0;
+  getRemainingTTL(t) {
+    return this.#s.has(t) ? 1 / 0 : 0;
   }
-  #initializeTTLTracking() {
-    const ttls = new ZeroArray(this.#max);
-    const starts = new ZeroArray(this.#max);
-    this.#ttls = ttls;
-    this.#starts = starts;
-    this.#setItemTTL = (index, ttl, start = perf.now()) => {
-      starts[index] = ttl !== 0 ? start : 0;
-      ttls[index] = ttl;
-      if (ttl !== 0 && this.ttlAutopurge) {
-        const t = setTimeout(() => {
-          if (this.#isStale(index)) {
-            this.#delete(this.#keyList[index], "expire");
-          }
-        }, ttl + 1);
-        if (t.unref) {
-          t.unref();
-        }
+  #j() {
+    let t = new z(this.#o), e = new z(this.#o);
+    this.#d = t, this.#A = e;
+    let i = this.ttlAutopurge ? new Array(this.#o) : void 0;
+    this.#g = i, this.#N = (n, o, r = this.#m.now()) => {
+      if (e[n] = o !== 0 ? r : 0, t[n] = o, i?.[n] && (clearTimeout(i[n]), i[n] = void 0), o !== 0 && i) {
+        let f = setTimeout(() => {
+          this.#p(n) && this.#E(this.#i[n], "expire");
+        }, o + 1);
+        f.unref && f.unref(), i[n] = f;
+      }
+    }, this.#R = (n) => {
+      e[n] = t[n] !== 0 ? this.#m.now() : 0;
+    }, this.#z = (n, o) => {
+      if (t[o]) {
+        let r = t[o], f = e[o];
+        if (!r || !f) return;
+        n.ttl = r, n.start = f, n.now = s || h();
+        let m = n.now - f;
+        n.remainingTTL = r - m;
       }
     };
-    this.#updateItemAge = (index) => {
-      starts[index] = ttls[index] !== 0 ? perf.now() : 0;
-    };
-    this.#statusTTL = (status, index) => {
-      if (ttls[index]) {
-        const ttl = ttls[index];
-        const start = starts[index];
-        if (!ttl || !start)
-          return;
-        status.ttl = ttl;
-        status.start = start;
-        status.now = cachedNow || getNow();
-        const age = status.now - start;
-        status.remainingTTL = ttl - age;
-      }
-    };
-    let cachedNow = 0;
-    const getNow = () => {
-      const n = perf.now();
+    let s = 0, h = () => {
+      let n = this.#m.now();
       if (this.ttlResolution > 0) {
-        cachedNow = n;
-        const t = setTimeout(() => cachedNow = 0, this.ttlResolution);
-        if (t.unref) {
-          t.unref();
-        }
+        s = n;
+        let o = setTimeout(() => s = 0, this.ttlResolution);
+        o.unref && o.unref();
       }
       return n;
     };
-    this.getRemainingTTL = (key) => {
-      const index = this.#keyMap.get(key);
-      if (index === void 0) {
-        return 0;
-      }
-      const ttl = ttls[index];
-      const start = starts[index];
-      if (!ttl || !start) {
-        return Infinity;
-      }
-      const age = (cachedNow || getNow()) - start;
-      return ttl - age;
-    };
-    this.#isStale = (index) => {
-      const s = starts[index];
-      const t = ttls[index];
-      return !!t && !!s && (cachedNow || getNow()) - s > t;
+    this.getRemainingTTL = (n) => {
+      let o = this.#s.get(n);
+      if (o === void 0) return 0;
+      let r = t[o], f = e[o];
+      if (!r || !f) return 1 / 0;
+      let m = (s || h()) - f;
+      return r - m;
+    }, this.#p = (n) => {
+      let o = e[n], r = t[n];
+      return !!r && !!o && (s || h()) - o > r;
     };
   }
-  // conditionally set private methods related to TTL
-  #updateItemAge = () => {
+  #R = () => {
   };
-  #statusTTL = () => {
+  #z = () => {
   };
-  #setItemTTL = () => {
+  #N = () => {
   };
-  /* c8 ignore stop */
-  #isStale = () => false;
-  #initializeSizeTracking() {
-    const sizes = new ZeroArray(this.#max);
-    this.#calculatedSize = 0;
-    this.#sizes = sizes;
-    this.#removeItemSize = (index) => {
-      this.#calculatedSize -= sizes[index];
-      sizes[index] = 0;
-    };
-    this.#requireSize = (k, v, size, sizeCalculation) => {
-      if (this.#isBackgroundFetch(v)) {
-        return 0;
+  #p = () => false;
+  #B() {
+    let t = new z(this.#o);
+    this.#_ = 0, this.#y = t, this.#W = (e) => {
+      this.#_ -= t[e], t[e] = 0;
+    }, this.#P = (e, i, s, h) => {
+      if (this.#e(i)) return 0;
+      if (!y(s)) if (h) {
+        if (typeof h != "function") throw new TypeError("sizeCalculation must be a function");
+        if (s = h(i, e), !y(s)) throw new TypeError("sizeCalculation return invalid (expect positive integer)");
+      } else throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
+      return s;
+    }, this.#U = (e, i, s) => {
+      if (t[e] = i, this.#c) {
+        let h = this.#c - t[e];
+        for (; this.#_ > h; ) this.#M(true);
       }
-      if (!isPosInt(size)) {
-        if (sizeCalculation) {
-          if (typeof sizeCalculation !== "function") {
-            throw new TypeError("sizeCalculation must be a function");
-          }
-          size = sizeCalculation(v, k);
-          if (!isPosInt(size)) {
-            throw new TypeError("sizeCalculation return invalid (expect positive integer)");
-          }
-        } else {
-          throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
-        }
-      }
-      return size;
-    };
-    this.#addItemSize = (index, size, status) => {
-      sizes[index] = size;
-      if (this.#maxSize) {
-        const maxSize = this.#maxSize - sizes[index];
-        while (this.#calculatedSize > maxSize) {
-          this.#evict(true);
-        }
-      }
-      this.#calculatedSize += sizes[index];
-      if (status) {
-        status.entrySize = size;
-        status.totalCalculatedSize = this.#calculatedSize;
-      }
+      this.#_ += t[e], s && (s.entrySize = i, s.totalCalculatedSize = this.#_);
     };
   }
-  #removeItemSize = (_i) => {
+  #W = (t) => {
   };
-  #addItemSize = (_i, _s, _st) => {
+  #U = (t, e, i) => {
   };
-  #requireSize = (_k, _v, size, sizeCalculation) => {
-    if (size || sizeCalculation) {
-      throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
-    }
+  #P = (t, e, i, s) => {
+    if (i || s) throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
     return 0;
   };
-  *#indexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#tail; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#head) {
-          break;
-        } else {
-          i = this.#prev[i];
-        }
-      }
-    }
+  *#F({ allowStale: t = this.allowStale } = {}) {
+    if (this.#n) for (let e = this.#h; !(!this.#H(e) || ((t || !this.#p(e)) && (yield e), e === this.#l)); ) e = this.#u[e];
   }
-  *#rindexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#head; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#tail) {
-          break;
-        } else {
-          i = this.#next[i];
-        }
-      }
-    }
+  *#O({ allowStale: t = this.allowStale } = {}) {
+    if (this.#n) for (let e = this.#l; !(!this.#H(e) || ((t || !this.#p(e)) && (yield e), e === this.#h)); ) e = this.#a[e];
   }
-  #isValidIndex(index) {
-    return index !== void 0 && this.#keyMap.get(this.#keyList[index]) === index;
+  #H(t) {
+    return t !== void 0 && this.#s.get(this.#i[t]) === t;
   }
-  /**
-   * Return a generator yielding `[key, value]` pairs,
-   * in order from most recently used to least recently used.
-   */
   *entries() {
-    for (const i of this.#indexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
+    for (let t of this.#F()) this.#t[t] !== void 0 && this.#i[t] !== void 0 && !this.#e(this.#t[t]) && (yield [this.#i[t], this.#t[t]]);
   }
-  /**
-   * Inverse order version of {@link LRUCache.entries}
-   *
-   * Return a generator yielding `[key, value]` pairs,
-   * in order from least recently used to most recently used.
-   */
   *rentries() {
-    for (const i of this.#rindexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
+    for (let t of this.#O()) this.#t[t] !== void 0 && this.#i[t] !== void 0 && !this.#e(this.#t[t]) && (yield [this.#i[t], this.#t[t]]);
   }
-  /**
-   * Return a generator yielding the keys in the cache,
-   * in order from most recently used to least recently used.
-   */
   *keys() {
-    for (const i of this.#indexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
+    for (let t of this.#F()) {
+      let e = this.#i[t];
+      e !== void 0 && !this.#e(this.#t[t]) && (yield e);
     }
   }
-  /**
-   * Inverse order version of {@link LRUCache.keys}
-   *
-   * Return a generator yielding the keys in the cache,
-   * in order from least recently used to most recently used.
-   */
   *rkeys() {
-    for (const i of this.#rindexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
+    for (let t of this.#O()) {
+      let e = this.#i[t];
+      e !== void 0 && !this.#e(this.#t[t]) && (yield e);
     }
   }
-  /**
-   * Return a generator yielding the values in the cache,
-   * in order from most recently used to least recently used.
-   */
   *values() {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
+    for (let t of this.#F()) this.#t[t] !== void 0 && !this.#e(this.#t[t]) && (yield this.#t[t]);
   }
-  /**
-   * Inverse order version of {@link LRUCache.values}
-   *
-   * Return a generator yielding the values in the cache,
-   * in order from least recently used to most recently used.
-   */
   *rvalues() {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
+    for (let t of this.#O()) this.#t[t] !== void 0 && !this.#e(this.#t[t]) && (yield this.#t[t]);
   }
-  /**
-   * Iterating over the cache itself yields the same results as
-   * {@link LRUCache.entries}
-   */
   [Symbol.iterator]() {
     return this.entries();
   }
-  /**
-   * A String value that is used in the creation of the default string
-   * description of an object. Called by the built-in method
-   * `Object.prototype.toString`.
-   */
   [Symbol.toStringTag] = "LRUCache";
-  /**
-   * Find a value for which the supplied fn method returns a truthy value,
-   * similar to `Array.find()`. fn is called as `fn(value, key, cache)`.
-   */
-  find(fn, getOptions = {}) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      if (fn(value, this.#keyList[i], this)) {
-        return this.get(this.#keyList[i], getOptions);
-      }
+  find(t, e = {}) {
+    for (let i of this.#F()) {
+      let s = this.#t[i], h = this.#e(s) ? s.__staleWhileFetching : s;
+      if (h !== void 0 && t(h, this.#i[i], this)) return this.get(this.#i[i], e);
     }
   }
-  /**
-   * Call the supplied function on each item in the cache, in order from most
-   * recently used to least recently used.
-   *
-   * `fn` is called as `fn(value, key, cache)`.
-   *
-   * If `thisp` is provided, function will be called in the `this`-context of
-   * the provided object, or the cache if no `thisp` object is provided.
-   *
-   * Does not update age or recenty of use, or iterate over stale values.
-   */
-  forEach(fn, thisp = this) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
+  forEach(t, e = this) {
+    for (let i of this.#F()) {
+      let s = this.#t[i], h = this.#e(s) ? s.__staleWhileFetching : s;
+      h !== void 0 && t.call(e, h, this.#i[i], this);
     }
   }
-  /**
-   * The same as {@link LRUCache.forEach} but items are iterated over in
-   * reverse order.  (ie, less recently used items are iterated over first.)
-   */
-  rforEach(fn, thisp = this) {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
+  rforEach(t, e = this) {
+    for (let i of this.#O()) {
+      let s = this.#t[i], h = this.#e(s) ? s.__staleWhileFetching : s;
+      h !== void 0 && t.call(e, h, this.#i[i], this);
     }
   }
-  /**
-   * Delete any stale entries. Returns true if anything was removed,
-   * false otherwise.
-   */
   purgeStale() {
-    let deleted = false;
-    for (const i of this.#rindexes({ allowStale: true })) {
-      if (this.#isStale(i)) {
-        this.#delete(this.#keyList[i], "expire");
-        deleted = true;
+    let t = false;
+    for (let e of this.#O({ allowStale: true })) this.#p(e) && (this.#E(this.#i[e], "expire"), t = true);
+    return t;
+  }
+  info(t) {
+    let e = this.#s.get(t);
+    if (e === void 0) return;
+    let i = this.#t[e], s = this.#e(i) ? i.__staleWhileFetching : i;
+    if (s === void 0) return;
+    let h = { value: s };
+    if (this.#d && this.#A) {
+      let n = this.#d[e], o = this.#A[e];
+      if (n && o) {
+        let r = n - (this.#m.now() - o);
+        h.ttl = r, h.start = Date.now();
       }
     }
-    return deleted;
+    return this.#y && (h.size = this.#y[e]), h;
   }
-  /**
-   * Get the extended info about a given entry, to get its value, size, and
-   * TTL info simultaneously. Returns `undefined` if the key is not present.
-   *
-   * Unlike {@link LRUCache#dump}, which is designed to be portable and survive
-   * serialization, the `start` value is always the current timestamp, and the
-   * `ttl` is a calculated remaining time to live (negative if expired).
-   *
-   * Always returns stale values, if their info is found in the cache, so be
-   * sure to check for expirations (ie, a negative {@link LRUCache.Entry#ttl})
-   * if relevant.
-   */
-  info(key) {
-    const i = this.#keyMap.get(key);
-    if (i === void 0)
-      return void 0;
-    const v = this.#valList[i];
-    const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-    if (value === void 0)
-      return void 0;
-    const entry = { value };
-    if (this.#ttls && this.#starts) {
-      const ttl = this.#ttls[i];
-      const start = this.#starts[i];
-      if (ttl && start) {
-        const remain = ttl - (perf.now() - start);
-        entry.ttl = remain;
-        entry.start = Date.now();
-      }
-    }
-    if (this.#sizes) {
-      entry.size = this.#sizes[i];
-    }
-    return entry;
-  }
-  /**
-   * Return an array of [key, {@link LRUCache.Entry}] tuples which can be
-   * passed to {@link LRUCache#load}.
-   *
-   * The `start` fields are calculated relative to a portable `Date.now()`
-   * timestamp, even if `performance.now()` is available.
-   *
-   * Stale entries are always included in the `dump`, even if
-   * {@link LRUCache.OptionsBase.allowStale} is false.
-   *
-   * Note: this returns an actual array, not a generator, so it can be more
-   * easily passed around.
-   */
   dump() {
-    const arr = [];
-    for (const i of this.#indexes({ allowStale: true })) {
-      const key = this.#keyList[i];
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0 || key === void 0)
-        continue;
-      const entry = { value };
-      if (this.#ttls && this.#starts) {
-        entry.ttl = this.#ttls[i];
-        const age = perf.now() - this.#starts[i];
-        entry.start = Math.floor(Date.now() - age);
+    let t = [];
+    for (let e of this.#F({ allowStale: true })) {
+      let i = this.#i[e], s = this.#t[e], h = this.#e(s) ? s.__staleWhileFetching : s;
+      if (h === void 0 || i === void 0) continue;
+      let n = { value: h };
+      if (this.#d && this.#A) {
+        n.ttl = this.#d[e];
+        let o = this.#m.now() - this.#A[e];
+        n.start = Math.floor(Date.now() - o);
       }
-      if (this.#sizes) {
-        entry.size = this.#sizes[i];
-      }
-      arr.unshift([key, entry]);
+      this.#y && (n.size = this.#y[e]), t.unshift([i, n]);
     }
-    return arr;
+    return t;
   }
-  /**
-   * Reset the cache and load in the items in entries in the order listed.
-   *
-   * The shape of the resulting cache may be different if the same options are
-   * not used in both caches.
-   *
-   * The `start` fields are assumed to be calculated relative to a portable
-   * `Date.now()` timestamp, even if `performance.now()` is available.
-   */
-  load(arr) {
+  load(t) {
     this.clear();
-    for (const [key, entry] of arr) {
-      if (entry.start) {
-        const age = Date.now() - entry.start;
-        entry.start = perf.now() - age;
+    for (let [e, i] of t) {
+      if (i.start) {
+        let s = Date.now() - i.start;
+        i.start = this.#m.now() - s;
       }
-      this.set(key, entry.value, entry);
+      this.set(e, i.value, i);
     }
   }
-  /**
-   * Add a value to the cache.
-   *
-   * Note: if `undefined` is specified as a value, this is an alias for
-   * {@link LRUCache#delete}
-   *
-   * Fields on the {@link LRUCache.SetOptions} options param will override
-   * their corresponding values in the constructor options for the scope
-   * of this single `set()` operation.
-   *
-   * If `start` is provided, then that will set the effective start
-   * time for the TTL calculation. Note that this must be a previous
-   * value of `performance.now()` if supported, or a previous value of
-   * `Date.now()` if not.
-   *
-   * Options object may also include `size`, which will prevent
-   * calling the `sizeCalculation` function and just use the specified
-   * number if it is a positive integer, and `noDisposeOnSet` which
-   * will prevent calling a `dispose` function in the case of
-   * overwrites.
-   *
-   * If the `size` (or return value of `sizeCalculation`) for a given
-   * entry is greater than `maxEntrySize`, then the item will not be
-   * added to the cache.
-   *
-   * Will update the recency of the entry.
-   *
-   * If the value is `undefined`, then this is an alias for
-   * `cache.delete(key)`. `undefined` is never stored in the cache.
-   */
-  set(k, v, setOptions = {}) {
-    if (v === void 0) {
-      this.delete(k);
-      return this;
-    }
-    const { ttl = this.ttl, start, noDisposeOnSet = this.noDisposeOnSet, sizeCalculation = this.sizeCalculation, status } = setOptions;
-    let { noUpdateTTL = this.noUpdateTTL } = setOptions;
-    const size = this.#requireSize(k, v, setOptions.size || 0, sizeCalculation);
-    if (this.maxEntrySize && size > this.maxEntrySize) {
-      if (status) {
-        status.set = "miss";
-        status.maxEntrySizeExceeded = true;
-      }
-      this.#delete(k, "set");
-      return this;
-    }
-    let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
-    if (index === void 0) {
-      index = this.#size === 0 ? this.#tail : this.#free.length !== 0 ? this.#free.pop() : this.#size === this.#max ? this.#evict(false) : this.#size;
-      this.#keyList[index] = k;
-      this.#valList[index] = v;
-      this.#keyMap.set(k, index);
-      this.#next[this.#tail] = index;
-      this.#prev[index] = this.#tail;
-      this.#tail = index;
-      this.#size++;
-      this.#addItemSize(index, size, status);
-      if (status)
-        status.set = "add";
-      noUpdateTTL = false;
-      if (this.#hasOnInsert) {
-        this.#onInsert?.(v, k, "add");
-      }
-    } else {
-      this.#moveToTail(index);
-      const oldVal = this.#valList[index];
-      if (v !== oldVal) {
-        if (this.#hasFetchMethod && this.#isBackgroundFetch(oldVal)) {
-          oldVal.__abortController.abort(new Error("replaced"));
-          const { __staleWhileFetching: s } = oldVal;
-          if (s !== void 0 && !noDisposeOnSet) {
-            if (this.#hasDispose) {
-              this.#dispose?.(s, k, "set");
-            }
-            if (this.#hasDisposeAfter) {
-              this.#disposed?.push([s, k, "set"]);
-            }
-          }
-        } else if (!noDisposeOnSet) {
-          if (this.#hasDispose) {
-            this.#dispose?.(oldVal, k, "set");
-          }
-          if (this.#hasDisposeAfter) {
-            this.#disposed?.push([oldVal, k, "set"]);
-          }
+  set(t, e, i = {}) {
+    if (e === void 0) return this.delete(t), this;
+    let { ttl: s = this.ttl, start: h, noDisposeOnSet: n = this.noDisposeOnSet, sizeCalculation: o = this.sizeCalculation, status: r } = i, { noUpdateTTL: f = this.noUpdateTTL } = i, m = this.#P(t, e, i.size || 0, o);
+    if (this.maxEntrySize && m > this.maxEntrySize) return r && (r.set = "miss", r.maxEntrySizeExceeded = true), this.#E(t, "set"), this;
+    let c = this.#n === 0 ? void 0 : this.#s.get(t);
+    if (c === void 0) c = this.#n === 0 ? this.#h : this.#b.length !== 0 ? this.#b.pop() : this.#n === this.#o ? this.#M(false) : this.#n, this.#i[c] = t, this.#t[c] = e, this.#s.set(t, c), this.#a[this.#h] = c, this.#u[c] = this.#h, this.#h = c, this.#n++, this.#U(c, m, r), r && (r.set = "add"), f = false, this.#x && this.#C?.(e, t, "add");
+    else {
+      this.#D(c);
+      let d = this.#t[c];
+      if (e !== d) {
+        if (this.#v && this.#e(d)) {
+          d.__abortController.abort(new Error("replaced"));
+          let { __staleWhileFetching: g } = d;
+          g !== void 0 && !n && (this.#T && this.#w?.(g, t, "set"), this.#f && this.#r?.push([g, t, "set"]));
+        } else n || (this.#T && this.#w?.(d, t, "set"), this.#f && this.#r?.push([d, t, "set"]));
+        if (this.#W(c), this.#U(c, m, r), this.#t[c] = e, r) {
+          r.set = "replace";
+          let g = d && this.#e(d) ? d.__staleWhileFetching : d;
+          g !== void 0 && (r.oldValue = g);
         }
-        this.#removeItemSize(index);
-        this.#addItemSize(index, size, status);
-        this.#valList[index] = v;
-        if (status) {
-          status.set = "replace";
-          const oldValue = oldVal && this.#isBackgroundFetch(oldVal) ? oldVal.__staleWhileFetching : oldVal;
-          if (oldValue !== void 0)
-            status.oldValue = oldValue;
-        }
-      } else if (status) {
-        status.set = "update";
-      }
-      if (this.#hasOnInsert) {
-        this.onInsert?.(v, k, v === oldVal ? "update" : "replace");
-      }
+      } else r && (r.set = "update");
+      this.#x && this.onInsert?.(e, t, e === d ? "update" : "replace");
     }
-    if (ttl !== 0 && !this.#ttls) {
-      this.#initializeTTLTracking();
-    }
-    if (this.#ttls) {
-      if (!noUpdateTTL) {
-        this.#setItemTTL(index, ttl, start);
-      }
-      if (status)
-        this.#statusTTL(status, index);
-    }
-    if (!noDisposeOnSet && this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
-      }
+    if (s !== 0 && !this.#d && this.#j(), this.#d && (f || this.#N(c, s, h), r && this.#z(r, c)), !n && this.#f && this.#r) {
+      let d = this.#r, g;
+      for (; g = d?.shift(); ) this.#S?.(...g);
     }
     return this;
   }
-  /**
-   * Evict the least recently used item, returning its value or
-   * `undefined` if cache is empty.
-   */
   pop() {
     try {
-      while (this.#size) {
-        const val = this.#valList[this.#head];
-        this.#evict(true);
-        if (this.#isBackgroundFetch(val)) {
-          if (val.__staleWhileFetching) {
-            return val.__staleWhileFetching;
-          }
-        } else if (val !== void 0) {
-          return val;
-        }
+      for (; this.#n; ) {
+        let t = this.#t[this.#l];
+        if (this.#M(true), this.#e(t)) {
+          if (t.__staleWhileFetching) return t.__staleWhileFetching;
+        } else if (t !== void 0) return t;
       }
     } finally {
-      if (this.#hasDisposeAfter && this.#disposed) {
-        const dt = this.#disposed;
-        let task;
-        while (task = dt?.shift()) {
-          this.#disposeAfter?.(...task);
-        }
+      if (this.#f && this.#r) {
+        let t = this.#r, e;
+        for (; e = t?.shift(); ) this.#S?.(...e);
       }
     }
   }
-  #evict(free) {
-    const head = this.#head;
-    const k = this.#keyList[head];
-    const v = this.#valList[head];
-    if (this.#hasFetchMethod && this.#isBackgroundFetch(v)) {
-      v.__abortController.abort(new Error("evicted"));
-    } else if (this.#hasDispose || this.#hasDisposeAfter) {
-      if (this.#hasDispose) {
-        this.#dispose?.(v, k, "evict");
-      }
-      if (this.#hasDisposeAfter) {
-        this.#disposed?.push([v, k, "evict"]);
-      }
-    }
-    this.#removeItemSize(head);
-    if (free) {
-      this.#keyList[head] = void 0;
-      this.#valList[head] = void 0;
-      this.#free.push(head);
-    }
-    if (this.#size === 1) {
-      this.#head = this.#tail = 0;
-      this.#free.length = 0;
-    } else {
-      this.#head = this.#next[head];
-    }
-    this.#keyMap.delete(k);
-    this.#size--;
-    return head;
+  #M(t) {
+    let e = this.#l, i = this.#i[e], s = this.#t[e];
+    return this.#v && this.#e(s) ? s.__abortController.abort(new Error("evicted")) : (this.#T || this.#f) && (this.#T && this.#w?.(s, i, "evict"), this.#f && this.#r?.push([s, i, "evict"])), this.#W(e), this.#g?.[e] && (clearTimeout(this.#g[e]), this.#g[e] = void 0), t && (this.#i[e] = void 0, this.#t[e] = void 0, this.#b.push(e)), this.#n === 1 ? (this.#l = this.#h = 0, this.#b.length = 0) : this.#l = this.#a[e], this.#s.delete(i), this.#n--, e;
   }
-  /**
-   * Check if a key is in the cache, without updating the recency of use.
-   * Will return false if the item is stale, even though it is technically
-   * in the cache.
-   *
-   * Check if a key is in the cache, without updating the recency of
-   * use. Age is updated if {@link LRUCache.OptionsBase.updateAgeOnHas} is set
-   * to `true` in either the options or the constructor.
-   *
-   * Will return `false` if the item is stale, even though it is technically in
-   * the cache. The difference can be determined (if it matters) by using a
-   * `status` argument, and inspecting the `has` field.
-   *
-   * Will not update item age unless
-   * {@link LRUCache.OptionsBase.updateAgeOnHas} is set.
-   */
-  has(k, hasOptions = {}) {
-    const { updateAgeOnHas = this.updateAgeOnHas, status } = hasOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v) && v.__staleWhileFetching === void 0) {
-        return false;
-      }
-      if (!this.#isStale(index)) {
-        if (updateAgeOnHas) {
-          this.#updateItemAge(index);
-        }
-        if (status) {
-          status.has = "hit";
-          this.#statusTTL(status, index);
-        }
-        return true;
-      } else if (status) {
-        status.has = "stale";
-        this.#statusTTL(status, index);
-      }
-    } else if (status) {
-      status.has = "miss";
-    }
+  has(t, e = {}) {
+    let { updateAgeOnHas: i = this.updateAgeOnHas, status: s } = e, h = this.#s.get(t);
+    if (h !== void 0) {
+      let n = this.#t[h];
+      if (this.#e(n) && n.__staleWhileFetching === void 0) return false;
+      if (this.#p(h)) s && (s.has = "stale", this.#z(s, h));
+      else return i && this.#R(h), s && (s.has = "hit", this.#z(s, h)), true;
+    } else s && (s.has = "miss");
     return false;
   }
-  /**
-   * Like {@link LRUCache#get} but doesn't update recency or delete stale
-   * items.
-   *
-   * Returns `undefined` if the item is stale, unless
-   * {@link LRUCache.OptionsBase.allowStale} is set.
-   */
-  peek(k, peekOptions = {}) {
-    const { allowStale = this.allowStale } = peekOptions;
-    const index = this.#keyMap.get(k);
-    if (index === void 0 || !allowStale && this.#isStale(index)) {
-      return;
-    }
-    const v = this.#valList[index];
-    return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+  peek(t, e = {}) {
+    let { allowStale: i = this.allowStale } = e, s = this.#s.get(t);
+    if (s === void 0 || !i && this.#p(s)) return;
+    let h = this.#t[s];
+    return this.#e(h) ? h.__staleWhileFetching : h;
   }
-  #backgroundFetch(k, index, options, context) {
-    const v = index === void 0 ? void 0 : this.#valList[index];
-    if (this.#isBackgroundFetch(v)) {
-      return v;
-    }
-    const ac = new AC();
-    const { signal } = options;
-    signal?.addEventListener("abort", () => ac.abort(signal.reason), {
-      signal: ac.signal
-    });
-    const fetchOpts = {
-      signal: ac.signal,
-      options,
-      context
-    };
-    const cb = (v2, updateCache = false) => {
-      const { aborted } = ac.signal;
-      const ignoreAbort = options.ignoreFetchAbort && v2 !== void 0;
-      if (options.status) {
-        if (aborted && !updateCache) {
-          options.status.fetchAborted = true;
-          options.status.fetchError = ac.signal.reason;
-          if (ignoreAbort)
-            options.status.fetchAbortIgnored = true;
-        } else {
-          options.status.fetchResolved = true;
-        }
-      }
-      if (aborted && !ignoreAbort && !updateCache) {
-        return fetchFail(ac.signal.reason);
-      }
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        if (v2 === void 0) {
-          if (bf2.__staleWhileFetching) {
-            this.#valList[index] = bf2.__staleWhileFetching;
-          } else {
-            this.#delete(k, "fetch");
-          }
-        } else {
-          if (options.status)
-            options.status.fetchUpdated = true;
-          this.set(k, v2, fetchOpts.options);
-        }
-      }
-      return v2;
-    };
-    const eb = (er) => {
-      if (options.status) {
-        options.status.fetchRejected = true;
-        options.status.fetchError = er;
-      }
-      return fetchFail(er);
-    };
-    const fetchFail = (er) => {
-      const { aborted } = ac.signal;
-      const allowStaleAborted = aborted && options.allowStaleOnFetchAbort;
-      const allowStale = allowStaleAborted || options.allowStaleOnFetchRejection;
-      const noDelete = allowStale || options.noDeleteOnFetchRejection;
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        const del = !noDelete || bf2.__staleWhileFetching === void 0;
-        if (del) {
-          this.#delete(k, "fetch");
-        } else if (!allowStaleAborted) {
-          this.#valList[index] = bf2.__staleWhileFetching;
-        }
-      }
-      if (allowStale) {
-        if (options.status && bf2.__staleWhileFetching !== void 0) {
-          options.status.returnedStale = true;
-        }
-        return bf2.__staleWhileFetching;
-      } else if (bf2.__returned === bf2) {
-        throw er;
-      }
-    };
-    const pcall = (res, rej) => {
-      const fmp = this.#fetchMethod?.(k, v, fetchOpts);
-      if (fmp && fmp instanceof Promise) {
-        fmp.then((v2) => res(v2 === void 0 ? void 0 : v2), rej);
-      }
-      ac.signal.addEventListener("abort", () => {
-        if (!options.ignoreFetchAbort || options.allowStaleOnFetchAbort) {
-          res(void 0);
-          if (options.allowStaleOnFetchAbort) {
-            res = (v2) => cb(v2, true);
-          }
-        }
+  #G(t, e, i, s) {
+    let h = e === void 0 ? void 0 : this.#t[e];
+    if (this.#e(h)) return h;
+    let n = new C(), { signal: o } = i;
+    o?.addEventListener("abort", () => n.abort(o.reason), { signal: n.signal });
+    let r = { signal: n.signal, options: i, context: s }, f = (p, _ = false) => {
+      let { aborted: l } = n.signal, w = i.ignoreFetchAbort && p !== void 0, b = i.ignoreFetchAbort || !!(i.allowStaleOnFetchAbort && p !== void 0);
+      if (i.status && (l && !_ ? (i.status.fetchAborted = true, i.status.fetchError = n.signal.reason, w && (i.status.fetchAbortIgnored = true)) : i.status.fetchResolved = true), l && !w && !_) return c(n.signal.reason, b);
+      let S = g, u = this.#t[e];
+      return (u === g || w && _ && u === void 0) && (p === void 0 ? S.__staleWhileFetching !== void 0 ? this.#t[e] = S.__staleWhileFetching : this.#E(t, "fetch") : (i.status && (i.status.fetchUpdated = true), this.set(t, p, r.options))), p;
+    }, m = (p) => (i.status && (i.status.fetchRejected = true, i.status.fetchError = p), c(p, false)), c = (p, _) => {
+      let { aborted: l } = n.signal, w = l && i.allowStaleOnFetchAbort, b = w || i.allowStaleOnFetchRejection, S = b || i.noDeleteOnFetchRejection, u = g;
+      if (this.#t[e] === g && (!S || !_ && u.__staleWhileFetching === void 0 ? this.#E(t, "fetch") : w || (this.#t[e] = u.__staleWhileFetching)), b) return i.status && u.__staleWhileFetching !== void 0 && (i.status.returnedStale = true), u.__staleWhileFetching;
+      if (u.__returned === u) throw p;
+    }, d = (p, _) => {
+      let l = this.#L?.(t, h, r);
+      l && l instanceof Promise && l.then((w) => p(w === void 0 ? void 0 : w), _), n.signal.addEventListener("abort", () => {
+        (!i.ignoreFetchAbort || i.allowStaleOnFetchAbort) && (p(void 0), i.allowStaleOnFetchAbort && (p = (w) => f(w, true)));
       });
     };
-    if (options.status)
-      options.status.fetchDispatched = true;
-    const p = new Promise(pcall).then(cb, eb);
-    const bf = Object.assign(p, {
-      __abortController: ac,
-      __staleWhileFetching: v,
-      __returned: void 0
-    });
-    if (index === void 0) {
-      this.set(k, bf, { ...fetchOpts.options, status: void 0 });
-      index = this.#keyMap.get(k);
+    i.status && (i.status.fetchDispatched = true);
+    let g = new Promise(d).then(f, m), A = Object.assign(g, { __abortController: n, __staleWhileFetching: h, __returned: void 0 });
+    return e === void 0 ? (this.set(t, A, { ...r.options, status: void 0 }), e = this.#s.get(t)) : this.#t[e] = A, A;
+  }
+  #e(t) {
+    if (!this.#v) return false;
+    let e = t;
+    return !!e && e instanceof Promise && e.hasOwnProperty("__staleWhileFetching") && e.__abortController instanceof C;
+  }
+  async fetch(t, e = {}) {
+    let { allowStale: i = this.allowStale, updateAgeOnGet: s = this.updateAgeOnGet, noDeleteOnStaleGet: h = this.noDeleteOnStaleGet, ttl: n = this.ttl, noDisposeOnSet: o = this.noDisposeOnSet, size: r = 0, sizeCalculation: f = this.sizeCalculation, noUpdateTTL: m = this.noUpdateTTL, noDeleteOnFetchRejection: c = this.noDeleteOnFetchRejection, allowStaleOnFetchRejection: d = this.allowStaleOnFetchRejection, ignoreFetchAbort: g = this.ignoreFetchAbort, allowStaleOnFetchAbort: A = this.allowStaleOnFetchAbort, context: p, forceRefresh: _ = false, status: l, signal: w } = e;
+    if (!this.#v) return l && (l.fetch = "get"), this.get(t, { allowStale: i, updateAgeOnGet: s, noDeleteOnStaleGet: h, status: l });
+    let b = { allowStale: i, updateAgeOnGet: s, noDeleteOnStaleGet: h, ttl: n, noDisposeOnSet: o, size: r, sizeCalculation: f, noUpdateTTL: m, noDeleteOnFetchRejection: c, allowStaleOnFetchRejection: d, allowStaleOnFetchAbort: A, ignoreFetchAbort: g, status: l, signal: w }, S = this.#s.get(t);
+    if (S === void 0) {
+      l && (l.fetch = "miss");
+      let u = this.#G(t, S, b, p);
+      return u.__returned = u;
     } else {
-      this.#valList[index] = bf;
+      let u = this.#t[S];
+      if (this.#e(u)) {
+        let E = i && u.__staleWhileFetching !== void 0;
+        return l && (l.fetch = "inflight", E && (l.returnedStale = true)), E ? u.__staleWhileFetching : u.__returned = u;
+      }
+      let T = this.#p(S);
+      if (!_ && !T) return l && (l.fetch = "hit"), this.#D(S), s && this.#R(S), l && this.#z(l, S), u;
+      let F = this.#G(t, S, b, p), O = F.__staleWhileFetching !== void 0 && i;
+      return l && (l.fetch = T ? "stale" : "refresh", O && T && (l.returnedStale = true)), O ? F.__staleWhileFetching : F.__returned = F;
     }
-    return bf;
   }
-  #isBackgroundFetch(p) {
-    if (!this.#hasFetchMethod)
-      return false;
-    const b = p;
-    return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AC;
+  async forceFetch(t, e = {}) {
+    let i = await this.fetch(t, e);
+    if (i === void 0) throw new Error("fetch() returned undefined");
+    return i;
   }
-  async fetch(k, fetchOptions = {}) {
-    const {
-      // get options
-      allowStale = this.allowStale,
-      updateAgeOnGet = this.updateAgeOnGet,
-      noDeleteOnStaleGet = this.noDeleteOnStaleGet,
-      // set options
-      ttl = this.ttl,
-      noDisposeOnSet = this.noDisposeOnSet,
-      size = 0,
-      sizeCalculation = this.sizeCalculation,
-      noUpdateTTL = this.noUpdateTTL,
-      // fetch exclusive options
-      noDeleteOnFetchRejection = this.noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection = this.allowStaleOnFetchRejection,
-      ignoreFetchAbort = this.ignoreFetchAbort,
-      allowStaleOnFetchAbort = this.allowStaleOnFetchAbort,
-      context,
-      forceRefresh = false,
-      status,
-      signal
-    } = fetchOptions;
-    if (!this.#hasFetchMethod) {
-      if (status)
-        status.fetch = "get";
-      return this.get(k, {
-        allowStale,
-        updateAgeOnGet,
-        noDeleteOnStaleGet,
-        status
-      });
-    }
-    const options = {
-      allowStale,
-      updateAgeOnGet,
-      noDeleteOnStaleGet,
-      ttl,
-      noDisposeOnSet,
-      size,
-      sizeCalculation,
-      noUpdateTTL,
-      noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection,
-      allowStaleOnFetchAbort,
-      ignoreFetchAbort,
-      status,
-      signal
-    };
-    let index = this.#keyMap.get(k);
-    if (index === void 0) {
-      if (status)
-        status.fetch = "miss";
-      const p = this.#backgroundFetch(k, index, options, context);
-      return p.__returned = p;
-    } else {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        const stale = allowStale && v.__staleWhileFetching !== void 0;
-        if (status) {
-          status.fetch = "inflight";
-          if (stale)
-            status.returnedStale = true;
+  memo(t, e = {}) {
+    let i = this.#I;
+    if (!i) throw new Error("no memoMethod provided to constructor");
+    let { context: s, forceRefresh: h, ...n } = e, o = this.get(t, n);
+    if (!h && o !== void 0) return o;
+    let r = i(t, o, { options: n, context: s });
+    return this.set(t, r, n), r;
+  }
+  get(t, e = {}) {
+    let { allowStale: i = this.allowStale, updateAgeOnGet: s = this.updateAgeOnGet, noDeleteOnStaleGet: h = this.noDeleteOnStaleGet, status: n } = e, o = this.#s.get(t);
+    if (o !== void 0) {
+      let r = this.#t[o], f = this.#e(r);
+      return n && this.#z(n, o), this.#p(o) ? (n && (n.get = "stale"), f ? (n && i && r.__staleWhileFetching !== void 0 && (n.returnedStale = true), i ? r.__staleWhileFetching : void 0) : (h || this.#E(t, "expire"), n && i && (n.returnedStale = true), i ? r : void 0)) : (n && (n.get = "hit"), f ? r.__staleWhileFetching : (this.#D(o), s && this.#R(o), r));
+    } else n && (n.get = "miss");
+  }
+  #k(t, e) {
+    this.#u[e] = t, this.#a[t] = e;
+  }
+  #D(t) {
+    t !== this.#h && (t === this.#l ? this.#l = this.#a[t] : this.#k(this.#u[t], this.#a[t]), this.#k(this.#h, t), this.#h = t);
+  }
+  delete(t) {
+    return this.#E(t, "delete");
+  }
+  #E(t, e) {
+    let i = false;
+    if (this.#n !== 0) {
+      let s = this.#s.get(t);
+      if (s !== void 0) if (this.#g?.[s] && (clearTimeout(this.#g?.[s]), this.#g[s] = void 0), i = true, this.#n === 1) this.#V(e);
+      else {
+        this.#W(s);
+        let h = this.#t[s];
+        if (this.#e(h) ? h.__abortController.abort(new Error("deleted")) : (this.#T || this.#f) && (this.#T && this.#w?.(h, t, e), this.#f && this.#r?.push([h, t, e])), this.#s.delete(t), this.#i[s] = void 0, this.#t[s] = void 0, s === this.#h) this.#h = this.#u[s];
+        else if (s === this.#l) this.#l = this.#a[s];
+        else {
+          let n = this.#u[s];
+          this.#a[n] = this.#a[s];
+          let o = this.#a[s];
+          this.#u[o] = this.#u[s];
         }
-        return stale ? v.__staleWhileFetching : v.__returned = v;
-      }
-      const isStale = this.#isStale(index);
-      if (!forceRefresh && !isStale) {
-        if (status)
-          status.fetch = "hit";
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        if (status)
-          this.#statusTTL(status, index);
-        return v;
-      }
-      const p = this.#backgroundFetch(k, index, options, context);
-      const hasStale = p.__staleWhileFetching !== void 0;
-      const staleVal = hasStale && allowStale;
-      if (status) {
-        status.fetch = isStale ? "stale" : "refresh";
-        if (staleVal && isStale)
-          status.returnedStale = true;
-      }
-      return staleVal ? p.__staleWhileFetching : p.__returned = p;
-    }
-  }
-  async forceFetch(k, fetchOptions = {}) {
-    const v = await this.fetch(k, fetchOptions);
-    if (v === void 0)
-      throw new Error("fetch() returned undefined");
-    return v;
-  }
-  memo(k, memoOptions = {}) {
-    const memoMethod = this.#memoMethod;
-    if (!memoMethod) {
-      throw new Error("no memoMethod provided to constructor");
-    }
-    const { context, forceRefresh, ...options } = memoOptions;
-    const v = this.get(k, options);
-    if (!forceRefresh && v !== void 0)
-      return v;
-    const vv = memoMethod(k, v, {
-      options,
-      context
-    });
-    this.set(k, vv, options);
-    return vv;
-  }
-  /**
-   * Return a value from the cache. Will update the recency of the cache
-   * entry found.
-   *
-   * If the key is not found, get() will return `undefined`.
-   */
-  get(k, getOptions = {}) {
-    const { allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, status } = getOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const value = this.#valList[index];
-      const fetching = this.#isBackgroundFetch(value);
-      if (status)
-        this.#statusTTL(status, index);
-      if (this.#isStale(index)) {
-        if (status)
-          status.get = "stale";
-        if (!fetching) {
-          if (!noDeleteOnStaleGet) {
-            this.#delete(k, "expire");
-          }
-          if (status && allowStale)
-            status.returnedStale = true;
-          return allowStale ? value : void 0;
-        } else {
-          if (status && allowStale && value.__staleWhileFetching !== void 0) {
-            status.returnedStale = true;
-          }
-          return allowStale ? value.__staleWhileFetching : void 0;
-        }
-      } else {
-        if (status)
-          status.get = "hit";
-        if (fetching) {
-          return value.__staleWhileFetching;
-        }
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        return value;
-      }
-    } else if (status) {
-      status.get = "miss";
-    }
-  }
-  #connect(p, n) {
-    this.#prev[n] = p;
-    this.#next[p] = n;
-  }
-  #moveToTail(index) {
-    if (index !== this.#tail) {
-      if (index === this.#head) {
-        this.#head = this.#next[index];
-      } else {
-        this.#connect(this.#prev[index], this.#next[index]);
-      }
-      this.#connect(this.#tail, index);
-      this.#tail = index;
-    }
-  }
-  /**
-   * Deletes a key out of the cache.
-   *
-   * Returns true if the key was deleted, false otherwise.
-   */
-  delete(k) {
-    return this.#delete(k, "delete");
-  }
-  #delete(k, reason) {
-    let deleted = false;
-    if (this.#size !== 0) {
-      const index = this.#keyMap.get(k);
-      if (index !== void 0) {
-        deleted = true;
-        if (this.#size === 1) {
-          this.#clear(reason);
-        } else {
-          this.#removeItemSize(index);
-          const v = this.#valList[index];
-          if (this.#isBackgroundFetch(v)) {
-            v.__abortController.abort(new Error("deleted"));
-          } else if (this.#hasDispose || this.#hasDisposeAfter) {
-            if (this.#hasDispose) {
-              this.#dispose?.(v, k, reason);
-            }
-            if (this.#hasDisposeAfter) {
-              this.#disposed?.push([v, k, reason]);
-            }
-          }
-          this.#keyMap.delete(k);
-          this.#keyList[index] = void 0;
-          this.#valList[index] = void 0;
-          if (index === this.#tail) {
-            this.#tail = this.#prev[index];
-          } else if (index === this.#head) {
-            this.#head = this.#next[index];
-          } else {
-            const pi = this.#prev[index];
-            this.#next[pi] = this.#next[index];
-            const ni = this.#next[index];
-            this.#prev[ni] = this.#prev[index];
-          }
-          this.#size--;
-          this.#free.push(index);
-        }
+        this.#n--, this.#b.push(s);
       }
     }
-    if (this.#hasDisposeAfter && this.#disposed?.length) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
-      }
+    if (this.#f && this.#r?.length) {
+      let s = this.#r, h;
+      for (; h = s?.shift(); ) this.#S?.(...h);
     }
-    return deleted;
+    return i;
   }
-  /**
-   * Clear the cache entirely, throwing away all values.
-   */
   clear() {
-    return this.#clear("delete");
+    return this.#V("delete");
   }
-  #clear(reason) {
-    for (const index of this.#rindexes({ allowStale: true })) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        v.__abortController.abort(new Error("deleted"));
-      } else {
-        const k = this.#keyList[index];
-        if (this.#hasDispose) {
-          this.#dispose?.(v, k, reason);
-        }
-        if (this.#hasDisposeAfter) {
-          this.#disposed?.push([v, k, reason]);
-        }
+  #V(t) {
+    for (let e of this.#O({ allowStale: true })) {
+      let i = this.#t[e];
+      if (this.#e(i)) i.__abortController.abort(new Error("deleted"));
+      else {
+        let s = this.#i[e];
+        this.#T && this.#w?.(i, s, t), this.#f && this.#r?.push([i, s, t]);
       }
     }
-    this.#keyMap.clear();
-    this.#valList.fill(void 0);
-    this.#keyList.fill(void 0);
-    if (this.#ttls && this.#starts) {
-      this.#ttls.fill(0);
-      this.#starts.fill(0);
+    if (this.#s.clear(), this.#t.fill(void 0), this.#i.fill(void 0), this.#d && this.#A) {
+      this.#d.fill(0), this.#A.fill(0);
+      for (let e of this.#g ?? []) e !== void 0 && clearTimeout(e);
+      this.#g?.fill(void 0);
     }
-    if (this.#sizes) {
-      this.#sizes.fill(0);
-    }
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free.length = 0;
-    this.#calculatedSize = 0;
-    this.#size = 0;
-    if (this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
-      }
+    if (this.#y && this.#y.fill(0), this.#l = 0, this.#h = 0, this.#b.length = 0, this.#_ = 0, this.#n = 0, this.#f && this.#r) {
+      let e = this.#r, i;
+      for (; i = e?.shift(); ) this.#S?.(...i);
     }
   }
 };
@@ -10612,7 +10017,7 @@ var PipeProxyErrors = class extends Pipe {
   }
   constructor(src, dest, opts) {
     super(src, dest, opts);
-    this.proxyErrors = (er) => dest.emit("error", er);
+    this.proxyErrors = (er) => this.dest.emit("error", er);
     src.on("error", this.proxyErrors);
   }
 };
@@ -10741,8 +10146,8 @@ var Minipass = class extends import_node_events.EventEmitter {
    * behavior.  Ie, a sync stream can be made async, but an async stream
    * cannot be safely made sync.
    */
-  set ["async"](a) {
-    this[ASYNC] = this[ASYNC] || !!a;
+  set ["async"](a3) {
+    this[ASYNC] = this[ASYNC] || !!a3;
   }
   // drop everything and get out of the flow completely
   [ABORT]() {
@@ -11326,6 +10731,8 @@ var Minipass = class extends import_node_events.EventEmitter {
       return: stop,
       [Symbol.asyncIterator]() {
         return this;
+      },
+      [Symbol.asyncDispose]: async () => {
       }
     };
   }
@@ -11361,6 +10768,8 @@ var Minipass = class extends import_node_events.EventEmitter {
       return: stop,
       [Symbol.iterator]() {
         return this;
+      },
+      [Symbol.dispose]: () => {
       }
     };
   }
@@ -11433,7 +10842,7 @@ var ENOREALPATH = 512;
 var ENOCHILD = ENOTDIR | ENOENT | ENOREALPATH;
 var TYPEMASK = 1023;
 var entToType = (s) => s.isFile() ? IFREG : s.isDirectory() ? IFDIR : s.isSymbolicLink() ? IFLNK : s.isCharacterDevice() ? IFCHR : s.isBlockDevice() ? IFBLK : s.isSocket() ? IFSOCK : s.isFIFO() ? IFIFO : UNKNOWN;
-var normalizeCache = /* @__PURE__ */ new Map();
+var normalizeCache = new L({ max: 2 ** 12 });
 var normalize = (s) => {
   const c = normalizeCache.get(s);
   if (c)
@@ -11442,7 +10851,7 @@ var normalize = (s) => {
   normalizeCache.set(s, n);
   return n;
 };
-var normalizeNocaseCache = /* @__PURE__ */ new Map();
+var normalizeNocaseCache = new L({ max: 2 ** 12 });
 var normalizeNocase = (s) => {
   const c = normalizeNocaseCache.get(s);
   if (c)
@@ -11451,17 +10860,17 @@ var normalizeNocase = (s) => {
   normalizeNocaseCache.set(s, n);
   return n;
 };
-var ResolveCache = class extends LRUCache {
+var ResolveCache = class extends L {
   constructor() {
     super({ max: 256 });
   }
 };
-var ChildrenCache = class extends LRUCache {
+var ChildrenCache = class extends L {
   constructor(maxSize = 16 * 1024) {
     super({
       maxSize,
       // parent + children
-      sizeCalculation: (a) => a.length + 1
+      sizeCalculation: (a3) => a3.length + 1
     });
   }
 };
@@ -11599,6 +11008,7 @@ var PathBase = class {
   get parentPath() {
     return (this.parent || this).fullpath();
   }
+  /* c8 ignore start */
   /**
    * Deprecated alias for Dirent['parentPath'] Somewhat counterintuitively,
    * this property refers to the *parent* path, not the path object itself.
@@ -11608,6 +11018,7 @@ var PathBase = class {
   get path() {
     return this.parentPath;
   }
+  /* c8 ignore stop */
   /**
    * Do not create new Path objects directly.  They should always be accessed
    * via the PathScurry class or other methods on the Path class.
@@ -13117,6 +12528,7 @@ var PathScurry = process.platform === "win32" ? PathScurryWin32 : process.platfo
 // node_modules/glob/dist/esm/pattern.js
 var isPatternList = (pl) => pl.length >= 1;
 var isGlobList = (gl) => gl.length >= 1;
+var customInspect = Symbol.for("nodejs.util.inspect.custom");
 var Pattern = class _Pattern {
   #patternList;
   #globList;
@@ -13174,6 +12586,9 @@ var Pattern = class _Pattern {
         this.length = this.#patternList.length;
       }
     }
+  }
+  [customInspect]() {
+    return "Pattern <" + this.#globList.slice(this.#index).join("/") + ">";
   }
   /**
    * The first entry in the parsed list of patterns
@@ -14024,11 +13439,12 @@ var Glob = class {
     this.nocase = this.scurry.nocase;
     const nocaseMagicOnly = this.platform === "darwin" || this.platform === "win32";
     const mmo = {
-      // default nocase based on platform
+      braceExpandMax: 1e4,
       ...opts,
       dot: this.dot,
       matchBase: this.matchBase,
       nobrace: this.nobrace,
+      // default nocase based on platform
       nocase: this.nocase,
       nocaseMagicOnly,
       nocomment: true,
